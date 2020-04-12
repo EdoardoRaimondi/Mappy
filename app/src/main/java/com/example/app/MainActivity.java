@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+/**
+ * Main UI activity. Here the user can choose the main actions.
+ * (Need to write every button what actually does, when completed)
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    /**
+     * Method to show the map (current position)
+     * Triggered by intent
+     */
     public void showMap(View view){
         Intent showMap = new Intent(this, MapsActivity.class);
         startActivity(showMap);
