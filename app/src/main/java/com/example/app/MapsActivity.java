@@ -223,7 +223,7 @@ public class MapsActivity extends FragmentActivity implements
     private String getUrl(double latitude, double longitude, String nearbyPlace, double radius)
     {
         StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
-        googleURL.append("location=" + 37.417745 + "," + -122.106601);
+        googleURL.append("location=" + latitude + "," + longitude);
         googleURL.append("&radius=" + radius);
         googleURL.append("&type=" + nearbyPlace);
         googleURL.append("&sensor=true");

@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void nearbyDiscoRequest(View view){
         Intent showNearbyDisco = new Intent(this, MapsActivity.class);
-        //showNearbyDisco.putExtra(MapsActivity.NEARBY_KEY, NearbyRequestType.DISCO);
-        //showNearbyDisco.putExtra(MapsActivity.RADIUS, 1000);
+        showNearbyDisco.putExtra(MapsActivity.NEARBY_KEY, NearbyRequestType.DISCO);
+        showNearbyDisco.putExtra(MapsActivity.RADIUS, 1000);
         //instead of 1000 there should be a reference to the UI
         //Basically the user has to choose the radius
         startActivity(showNearbyDisco);

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">App</string>
     <string name="title_activity_maps">Map</string>
+
+    //BUTTON NAMES
+    <string name="party">FIESTA</string>
 </resources>
