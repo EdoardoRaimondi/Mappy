@@ -70,7 +70,6 @@ public class MapsActivity extends FragmentActivity implements
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
-    private Location myCurrentLocation;
 
 
     @Override
@@ -247,8 +246,7 @@ public class MapsActivity extends FragmentActivity implements
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
                                 Object transferData[] = new Object[2];
-                                //DON'T MIND THIS, STILL ON WORKING
-                                /**GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
+                                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                                 NearbyRequestType requestType = (NearbyRequestType) getIntent().getSerializableExtra(NEARBY_KEY);
                                 int radius = getIntent().getIntExtra(RADIUS, 1000);
 
@@ -260,7 +258,7 @@ public class MapsActivity extends FragmentActivity implements
 
                                         getNearbyPlaces.execute(transferData);
                                 }
-                                 */
+
                             }
                         }
                     }
