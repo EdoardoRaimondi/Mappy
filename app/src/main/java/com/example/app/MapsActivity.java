@@ -214,9 +214,9 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * method to get the url string containing all the place information
-     * @param latitude
+     * @param latitude 
      * @param longitude
-     * @param nearbyPlace
+     * @param nearbyPlace to search for
      * @param radius of the research
      * @return url string
      */
@@ -252,9 +252,16 @@ public class MapsActivity extends FragmentActivity implements
 
                                 switch (requestType) {
                                     case DISCO:
-                                        String url = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "disco", radius);
+                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "disco", radius);
                                         transferData[0] = mMap;
-                                        transferData[1] = url;
+                                        transferData[1] = urlDisco;
+
+                                        getNearbyPlaces.execute(transferData);
+
+                                    case RESTAURANT:
+                                        String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "Restaurant", radius);
+                                        transferData[0] = mMap;
+                                        transferData[1] = urlRisto;
 
                                         getNearbyPlaces.execute(transferData);
                                 }

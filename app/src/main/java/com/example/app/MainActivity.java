@@ -19,18 +19,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Method to show the map (current position)
-     * Triggered by intent
-     */
-    public void showMap(View view){
-        Intent showMap = new Intent(this, MapsActivity.class);
-        startActivity(showMap);
-    }
-
-    /**
-     * Method to send an nearby disco showing request to the Maps activity
+     * Method to send a nearby disco showing request to the Maps activity
      * @param view button {@id nearby_disco}
-     * @TODO this method implementation is on the way. NOW IT DOESN'T WORK!!
+     *
      */
     public void nearbyDiscoRequest(View view){
         Intent showNearbyDisco = new Intent(this, MapsActivity.class);
@@ -39,5 +30,16 @@ public class MainActivity extends AppCompatActivity {
         //instead of 1000 there should be a reference to the UI
         //Basically the user has to choose the radius
         startActivity(showNearbyDisco);
+    }
+
+    /**
+     * Method to send a nearby restaurant showing request to the Maps activity
+     * @param view button {@id nearby_restaurant}
+     */
+    public void nearbyRestaurantRequest(View view){
+        Intent showNearbyRestaurant = new Intent(this, MapsActivity.class);
+        showNearbyRestaurant.putExtra(MapsActivity.NEARBY_KEY, NearbyRequestType.RESTAURANT);
+        showNearbyRestaurant.putExtra(MapsActivity.RADIUS, 1000);
+        startActivity(showNearbyRestaurant);
     }
 }
