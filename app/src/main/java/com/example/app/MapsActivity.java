@@ -214,7 +214,7 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * method to get the url string containing all the place information
-     * @param latitude 
+     * @param latitude
      * @param longitude
      * @param nearbyPlace to search for
      * @param radius of the research
