@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">App</string>
+    <string name="title_activity_maps">Map</string>
+
+    //BUTTON NAMES
+    <string name="party">FIESTA</string>
+    <string name="restaurant">DAMN HUNGRY</string>
+
+    //Spinner
+    <string-array name="RADIUS">
+        <item>1km</item>
+        <item>2km</item>
+        <item>5km</item>
+        <item>10km</item>
+        <item>50km</item>
+    </string-array>
 </resources>
