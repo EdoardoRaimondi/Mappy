@@ -238,6 +238,7 @@ public class MapsActivity extends FragmentActivity implements
      * Method activated by the nearby button pressure
      */
     private void showNearby(){
+        mMap.clear();
         fusedLocationProviderClient.getLastLocation()
                 .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
@@ -252,7 +253,7 @@ public class MapsActivity extends FragmentActivity implements
 
                                 switch (requestType) {
                                     case DISCO:
-                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "disco", radius);
+                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "Hospital", radius);
                                         transferData[0] = mMap;
                                         transferData[1] = urlDisco;
 
@@ -262,8 +263,8 @@ public class MapsActivity extends FragmentActivity implements
                                         String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "Restaurant", radius);
                                         transferData[0] = mMap;
                                         transferData[1] = urlRisto;
-
-                                        getNearbyPlaces.execute(transferData);
+                                        GetNearbyPlaces getNearbyPlaces1 = new GetNearbyPlaces();
+                                        getNearbyPlaces1.execute(transferData);
                                 }
 
                             }
@@ -281,4 +282,6 @@ public class MapsActivity extends FragmentActivity implements
             }
         }
     }
+
+
 }
