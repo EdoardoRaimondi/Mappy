@@ -249,18 +249,19 @@ public class MapsActivity extends FragmentActivity implements
                                 Object transferData[] = new Object[2];
                                 GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                                 NearbyRequestType requestType = (NearbyRequestType) getIntent().getSerializableExtra(NEARBY_KEY);
+                                Log.d("REQUEST TYPE", requestType.toString());
                                 int radius = getIntent().getIntExtra(RADIUS, 1000);
 
                                 switch (requestType) {
                                     case DISCO:
-                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "Hospital", radius);
+                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
                                         transferData[0] = mMap;
                                         transferData[1] = urlDisco;
 
                                         getNearbyPlaces.execute(transferData);
 
                                     case RESTAURANT:
-                                        String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "Restaurant", radius);
+                                        String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
                                         transferData[0] = mMap;
                                         transferData[1] = urlRisto;
                                         GetNearbyPlaces getNearbyPlaces1 = new GetNearbyPlaces();
