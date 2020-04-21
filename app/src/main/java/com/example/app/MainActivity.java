@@ -16,7 +16,6 @@ import android.widget.Spinner;
  */
 public class MainActivity extends AppCompatActivity {
 
-
     public long radius;
 
     @Override
@@ -65,6 +64,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    //NATIVE METHODS
+
+    /**
+     * Parser for the radius integer
+     * @param radius to parse
+     */
+    public native int parseRadius(String radius);
+
+    /**
+     * Library loading
+     */
+    static {
+        System.loadLibrary("main_native_lib");
+    }
 
     /**
      * Inner class to define the radius spinner activity
@@ -75,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
                                    int pos, long id) {
             // An item was selected. You can retrieve the selected item using
             String radiusString = parent.getItemAtPosition(pos).toString();
-            radius = 5000;
 
         }
 
