@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * CLass to parse the google place data
  */
-public class DataParser {
+public class DataParser implements MapJSonDataParser{
 
 
     /**

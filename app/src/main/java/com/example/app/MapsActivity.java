@@ -56,7 +56,6 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
-    private static final String CURRENT_POSITION_MARKER = "You are here";
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     private static final int DEFAULT_ZOOM = 12;
     private static final String GOOGLE_KEY = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
@@ -214,28 +213,6 @@ public class MapsActivity extends FragmentActivity implements
 
 
     /**
-     * method to get the url string containing all the place information
-     * @param latitude 
-     * @param longitude
-     * @param nearbyPlace to search for
-     * @param radius of the research
-     * @return url string
-     */
-    private String getUrl(double latitude, double longitude, String nearbyPlace, double radius)
-    {
-        StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
-        googleURL.append("location=" + latitude + "," + longitude);
-        googleURL.append("&radius=" + radius);
-        googleURL.append("&type=" + nearbyPlace);
-        googleURL.append("&sensor=true");
-        googleURL.append("&key=" + GOOGLE_KEY);
-
-        Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
-
-        return googleURL.toString();
-    }
-
-    /**
      * Method activated by the nearby button pressure
      */
     private void showNearby(){
@@ -282,6 +259,28 @@ public class MapsActivity extends FragmentActivity implements
                 getDeviceLocation();
             }
         }
+    }
+
+    /**
+     * method to get the url string containing all the place information
+     * @param latitude
+     * @param longitude
+     * @param nearbyPlace to search for
+     * @param radius of the research
+     * @return url string
+     */
+    private String getUrl(double latitude, double longitude, String nearbyPlace, double radius)
+    {
+        StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
+        googleURL.append("location=" + latitude + "," + longitude);
+        googleURL.append("&radius=" + radius);
+        googleURL.append("&type=" + nearbyPlace);
+        googleURL.append("&sensor=true");
+        googleURL.append("&key=" + GOOGLE_KEY);
+
+        Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
+
+        return googleURL.toString();
     }
 
 }
