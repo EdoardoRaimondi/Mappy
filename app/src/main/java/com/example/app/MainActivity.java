@@ -76,9 +76,10 @@ public class MainActivity extends AppCompatActivity {
      * Library loading
      */
     static {
-        System.loadLibrary("main_native_lib");
+        System.loadLibrary("libmain_native_lib");
     }
 
+    //INNER CLASSES (Not so elegant but clear)
     /**
      * Inner class to define the radius spinner activity
      */

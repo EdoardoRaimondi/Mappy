@@ -16,7 +16,7 @@ Java_com_example_app_MainActivity_parseRadius(JNIEnv * env, jobject obj, jstring
     for(i=0; nativeString[i]!=flag; i++) buffer[i] = nativeString[i];
     buffer[i] = 0;
     int numericRadius = atoi(buffer);
-    return numericRadius + offset;
+    return numericRadius * offset;
     }
 }
 
