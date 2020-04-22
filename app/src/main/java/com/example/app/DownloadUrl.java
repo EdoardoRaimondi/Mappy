@@ -23,7 +23,7 @@ public class DownloadUrl {
      * @return String representing data to downloaded
      * @throws IOException if input streaming goes wrong
      */
-    public String readTheUrl(String urlPlace) throws IOException {
+    public String readTheUrl(@NonNull String urlPlace) throws IOException {
 
         String data = "";
         InputStream inputStream = null;
