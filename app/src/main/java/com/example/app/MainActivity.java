@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                                    int pos, long id) {
             // An item was selected. You can retrieve the selected item using
             String radiusString = parent.getItemAtPosition(pos).toString();
-
+            radius = parseRadius(radiusString);
         }
 
         public void onNothingSelected(AdapterView<?> parent) {
