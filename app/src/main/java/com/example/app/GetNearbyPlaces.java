@@ -2,6 +2,7 @@ package com.example.app;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -67,40 +68,49 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
      * Method to show the nearby places
      * @param nearByPlacesList The list of nearby places
      */
-    private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList){
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for(int i = 0; i < nearByPlacesList.size(); i++){
-            MarkerOptions markerOptions = new MarkerOptions();
-            //extract the data
-            HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
-            String placeName = googleNearbyPlace.get("place_name");
-            String vicinity  = googleNearbyPlace.get("vicinity");
-            try {
-                double lat = Double.parseDouble(googleNearbyPlace.get("lat"));
-                double lon = Double.parseDouble(googleNearbyPlace.get("lng"));
-                LatLng latLng = new LatLng(lat, lon);
-                builder.include(latLng);
+    private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
+        if (!nearByPlacesList.isEmpty()) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (int i = 0; i < nearByPlacesList.size(); i++) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                //extract the data
+                HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
+                String placeName = googleNearbyPlace.get("place_name");
+                String vicinity = googleNearbyPlace.get("vicinity");
+                try {
+                    double lat = Double.parseDouble(googleNearbyPlace.get("lat"));
+                    double lon = Double.parseDouble(googleNearbyPlace.get("lng"));
+                    LatLng latLng = new LatLng(lat, lon);
+                    builder.include(latLng);
 
 
-                //Once get the data, I position the markers of this specific place
-                markerOptions.position(latLng);
-                markerOptions.title(placeName + " : " + vicinity);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                    //Once get the data, I position the markers of this specific place
+                    markerOptions.position(latLng);
+                    markerOptions.title(placeName + " : " + vicinity);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                //create the marker
-                mMap.addMarker(markerOptions);
+                    //create the marker
+                    mMap.addMarker(markerOptions);
 /**
  //synchronize the visual map
  //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
  mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
  */
+                }
+                // If I am here, it means I did not have the position for that searching
+                catch (NullPointerException e) {
+                    //TODO : Show an "error" message
+                }
             }
-            catch(NullPointerException e){ Log.d("EXCEPTION", "trapped");}
-        }
-        LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            LatLngBounds bounds = builder.build();
+            int padding = 0; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-        mMap.animateCamera(cu);
+            mMap.animateCamera(cu);
+        }
+        else {
+            //No type places found
+            //TODO : show a message saying that
+        }
     }
 }

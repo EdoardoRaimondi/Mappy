@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -94,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements
 
 
     /**
-     * Callback when the map fragemnt ui is ready
+     * Callback when the map fragment ui is ready
      * @param googleMap
      */
     @SuppressLint("MissingPermission")
@@ -247,23 +248,22 @@ public class MapsActivity extends FragmentActivity implements
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
                                 Object transferData[] = new Object[2];
-                                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                                 NearbyRequestType requestType = (NearbyRequestType) getIntent().getSerializableExtra(NEARBY_KEY);
                                 Log.d("REQUEST TYPE", requestType.toString());
                                 int radius = getIntent().getIntExtra(RADIUS, 1000);
 
-                                switch (requestType) {
-                                    case DISCO:
-                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
+                                if(requestType == NearbyRequestType.DISCO) {
+                                    String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
+                                    transferData[0] = mMap;
+                                    transferData[1] = urlDisco;
+                                    GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
+                                    getNearbyPlaces.execute(transferData);
+                                    Log.d("DISCO", "request called");
+                                }
+                                else {
+                                        String urlRestaurant = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
                                         transferData[0] = mMap;
-                                        transferData[1] = urlDisco;
-
-                                        getNearbyPlaces.execute(transferData);
-
-                                    case RESTAURANT:
-                                        String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
-                                        transferData[0] = mMap;
-                                        transferData[1] = urlRisto;
+                                        transferData[1] = urlRestaurant;
                                         GetNearbyPlaces getNearbyPlaces1 = new GetNearbyPlaces();
                                         getNearbyPlaces1.execute(transferData);
                                 }
@@ -283,6 +283,5 @@ public class MapsActivity extends FragmentActivity implements
             }
         }
     }
-
 
 }
