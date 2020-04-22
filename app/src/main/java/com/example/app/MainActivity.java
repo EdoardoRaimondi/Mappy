@@ -2,11 +2,10 @@ package com.example.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -16,7 +15,8 @@ import android.widget.Spinner;
  */
 public class MainActivity extends AppCompatActivity {
 
-    public long radius;
+    public static long RADIUS;
+    private SpinnerActivity spinnerActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //create the spinner and fill it
-        Spinner radius = findViewById(R.id.spinner);
+        Spinner radiusSpinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
                 this,
                 R.array.RADIUS,
@@ -32,10 +32,9 @@ public class MainActivity extends AppCompatActivity {
         // Specify the layout to use when the list of choices appears
         grade.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        radius.setAdapter(grade);
+        radiusSpinner.setAdapter(grade);
+        radiusSpinner.setOnItemSelectedListener(spinnerActivity);
     }
-
-
 
 
     /**
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public void nearbyDiscoRequest(View view){
         Intent showNearbyDisco = new Intent(this, MapsActivity.class);
         showNearbyDisco.putExtra(MapsActivity.NEARBY_KEY, NearbyRequestType.DISCO);
-        showNearbyDisco.putExtra(MapsActivity.RADIUS, radius);
+        showNearbyDisco.putExtra(MapsActivity.RADIUS, RADIUS);
         startActivity(showNearbyDisco);
     }
 
@@ -57,44 +56,9 @@ public class MainActivity extends AppCompatActivity {
     public void nearbyRestaurantRequest(View view){
         Intent showNearbyRestaurant = new Intent(this, MapsActivity.class);
         showNearbyRestaurant.putExtra(MapsActivity.NEARBY_KEY, NearbyRequestType.RESTAURANT);
-        showNearbyRestaurant.putExtra(MapsActivity.RADIUS, radius);
+        showNearbyRestaurant.putExtra(MapsActivity.RADIUS, RADIUS);
+        Log.d("RADIUS", String.valueOf(RADIUS));
         startActivity(showNearbyRestaurant);
     }
 
-
-
-
-    //NATIVE METHODS
-
-    /**
-     * Parser for the radius integer
-     * @param radius to parse
-     */
-    public native int parseRadius(String radius);
-
-    /**
-     * Library loading
-     */
-    static {
-        System.loadLibrary("libmain_native_lib");
-    }
-
-    //INNER CLASSES (Not so elegant but clear)
-    /**
-     * Inner class to define the radius spinner activity
-     */
-    public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
-
-        public void onItemSelected(AdapterView<?> parent, View view,
-                                   int pos, long id) {
-            // An item was selected. You can retrieve the selected item using
-            String radiusString = parent.getItemAtPosition(pos).toString();
-            radius = parseRadius(radiusString);
-        }
-
-        public void onNothingSelected(AdapterView<?> parent) {
-            //default radius is 2km
-            radius = 2000;
-        }
-    }
 }
