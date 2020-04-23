@@ -128,9 +128,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 getDeviceLocation();
                 //Get information of what button has been pressed
-                NearbyRequestType requestType = (NearbyRequestType) getIntent().getSerializableExtra(NEARBY_KEY);
-                int radius = getIntent().getIntExtra(RADIUS, 1000);
+                Intent requestInfo = getIntent();
+                NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
+                long radius = requestInfo.getLongExtra(RADIUS, 1000);
                 Log.d("RAGGIO ", String.valueOf(radius));
+
+                //act in order to satisfy the request purpose
                 if (requestType == NearbyRequestType.DISCO) {
                     showNearbyDisco(radius);
                 }
@@ -246,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements
     /**
      * Method activated by the nearby button pressure
      */
-    private void showNearbyDisco(final int radius){
+    private void showNearbyDisco(final long radius){
         fusedLocationProviderClient.getLastLocation()
                 .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
@@ -272,7 +275,7 @@ public class MapsActivity extends FragmentActivity implements
     /**
      * Method activated by the nearby button pressure
      */
-    private void showNearbyRestaurant(final int radius){
+    private void showNearbyRestaurant(final long radius){
         fusedLocationProviderClient.getLastLocation()
                 .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
