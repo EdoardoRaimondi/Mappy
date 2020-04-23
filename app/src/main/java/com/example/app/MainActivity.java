@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -16,7 +17,6 @@ import android.widget.Spinner;
 public class MainActivity extends AppCompatActivity {
 
     public static long RADIUS;
-    private SpinnerActivity spinnerActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,21 @@ public class MainActivity extends AppCompatActivity {
         grade.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         radiusSpinner.setAdapter(grade);
-        radiusSpinner.setOnItemSelectedListener(spinnerActivity);
+        radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // An item was selected. You can retrieve the selected item using
+                String radiusString = parent.getItemAtPosition(position).toString();
+                RADIUS = parseRadius(radiusString);
+                Log.d("RADIUS", String.valueOf(MainActivity.RADIUS));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //default radius is 2km
+                RADIUS = 2000;
+            }
+        });
     }
 
 
@@ -59,6 +73,21 @@ public class MainActivity extends AppCompatActivity {
         showNearbyRestaurant.putExtra(MapsActivity.RADIUS, RADIUS);
         Log.d("RADIUS", String.valueOf(RADIUS));
         startActivity(showNearbyRestaurant);
+    }
+
+    //NATIVE METHODS
+
+    /**
+     * Parser for the radius integer
+     * @param radius to parse
+     */
+    public native int parseRadius(String radius);
+
+    /**
+     * Library loading
+     */
+    static {
+        System.loadLibrary("libmain_native_lib");
     }
 
 }
