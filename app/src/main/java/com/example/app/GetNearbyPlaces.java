@@ -29,7 +29,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
 
     /**
      * Method to extract the data from the {@link MapsActivity}
-     * @param objects
+     * @param  objects A two dimension array containing the map and the url request from the {@link MainActivity}
      * @return string representing the data
      */
     @Override
@@ -65,7 +65,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     }
 
     /**
-     * Method to show the nearby places
+     * Method to show the nearby places on the map
      * @param nearByPlacesList The list of nearby places
      */
     private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
@@ -73,7 +73,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (int i = 0; i < nearByPlacesList.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions();
-                //extract the data
+                //Extract the data
                 HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
                 String placeName = googleNearbyPlace.get("place_name");
                 String vicinity = googleNearbyPlace.get("vicinity");
@@ -89,17 +89,13 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                     markerOptions.title(placeName + " : " + vicinity);
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                    //create the marker
+                    //Create the marker
                     mMap.addMarker(markerOptions);
-/**
- //synchronize the visual map
- //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
- mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
- */
+
                 }
-                // If I am here, it means I did not have the position for that searching
+                //If I am here, it means I did not have the position (latitude and longitude) for that searching
                 catch (NullPointerException e) {
-                    //TODO : Show an "error" message
+                    //Just don't showing it on the map
                 }
             }
             LatLngBounds bounds = builder.build();
@@ -109,7 +105,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
             mMap.animateCamera(cu);
         }
         else {
-            //No type places found
+            //No type places found or I had over requested
            Toast.makeText(MapsActivity.getContext(), "NO PLACE NEAR YOU OR TRY LATER", Toast.LENGTH_LONG).show();
         }
     }

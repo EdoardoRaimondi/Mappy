@@ -17,7 +17,8 @@ import android.widget.Spinner;
  */
 public class MainActivity extends AppCompatActivity {
 
-    public long radius;
+    private long radius;
+    private IntentFactory intentFactory = new IntentFactory();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +35,32 @@ public class MainActivity extends AppCompatActivity {
         grade.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         radiusSpinner.setAdapter(grade);
+        //set the listener
         radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+            /**
+             * Callback when an item from the radiusSpinner is selected
+             * @param parent    adapter view
+             * @param view      reference to the spinner widget
+             * @param position  of the item
+             * @param id        of the spinner
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // An item was selected. You can retrieve the selected item using
+                // An radius was selected. You can retrieve the selected item using
                 String radiusString = parent.getItemAtPosition(position).toString();
+                //Set the desired radius
                 radius = parseRadius(radiusString);
-                Log.d("RADIUS", String.valueOf(radius));
             }
 
+            /**
+             * Callback when the user don't select items
+             * @param parent adapter view
+             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //default radius is 2km
-                radius = 2000;
+                //Default radius is 1km
+                radius = 1000;
             }
         });
     }
@@ -56,10 +69,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Method to send a nearby disco showing request to the Maps activity
      * @param view button {@id nearby_disco}
-     *
      */
     public void nearbyDiscoRequest(View view){
-        Intent showNearbyDisco = createRequestIntent(this, NearbyRequestType.DISCO, radius);
+        Intent showNearbyDisco = intentFactory.createNearbyRequestIntent(this, NearbyRequestType.DISCO, radius);
         startActivity(showNearbyDisco);
     }
 
@@ -68,31 +80,17 @@ public class MainActivity extends AppCompatActivity {
      * @param view button {@id nearby_restaurant}
      */
     public void nearbyRestaurantRequest(View view){
-        Intent showNearbyRestaurant = createRequestIntent(this, NearbyRequestType.RESTAURANT, radius);
+        Intent showNearbyRestaurant = intentFactory.createNearbyRequestIntent(this, NearbyRequestType.RESTAURANT, radius);
         Log.d("RADIUS", String.valueOf(radius));
         startActivity(showNearbyRestaurant);
     }
 
 
-    /**
-     * Method to create a request Intent
-     * @param context
-     * @param requestType The place I'm looking for (disco, restaurant...)
-     * @param radius The research radius
-     * @return The intent
-     */
-    private static Intent createRequestIntent(Context context, NearbyRequestType requestType, long radius){
-        Intent intent = new Intent(context, MapsActivity.class);
-        intent.putExtra(MapsActivity.NEARBY_KEY, requestType);
-        intent.putExtra(MapsActivity.RADIUS, radius);
-        return intent;
-    }
-
 
     //NATIVE METHODS
 
     /**
-     * Parser for the radius integer
+     * Parser for the radius long
      * @param radius to parse
      */
     public native long parseRadius(String radius);

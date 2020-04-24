@@ -136,7 +136,6 @@ public class MapsActivity extends FragmentActivity implements
                 Intent requestInfo = getIntent();
                 NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
-                Log.d("RAGGIO ", String.valueOf(radius));
 
                 //act in order to satisfy the request purpose
                 if (requestType == NearbyRequestType.DISCO) {
@@ -191,7 +190,7 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     /**
-     * method to check the user location permission
+     * Method to check the user location permission
      * @return true if it has the permission, false otherwise
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -210,9 +209,9 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * Callback to check user permission
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param requestCode   of the permission
+     * @param permissions   of the request
+     * @param grantResults  of the permission request
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -232,11 +231,11 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * method to get the url string containing all the place information
-     * @param latitude
-     * @param longitude
-     * @param nearbyPlace to search for
-     * @param radius of the research
-     * @return url string
+     * @param latitude     of the searching centre position
+     * @param longitude    of the searching centre position
+     * @param nearbyPlace  to search for
+     * @param radius       of the research
+     * @return URL string
      */
     private String getUrl(double latitude, double longitude, String nearbyPlace, double radius)
     {
@@ -265,12 +264,14 @@ public class MapsActivity extends FragmentActivity implements
                             if (myLastLocation != null) {
                                 Object transferData[] = new Object[2];
 
-                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
-                                        transferData[0] = mMap;
-                                        transferData[1] = urlDisco;
+                                //create the request
+                                String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
+                                transferData[0] = mMap;
+                                transferData[1] = urlDisco;
 
-                                        GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                                        getNearbyPlaces.execute(transferData);
+                                //the request will be downloaded and displayed
+                                GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
+                                getNearbyDiscoPlaces.execute(transferData);
 
                             }
                         }
@@ -291,13 +292,14 @@ public class MapsActivity extends FragmentActivity implements
                             if (myLastLocation != null) {
                                 Object transferData[] = new Object[2];
 
-
+                                //create the request
                                  String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
                                  transferData[0] = mMap;
                                  transferData[1] = urlRisto;
 
-                                 GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                                 getNearbyPlaces.execute(transferData);
+                                 //request will be downloaded and displayed
+                                 GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
+                                 getNearbyRestaurantPlaces.execute(transferData);
 
 
                             }

@@ -17,7 +17,7 @@ import java.net.URL;
 public class DownloadUrl {
 
     /**
-     * It read the url (basically a Json file with all the places information such as position and name) and
+     * It read the url (a Json file with all the places information such as position and name) and
      * return it under string format
      * @param urlPlace to download
      * @return String representing data to downloaded
