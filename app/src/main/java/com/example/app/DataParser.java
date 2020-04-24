@@ -106,13 +106,9 @@ public class DataParser implements MapJSonDataParser{
         JSONObject jsonObject = new JSONObject(JsonData);
 
         jsonArray = jsonObject.getJSONArray("results");
-        if(jsonArray.length()==0){
-            //Something goes wrong, check the status
-            //The status can assume one of the {@link ResponseStatus.class}
-            STATUS = jsonObject.getString("status");
-        }
 
-        Log.d("ARRAY_LENGTH", String.valueOf(jsonArray.length()));
+        //The status can assume one of the {@link ResponseStatus.class}
+        STATUS = jsonObject.getString("status");
 
         return getAllNearbyPlaces(jsonArray);
     }
