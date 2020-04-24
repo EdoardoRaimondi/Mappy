@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
      * Parser for the radius integer
      * @param radius to parse
      */
-    public native int parseRadius(String radius);
+    public native long parseRadius(String radius);
 
     /**
      * Library loading
