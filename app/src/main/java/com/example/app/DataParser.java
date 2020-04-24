@@ -107,8 +107,8 @@ public class DataParser implements MapJSonDataParser{
 
         jsonArray = jsonObject.getJSONArray("results");
         if(jsonArray.length()==0){
-            //Something goes wrong, check the status.
-            //No place near me or over query limit
+            //Something goes wrong, check the status
+            //The status can assume one of the {@link ResponseStatus.class}
             STATUS = jsonObject.getString("status");
         }
 

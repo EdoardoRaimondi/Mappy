@@ -107,23 +107,23 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
         else {
             //Something goes wrong. Let's figure out why
             switch (DataParser.STATUS){
-                case (ResponseStatus.ZERO_RESULTS):
+                case ResponseStatus.ZERO_RESULTS:
                     //to improve
                     Toast.makeText(MapsActivity.getContext(), "SEEMS WE ARE IN THE DESERT. NOTHING AROUND US", Toast.LENGTH_LONG).show();
                     break;
-                case (ResponseStatus.NOT_FOUND):
+                case ResponseStatus.NOT_FOUND:
                     Toast.makeText(MapsActivity.getContext(), "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
                     break;
-                case (ResponseStatus.INVALID_REQUEST):
+                case ResponseStatus.INVALID_REQUEST:
                     Toast.makeText(MapsActivity.getContext(), "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
                     break;
-                case (ResponseStatus.UNKNOWN_ERROR):
+                case ResponseStatus.UNKNOWN_ERROR:
                     Toast.makeText(MapsActivity.getContext(), "TRY AGAIN", Toast.LENGTH_LONG).show();
                     break;
-                case (ResponseStatus.REQUEST_DENIED):
+                case ResponseStatus.REQUEST_DENIED:
                     Toast.makeText(MapsActivity.getContext(), "REQUEST DENIED", Toast.LENGTH_LONG).show();
                     break;
-                case (ResponseStatus.OVER_QUERY_LIMIT):
+                case ResponseStatus.OVER_QUERY_LIMIT:
                     Toast.makeText(MapsActivity.getContext(), "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
                     break;
             }
