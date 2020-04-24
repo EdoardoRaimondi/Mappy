@@ -137,11 +137,13 @@ public class MapsActivity extends FragmentActivity implements
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
 
                 //act in order to satisfy the request purpose
-                if (requestType == NearbyRequestType.DISCO) {
-                    showNearbyDisco(radius);
-                }
-                else{
-                    showNearbyRestaurant(radius);
+                switch(requestType){
+                    case DISCO:
+                        showNearbyDisco(radius);
+                        break;
+                    case RESTAURANT:
+                        showNearbyRestaurant(radius);
+                        break;
                 }
             }
         });
