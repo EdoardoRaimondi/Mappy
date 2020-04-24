@@ -31,7 +31,7 @@
         app:layout_constraintRight_toLeftOf="@id/nearby_disco"
         app:layout_constraintVertical_bias="0.824"
         android:onClick="nearbyRestaurantRequest"
-         />
+        />
 
     <Spinner
         android:id="@+id/spinner"

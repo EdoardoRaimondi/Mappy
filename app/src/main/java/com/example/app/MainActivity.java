@@ -21,13 +21,18 @@ public class MainActivity extends AppCompatActivity {
     private long radius;
     private IntentFactory intentFactory = new IntentFactory();
 
+    // constants for restoring instance of views
+    private static final String SPINNER_KEY = "spinner_k";
+    private static final int INVALID_INDEX = -1;
+    private Spinner radiusSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //create the spinner and fill it
-        Spinner radiusSpinner = findViewById(R.id.spinner);
+        radiusSpinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
                 this,
                 R.array.RADIUS,
@@ -64,10 +69,24 @@ public class MainActivity extends AppCompatActivity {
                 radius = 1000;
             }
         });
+
+        // restoring instance status of views
+        if(savedInstanceState != null) {
+            int spinnerSelected = savedInstanceState.getInt(SPINNER_KEY, INVALID_INDEX);
+            if(spinnerSelected != INVALID_INDEX){
+                radiusSpinner.setSelection(spinnerSelected);
+            }
+        }
     }
 
     @Override
-    protected void onResume(){
+    public void onSaveInstanceState(Bundle savedInstance) {
+        savedInstance.putInt(SPINNER_KEY, radiusSpinner.getSelectedItemPosition());
+        super.onSaveInstanceState(savedInstance);
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
         // checking Google Play services apk
         GoogleApiAvailability google = GoogleApiAvailability.getInstance();
@@ -78,13 +97,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     /**
      * Method to send a nearby disco showing request to the Maps activity
      * @param view button {@id nearby_disco}
      */
-    public void nearbyDiscoRequest(View view){
-        Intent showNearbyDisco = intentFactory.createNearbyRequestIntent(this, NearbyRequestType.DISCO, radius);
+    public void nearbyDiscoRequest(View view) {
+        Intent showNearbyDisco = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.DISCO, radius);
         startActivity(showNearbyDisco);
     }
 
@@ -92,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
      * Method to send a nearby restaurant showing request to the Maps activity
      * @param view button {@id nearby_restaurant}
      */
-    public void nearbyRestaurantRequest(View view){
-        Intent showNearbyRestaurant = intentFactory.createNearbyRequestIntent(this, NearbyRequestType.RESTAURANT, radius);
+    public void nearbyRestaurantRequest(View view) {
+        Intent showNearbyRestaurant = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.RESTAURANT, radius);
         Log.d("RADIUS", String.valueOf(radius));
         startActivity(showNearbyRestaurant);
     }
