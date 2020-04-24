@@ -2,9 +2,10 @@ package com.example.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //create the spinner and fill it
-        Spinner radius = findViewById(R.id.spinner);
+        Spinner radiusSpinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
                 this,
                 R.array.RADIUS,
@@ -32,10 +33,24 @@ public class MainActivity extends AppCompatActivity {
         // Specify the layout to use when the list of choices appears
         grade.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        radius.setAdapter(grade);
+        radiusSpinner.setAdapter(grade);
+        radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // An item was selected. You can retrieve the selected item using
+                String radiusString = parent.getItemAtPosition(position).toString();
+                radius = parseRadius(radiusString);
+                Log.d("RADIUS", String.valueOf(radius));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //default radius is 2km
+                radius = 2000;
+            }
+        });
     }
-
-
 
 
     /**
@@ -44,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     public void nearbyDiscoRequest(View view){
-        Intent showNearbyDisco = new Intent(this, MapsActivity.class);
-        showNearbyDisco.putExtra(MapsActivity.NEARBY_KEY, NearbyRequestType.DISCO);
-        showNearbyDisco.putExtra(MapsActivity.RADIUS, radius);
+        Intent showNearbyDisco = createRequestIntent(this, NearbyRequestType.DISCO, radius);
         startActivity(showNearbyDisco);
     }
 
@@ -55,13 +68,25 @@ public class MainActivity extends AppCompatActivity {
      * @param view button {@id nearby_restaurant}
      */
     public void nearbyRestaurantRequest(View view){
-        Intent showNearbyRestaurant = new Intent(this, MapsActivity.class);
-        showNearbyRestaurant.putExtra(MapsActivity.NEARBY_KEY, NearbyRequestType.RESTAURANT);
-        showNearbyRestaurant.putExtra(MapsActivity.RADIUS, radius);
+        Intent showNearbyRestaurant = createRequestIntent(this, NearbyRequestType.RESTAURANT, radius);
+        Log.d("RADIUS", String.valueOf(radius));
         startActivity(showNearbyRestaurant);
     }
 
 
+    /**
+     * Method to create a request Intent
+     * @param context
+     * @param requestType The place I'm looking for (disco, restaurant...)
+     * @param radius The research radius
+     * @return The intent
+     */
+    private static Intent createRequestIntent(Context context, NearbyRequestType requestType, long radius){
+        Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra(MapsActivity.NEARBY_KEY, requestType);
+        intent.putExtra(MapsActivity.RADIUS, radius);
+        return intent;
+    }
 
 
     //NATIVE METHODS
@@ -76,24 +101,7 @@ public class MainActivity extends AppCompatActivity {
      * Library loading
      */
     static {
-        System.loadLibrary("main_native_lib");
+        System.loadLibrary("libmain_native_lib");
     }
 
-    /**
-     * Inner class to define the radius spinner activity
-     */
-    public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
-
-        public void onItemSelected(AdapterView<?> parent, View view,
-                                   int pos, long id) {
-            // An item was selected. You can retrieve the selected item using
-            String radiusString = parent.getItemAtPosition(pos).toString();
-
-        }
-
-        public void onNothingSelected(AdapterView<?> parent) {
-            //default radius is 2km
-            radius = 2000;
-        }
-    }
 }

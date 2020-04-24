@@ -127,7 +127,19 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 getDeviceLocation();
-                showNearby();
+                //Get information of what button has been pressed
+                Intent requestInfo = getIntent();
+                NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
+                long radius = requestInfo.getLongExtra(RADIUS, 1000);
+                Log.d("RAGGIO ", String.valueOf(radius));
+
+                //act in order to satisfy the request purpose
+                if (requestType == NearbyRequestType.DISCO) {
+                    showNearbyDisco(radius);
+                }
+                else{
+                    showNearbyRestaurant(radius);
+                }
             }
         });
     }
@@ -237,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements
     /**
      * Method activated by the nearby button pressure
      */
-    private void showNearby(){
+    private void showNearbyDisco(final long radius){
         fusedLocationProviderClient.getLastLocation()
                 .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
@@ -246,31 +258,48 @@ public class MapsActivity extends FragmentActivity implements
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
                                 Object transferData[] = new Object[2];
-                                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                                NearbyRequestType requestType = (NearbyRequestType) getIntent().getSerializableExtra(NEARBY_KEY);
-                                int radius = getIntent().getIntExtra(RADIUS, 1000);
 
-                                switch (requestType) {
-                                    case DISCO:
-                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "disco", radius);
+                                        String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
                                         transferData[0] = mMap;
                                         transferData[1] = urlDisco;
 
+                                        GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                                         getNearbyPlaces.execute(transferData);
-
-                                    case RESTAURANT:
-                                        String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "Restaurant", radius);
-                                        transferData[0] = mMap;
-                                        transferData[1] = urlRisto;
-
-                                        getNearbyPlaces.execute(transferData);
-                                }
 
                             }
                         }
                     }
                 });
     }
+
+    /**
+     * Method activated by the nearby button pressure
+     */
+    private void showNearbyRestaurant(final long radius){
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            myLastLocation = task.getResult();
+                            if (myLastLocation != null) {
+                                Object transferData[] = new Object[2];
+
+
+                                 String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
+                                 transferData[0] = mMap;
+                                 transferData[1] = urlRisto;
+
+                                 GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
+                                 getNearbyPlaces.execute(transferData);
+
+
+                            }
+                        }
+                    }
+                });
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
