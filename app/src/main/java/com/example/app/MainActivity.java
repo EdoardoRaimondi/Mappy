@@ -1,8 +1,7 @@
 package com.example.app;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 /**
  * Main UI activity. Here the user can choose the main actions.
@@ -63,6 +64,18 @@ public class MainActivity extends AppCompatActivity {
                 radius = 1000;
             }
         });
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        // checking Google Play services apk
+        GoogleApiAvailability google = GoogleApiAvailability.getInstance();
+        int result = google.isGooglePlayServicesAvailable(this);
+        if(result != ConnectionResult.SUCCESS){
+            Dialog dial = google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
+            dial.show();
+        }
     }
 
 
