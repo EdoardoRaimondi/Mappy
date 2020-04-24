@@ -14,4 +14,7 @@
         <item>10km</item>
         <item>50km</item>
     </string-array>
+
+    <string name="disco_descr">descrizione del bottone per andare in discoteca</string>
+    <string name="restaurant_descr">descrizione del bottone per andare in un ristorante</string>
 </resources>
