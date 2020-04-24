@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class DataParser implements MapJSonDataParser{
 
+    public static String STATUS = "";
 
     /**
      * Convert a single json object of the position to an Hash Map
@@ -46,6 +47,7 @@ public class DataParser implements MapJSonDataParser{
             latitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
             reference = googlePlaceJSON.getString("reference");
+
 
             googlePlaceMap.put("place_name", NameOfPlace);
             googlePlaceMap.put("vicinity", vicinity);
@@ -104,9 +106,15 @@ public class DataParser implements MapJSonDataParser{
         JSONObject jsonObject = new JSONObject(JsonData);
 
         jsonArray = jsonObject.getJSONArray("results");
+        if(jsonArray.length()==0){
+            //Something goes wrong, check the status.
+            //No place near me or over query limit
+            STATUS = jsonObject.getString("status");
+        }
 
         Log.d("ARRAY_LENGTH", String.valueOf(jsonArray.length()));
 
         return getAllNearbyPlaces(jsonArray);
     }
+
 }
