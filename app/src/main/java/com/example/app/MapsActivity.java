@@ -3,6 +3,7 @@ package com.example.app;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -10,6 +11,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -64,6 +66,8 @@ public class MapsActivity extends FragmentActivity implements
     public static final String NEARBY_KEY = "nearby key";
     public static final String RADIUS = "radius";
 
+    public static Context mContext;
+
     private GoogleMap mMap;
     private LocationCallback locationCallback;
 
@@ -83,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements
             checkUserLocationPermission();
         }
 
+        setContext();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -189,13 +194,14 @@ public class MapsActivity extends FragmentActivity implements
      * method to check the user location permission
      * @return true if it has the permission, false otherwise
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public boolean checkUserLocationPermission(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
             }
             else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
             }
             return false;
         }
@@ -213,9 +219,9 @@ public class MapsActivity extends FragmentActivity implements
         switch (requestCode){
             case REQUEST_USER_LOCATION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                        mMap.setMyLocationEnabled(true);
-                    }
+                    //if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                      //  mMap.setMyLocationEnabled(true);
+                    //}
                 }
                 else {
                     Toast.makeText(this, "PERMISSION FAILED", Toast.LENGTH_LONG).show();
@@ -301,6 +307,12 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
+    /**
+     * Callback for the activity result. If check is passed, let the method execute
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -309,5 +321,19 @@ public class MapsActivity extends FragmentActivity implements
                 getDeviceLocation();
             }
         }
+    }
+
+    /**
+     * Method to set the context
+     */
+    private void setContext(){
+        mContext = getApplicationContext();
+    }
+
+    /**
+     * @return the activity context
+     */
+    public static Context getContext(){
+        return mContext;
     }
 }

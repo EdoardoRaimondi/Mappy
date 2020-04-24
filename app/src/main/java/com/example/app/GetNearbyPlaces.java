@@ -110,7 +110,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
         }
         else {
             //No type places found
-            //TODO : show a message saying that
+           Toast.makeText(MapsActivity.getContext(), "NO PLACE NEAR YOU OR TRY LATER", Toast.LENGTH_LONG).show();
         }
     }
 }
