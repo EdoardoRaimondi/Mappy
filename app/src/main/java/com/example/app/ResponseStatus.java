@@ -1,7 +1,5 @@
 package com.example.app;
 
-import android.widget.Spinner;
-
 /**
  * Class containing all the possible status for a place response
  */
