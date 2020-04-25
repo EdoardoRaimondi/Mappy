@@ -19,7 +19,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 public class MainActivity extends AppCompatActivity {
 
     private long radius;
-    private IntentFactory intentFactory = new IntentFactory();
 
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
