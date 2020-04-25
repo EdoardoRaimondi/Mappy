@@ -54,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
     private static final int DEFAULT_ZOOM = 12;
-    private static final String GOOGLE_KEY = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
+    private static final String GOOGLE_KEY = "AIzaSyC3Xv1AKbmZ3wJ6VXz56BKIwxBguangcQA";
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     //Activity connectors
     public static final String NEARBY_KEY = "nearby key";

@@ -69,7 +69,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
      * @param nearByPlacesList The list of nearby places
      */
     private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
-        if (!nearByPlacesList.isEmpty() && DataParser.STATUS == ResponseStatus.OK) {
+        if (!nearByPlacesList.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (int i = 0; i < nearByPlacesList.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -93,7 +93,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                     mMap.addMarker(markerOptions);
 
                 }
-                //If I am here, it means I did not have the position (latitude and longitude) for that searching
+                //If I am here, it means I did not receive the position (latitude and longitude) for that searching
                 catch (NullPointerException e) {
                     //Just don't showing it on the map
                 }
