@@ -1,14 +1,24 @@
 package com.example.app;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -23,12 +33,18 @@ public class MainActivity extends AppCompatActivity {
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
     private static final int INVALID_INDEX = -1;
+    private static final int REQUEST_USER_LOCATION_CODE = 99;
+
     private Spinner radiusSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            checkUserLocationPermission();
+        }
 
         //create the spinner and fill it
         radiusSpinner = findViewById(R.id.spinner);
@@ -114,6 +130,50 @@ public class MainActivity extends AppCompatActivity {
         Log.d("RADIUS", String.valueOf(radius));
         startActivity(showNearbyRestaurant);
     }
+
+    //PERMISSIONS
+
+    /**
+     * Callback to check user permission
+     * @param requestCode   of the permission
+     * @param permissions   of the request
+     * @param grantResults  of the permission request
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case REQUEST_USER_LOCATION_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    //if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    //  mMap.setMyLocationEnabled(true);
+                    //}
+                }
+                else {
+                    Toast.makeText(this, "PERMISSION FAILED", Toast.LENGTH_LONG).show();
+                }
+        }
+    }
+
+    /**
+     * Method to check the user location permission
+     * @return true if it has the permission, false otherwise
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public boolean checkUserLocationPermission(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
+            }
+            else{
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+
 
 
 

@@ -57,12 +57,10 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
-    private static final String CURRENT_POSITION_MARKER = "You are here";
-    private static final int REQUEST_USER_LOCATION_CODE = 99;
     private static final int DEFAULT_ZOOM = 12;
     private static final String GOOGLE_KEY = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-    //Activity connector
+    //Activity connectors
     public static final String NEARBY_KEY = "nearby key";
     public static final String RADIUS = "radius";
 
@@ -81,11 +79,7 @@ public class MapsActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkUserLocationPermission();
-        }
-
+        //I set the current context so I can show eventual error toasts
         setContext();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -190,44 +184,6 @@ public class MapsActivity extends FragmentActivity implements
                 });
     }
 
-    /**
-     * Method to check the user location permission
-     * @return true if it has the permission, false otherwise
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public boolean checkUserLocationPermission(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
-            }
-            else{
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
-            }
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Callback to check user permission
-     * @param requestCode   of the permission
-     * @param permissions   of the request
-     * @param grantResults  of the permission request
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case REQUEST_USER_LOCATION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                      //  mMap.setMyLocationEnabled(true);
-                    //}
-                }
-                else {
-                    Toast.makeText(this, "PERMISSION FAILED", Toast.LENGTH_LONG).show();
-                }
-        }
-    }
 
 
     /**
