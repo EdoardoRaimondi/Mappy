@@ -1,11 +1,7 @@
 package com.example.app;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,18 +9,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -77,7 +68,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     /**
      * It takes the information of the nearby places from the URL request,
      * encapsulate them in a marker and display it
-     * @param nearByPlacesList The list of nearby places
+     * @param nearByPlacesList the list of nearby places
      */
     private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
         if (!nearByPlacesList.isEmpty()) {

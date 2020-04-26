@@ -64,9 +64,13 @@ public class MapsActivity extends FragmentActivity implements
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
 
+    // instance restoring control variables
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers;
 
+    /**
+     * Callback when the activity is created
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,29 +82,34 @@ public class MapsActivity extends FragmentActivity implements
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
             if (titles != null) {
-                for (int i = 0; i < titles.size(); i++) {
-                    restoreMarkers = new ArrayList<MarkerOptions>();
-                    MarkerOptions newMarker = new MarkerOptions();
-                    newMarker.title(titles.get(i));
-                    double lat = latitudes[i];
-                    double lng = longitudes[i];
-                    LatLng latLng = new LatLng(lat, lng);
-                    newMarker.position(latLng);
-                    newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                    //now the marker is created I add it on the marker list
-                    restoreMarkers.add(newMarker);
-                    canRestore = true;
+                if(latitudes != null && longitudes != null) {
+                    for (int i = 0; i < titles.size(); i++) {
+                        restoreMarkers = new ArrayList<>();
+                        MarkerOptions newMarker = new MarkerOptions();
+                        newMarker.title(titles.get(i));
+                        double lat = latitudes[i];
+                        double lng = longitudes[i];
+                        LatLng latLng = new LatLng(lat, lng);
+                        newMarker.position(latLng);
+                        newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                        // now the marker is created and added on marker list
+                        restoreMarkers.add(newMarker);
+                        canRestore = true;
+                    }
                 }
             }
         }
 
         //create a key list
         ArrayList<String> keys = new ArrayList<>();
+        // edoardo's keys
         keys.add("AIzaSyBY5JjsICWIElDIkNM77aLl36X-Qh7D6YQ");
         keys.add("AIzaSyAXVDbrt2btG6elw5_Q3AnCQp4jZnF3e10");
         keys.add("AIzaSyCU1II2dpnolrtQ7sBO7CLBCIQrfYYLjbA");
         keys.add("AIzaSyCCye6V4rO1FM_3l2r2bjyrWwEuUIdsbjE");
         keys.add("AIzaSyC3Xv1AKbmZ3wJ6VXz56BKIwxBguangcQA");
+        // jacopo's key
+        keys.add("AIzaSyBhUH-chcm8iT5iSYmqzmuEbnZVUt93Mmo");
 
         //pass it to a key selector
         keySelector = new RandomicKeySelector(keys);
@@ -441,22 +450,23 @@ public class MapsActivity extends FragmentActivity implements
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
         // creating empty arrays to save the state
-        ArrayList<String> titles = new ArrayList<String>();
+        ArrayList<String> titles = new ArrayList<>();
         // only the array list titles will tell how many places by its size
         double[] lat = new double[MAX_PLACES];
         double[] lng = new double[MAX_PLACES];
         if(markerList != null) {
             for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
-                //fill the arrays
+                // filling the arrays
                 MarkerOptions marker = markerList.get(currentMarker);
                 titles.add(marker.getTitle());
                 lat[currentMarker] = marker.getPosition().latitude;
                 lng[currentMarker] = marker.getPosition().longitude;
             }
-            // now I have all the arrays filled with the information I need
+            // now arrays are filled with the information I need
             savedInstanceState.putStringArrayList(TITLES_KEY, titles);
             savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
             savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
+            // saving current position
             savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
             savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
         }
