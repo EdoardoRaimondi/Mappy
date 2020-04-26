@@ -199,11 +199,11 @@ public class MapsActivity extends FragmentActivity implements
         String google_key = keySelector.selectKey();
 
         StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
-        googleURL.append("location=" + latitude + "," + longitude);
-        googleURL.append("&radius=" + radius);
-        googleURL.append("&type=" + nearbyPlace);
+        googleURL.append("location=").append(latitude).append(",").append(longitude);
+        googleURL.append("&radius=").append(radius);
+        googleURL.append("&type=").append(nearbyPlace);
         googleURL.append("&sensor=true");
-        googleURL.append("&key=" + google_key);
+        googleURL.append("&key=").append(google_key);
 
         Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
 
@@ -222,7 +222,7 @@ public class MapsActivity extends FragmentActivity implements
                         if (task.isSuccessful()) {
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
-                                Object transferData[] = new Object[2];
+                                Object[] transferData = new Object[2];
 
                                 //create the request
                                 String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
@@ -251,7 +251,7 @@ public class MapsActivity extends FragmentActivity implements
                         if (task.isSuccessful()) {
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
-                                Object transferData[] = new Object[2];
+                                Object[] transferData = new Object[2];
 
                                 //create the request
                                  String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
@@ -281,7 +281,7 @@ public class MapsActivity extends FragmentActivity implements
                         if (task.isSuccessful()) {
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
-                                Object transferData[] = new Object[2];
+                                Object[] transferData = new Object[2];
 
                                 //create the request
                                 String urlTaxi = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
@@ -311,7 +311,7 @@ public class MapsActivity extends FragmentActivity implements
                         if (task.isSuccessful()) {
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
-                                Object transferData[] = new Object[2];
+                                Object[] transferData = new Object[2];
 
                                 //create the request
                                 String urlHospital = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
@@ -341,7 +341,7 @@ public class MapsActivity extends FragmentActivity implements
                         if (task.isSuccessful()) {
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
-                                Object transferData[] = new Object[2];
+                                Object[] transferData = new Object[2];
 
                                 //create the request
                                 String urlPolice = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
