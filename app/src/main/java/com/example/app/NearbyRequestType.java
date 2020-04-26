@@ -5,5 +5,8 @@ package com.example.app;
  */
 public enum NearbyRequestType {
     DISCO,
-    RESTAURANT
+    RESTAURANT,
+    HOSPITAL,
+    POLICE,
+    TAXI
 }
