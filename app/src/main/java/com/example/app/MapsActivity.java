@@ -2,33 +2,19 @@ package com.example.app;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Api;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -40,10 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -81,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
@@ -89,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * Callback when the map fragemnt ui is ready
-     * @param googleMap
+     * @param googleMap the map ready
      */
     @SuppressLint("MissingPermission")
     @Override
@@ -127,12 +111,22 @@ public class MapsActivity extends FragmentActivity implements
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
 
                 //act in order to satisfy the request purpose
+                assert requestType != null;
                 switch(requestType){
                     case DISCO:
                         showNearbyDisco(radius);
                         break;
                     case RESTAURANT:
                         showNearbyRestaurant(radius);
+                        break;
+                    case TAXI:
+                        showNearbyTaxi(radius);
+                        break;
+                    case HOSPITAL:
+                        showNearbyHospital(radius);
+                        break;
+                    case POLICE:
+                        showNearbyPolice(radius);
                         break;
                 }
             }
@@ -173,8 +167,6 @@ public class MapsActivity extends FragmentActivity implements
                                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
                             }
-                        } else {
-                            return;
                         }
                     }
                 });
@@ -205,7 +197,8 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     /**
-     * Method activated by the nearby button pressure
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
      */
     private void showNearbyDisco(final long radius){
         fusedLocationProviderClient.getLastLocation()
@@ -233,7 +226,8 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     /**
-     * Method activated by the nearby button pressure
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
      */
     private void showNearbyRestaurant(final long radius){
         fusedLocationProviderClient.getLastLocation()
@@ -261,12 +255,101 @@ public class MapsActivity extends FragmentActivity implements
                 });
     }
 
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyTaxi(final long radius){
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            myLastLocation = task.getResult();
+                            if (myLastLocation != null) {
+                                Object transferData[] = new Object[2];
+
+                                //create the request
+                                String urlTaxi = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
+                                transferData[0] = mMap;
+                                transferData[1] = urlTaxi;
+
+                                //request will be downloaded and displayed
+                                GetNearbyPlaces getNearbyTaxiPlaces = new GetNearbyPlaces();
+                                getNearbyTaxiPlaces.execute(transferData);
+
+
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyHospital(final long radius){
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            myLastLocation = task.getResult();
+                            if (myLastLocation != null) {
+                                Object transferData[] = new Object[2];
+
+                                //create the request
+                                String urlHospital = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
+                                transferData[0] = mMap;
+                                transferData[1] = urlHospital;
+
+                                //request will be downloaded and displayed
+                                GetNearbyPlaces getNearbyHospitals = new GetNearbyPlaces();
+                                getNearbyHospitals.execute(transferData);
+
+
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyPolice(final long radius){
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            myLastLocation = task.getResult();
+                            if (myLastLocation != null) {
+                                Object transferData[] = new Object[2];
+
+                                //create the request
+                                String urlPolice = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
+                                transferData[0] = mMap;
+                                transferData[1] = urlPolice;
+
+                                //request will be downloaded and displayed
+                                GetNearbyPlaces getNearbyPoliceStations = new GetNearbyPlaces();
+                                getNearbyPoliceStations.execute(transferData);
+
+
+                            }
+                        }
+                    }
+                });
+    }
 
     /**
      * Callback for the activity result. If check is passed, let the method execute
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode activity request code
+     * @param resultCode  activity result code
+     * @param data        intent representing the data
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

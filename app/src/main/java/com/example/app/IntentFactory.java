@@ -21,4 +21,14 @@ public class IntentFactory {
         intent.putExtra(MapsActivity.RADIUS, radius);
         return intent;
     }
+
+    /**
+     * Method to create an help request Intent
+     * @param context of the activity
+     * @return The intent created
+     */
+    public static Intent createHelpIntentRequest(Context context){
+        Intent intent = new Intent(context, HelpActivity.class);
+        return intent;
+    }
 }
