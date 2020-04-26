@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
-    private static final int INVALID_INDEX = -1;
+    private static final int INVALID_POSITION = -1;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
     private Spinner radiusSpinner;
@@ -87,17 +87,21 @@ public class MainActivity extends AppCompatActivity {
 
         // restoring instance status of views
         if(savedInstanceState != null) {
-            int spinnerSelected = savedInstanceState.getInt(SPINNER_KEY, INVALID_INDEX);
-            if(spinnerSelected != INVALID_INDEX){
+            int spinnerSelected = savedInstanceState.getInt(SPINNER_KEY, INVALID_POSITION);
+            if(spinnerSelected != INVALID_POSITION){
                 radiusSpinner.setSelection(spinnerSelected);
             }
         }
     }
 
+    /**
+     * Callback to save the state when necessary
+     * @param savedInstanceState Bundle where to save places information
+     */
     @Override
-    public void onSaveInstanceState(Bundle savedInstance) {
-        savedInstance.putInt(SPINNER_KEY, radiusSpinner.getSelectedItemPosition());
-        super.onSaveInstanceState(savedInstance);
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(SPINNER_KEY, radiusSpinner.getSelectedItemPosition());
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -171,11 +175,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-
-
-
-
 
     //NATIVE METHODS
 

@@ -2,34 +2,19 @@ package com.example.app;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Api;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -43,7 +28,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,12 +40,20 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
+    private static final int MAX_PLACES = 30;
+
     private static final int DEFAULT_ZOOM = 12;
-    private static final String GOOGLE_KEY = "AIzaSyC3Xv1AKbmZ3wJ6VXz56BKIwxBguangcQA";
+    private static final String GOOGLE_KEY = "AIzaSyBhUH-chcm8iT5iSYmqzmuEbnZVUt93Mmo";
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-    //Activity connectors
+
+    // activity connectors
     public static final String NEARBY_KEY = "nearby key";
     public static final String RADIUS = "radius";
+
+    // instance state keys
+    private static final String TITLES_KEY = "titles_k";
+    private static final String LATITUDES_KEY = "lat_k";
+    private static final String LONGITUDES_KEY = "lng_k";
 
     public static Context mContext;
 
@@ -90,20 +82,24 @@ public class MapsActivity extends FragmentActivity implements
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
         if(savedInstanceState != null){
+            ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
+            double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
+            double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             //Create a marker list, in order to be display then
-            for(int i = 0; i < savedInstanceState.size(); i++){
-                List<MarkerOptions> markers = null;
-                MarkerOptions newMarker = new MarkerOptions();
-                newMarker.title(savedInstanceState.getStringArrayList("titles").get(i));
-                double lat = savedInstanceState.getDoubleArray("lat")[i];
-                double lng = savedInstanceState.getDoubleArray("lng")[i];
-                LatLng latLng = new LatLng(lat, lng);
-                newMarker.position(latLng);
-                newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                //now the marker is created I add it on the marker list
-                markers.add(newMarker);
-
-                onNeedRestoreState(markers);
+            if (titles != null) {
+                for (int i = 0; i < titles.size(); i++) {
+                    List<MarkerOptions> markers = new ArrayList<MarkerOptions>();
+                    MarkerOptions newMarker = new MarkerOptions();
+                    newMarker.title(titles.get(i));
+                    double lat = latitudes[i];
+                    double lng = longitudes[i];
+                    LatLng latLng = new LatLng(lat, lng);
+                    newMarker.position(latLng);
+                    newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                    //now the marker is created I add it on the marker list
+                    markers.add(newMarker);
+                    onNeedRestoreState(markers);
+                }
             }
         }
     }
@@ -319,29 +315,32 @@ public class MapsActivity extends FragmentActivity implements
 
     /**
      * Callback to save the state when necessary
-     * @param savedInstanceState bundle where to save places information
+     * @param savedInstanceState Bundle where to save places information
      */
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
+        // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        //create the empty array to save the info
-        ArrayList<String> titles = null;
-        double[] lat = new double[30]; //max places displayed
-        double[] lng = new double[30];
+        // creating empty arrays to save the state
+        ArrayList<String> titles = new ArrayList<String>();
+        // only the array list titles will tell how many places by its size
+        double[] lat = new double[MAX_PLACES];
+        double[] lng = new double[MAX_PLACES];
         if(markerList != null) {
             for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
                 //fill the arrays
                 MarkerOptions marker = markerList.get(currentMarker);
                 titles.add(marker.getTitle());
-                lat[currentMarker] = (marker.getPosition().latitude);
-                lng[currentMarker] = (marker.getPosition().longitude);
+                lat[currentMarker] = marker.getPosition().latitude;
+                lng[currentMarker] = marker.getPosition().longitude;
             }
-            //now I have all the arrays filled with the information I need
-            savedInstanceState.putStringArrayList("titles", titles);
-            savedInstanceState.putDoubleArray("lat", lat);
-            savedInstanceState.putDoubleArray("lng", lng);
+            // now I have all the arrays filled with the information I need
+            savedInstanceState.putStringArrayList(TITLES_KEY, titles);
+            savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
+            savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
         }
+        // calling super class method
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     /**
@@ -349,6 +348,8 @@ public class MapsActivity extends FragmentActivity implements
      * @param markerList the list of the marker representing the precedent state
      */
     public void onNeedRestoreState(List<MarkerOptions> markerList){
-        for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) mMap.addMarker(markerList.get(currentMarker));
+        for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
+            mMap.addMarker(markerList.get(currentMarker));
+        }
     }
 }
