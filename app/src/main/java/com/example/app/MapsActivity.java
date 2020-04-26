@@ -31,13 +31,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
 
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
     private static final int DEFAULT_ZOOM = 12;
-    private static final String GOOGLE_KEY = "AIzaSyC3Xv1AKbmZ3wJ6VXz56BKIwxBguangcQA";
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     //Activity connectors
     public static final String NEARBY_KEY = "nearby key";
@@ -47,6 +47,7 @@ public class MapsActivity extends FragmentActivity implements
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
+    private RandomicKeySelector keySelector;
 
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -57,6 +58,17 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        //create a key list
+        ArrayList<String> keys = new ArrayList<>();
+        keys.add("AIzaSyBY5JjsICWIElDIkNM77aLl36X-Qh7D6YQ");
+        keys.add("AIzaSyAXVDbrt2btG6elw5_Q3AnCQp4jZnF3e10");
+        keys.add("AIzaSyCU1II2dpnolrtQ7sBO7CLBCIQrfYYLjbA");
+        keys.add("AIzaSyCCye6V4rO1FM_3l2r2bjyrWwEuUIdsbjE");
+        keys.add("AIzaSyC3Xv1AKbmZ3wJ6VXz56BKIwxBguangcQA");
+
+        //pass it to a key selector
+        keySelector = new RandomicKeySelector(keys);
 
         //I set the current context so I can show eventual error toasts
         setContext();
@@ -184,12 +196,14 @@ public class MapsActivity extends FragmentActivity implements
      */
     private String getUrl(double latitude, double longitude, String nearbyPlace, double radius)
     {
+        String google_key = keySelector.selectKey();
+
         StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
         googleURL.append("location=" + latitude + "," + longitude);
         googleURL.append("&radius=" + radius);
         googleURL.append("&type=" + nearbyPlace);
         googleURL.append("&sensor=true");
-        googleURL.append("&key=" + GOOGLE_KEY);
+        googleURL.append("&key=" + google_key);
 
         Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
 
