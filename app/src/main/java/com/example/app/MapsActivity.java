@@ -158,24 +158,29 @@ public class MapsActivity extends FragmentActivity implements
                 NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
 
-                //act in order to satisfy the request purpose
-                assert requestType != null;
-                switch(requestType){
-                    case DISCO:
-                        showNearbyDisco(radius);
-                        break;
-                    case RESTAURANT:
-                        showNearbyRestaurant(radius);
-                        break;
-                    case TAXI:
-                        showNearbyTaxi(radius);
-                        break;
-                    case HOSPITAL:
-                        showNearbyHospital(radius);
-                        break;
-                    case POLICE:
-                        showNearbyPolice(radius);
-                        break;
+                if(canRestore){
+                    onNeedRestoreState(restoreMarkers);
+                }
+                else {
+                    //act in order to satisfy the request purpose
+                    assert requestType != null;
+                    switch (requestType) {
+                        case DISCO:
+                            showNearbyDisco(radius);
+                            break;
+                        case RESTAURANT:
+                            showNearbyRestaurant(radius);
+                            break;
+                        case TAXI:
+                            showNearbyTaxi(radius);
+                            break;
+                        case HOSPITAL:
+                            showNearbyHospital(radius);
+                            break;
+                        case POLICE:
+                            showNearbyPolice(radius);
+                            break;
+                    }
                 }
             }
         });
