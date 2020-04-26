@@ -1,7 +1,11 @@
 package com.example.app;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -9,13 +13,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -25,6 +33,8 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
 
     private String googlePlaceData, url;
     private GoogleMap mMap;
+
+    public static List<MarkerOptions> markerList = null; //to save the state
 
     /**
      * Method to extract the data from the {@link MapsActivity}
@@ -64,11 +74,12 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     }
 
     /**
-     * Method to show the nearby places on the map
+     * It takes the information of the nearby places from the URL request,
+     * encapsulate them in a marker and display it
      * @param nearByPlacesList The list of nearby places
      */
     private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
-        if (!nearByPlacesList.isEmpty()) {
+        if (!nearByPlacesList.isEmpty() && nearByPlacesList != null) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (int i = 0; i < nearByPlacesList.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -90,9 +101,11 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
 
                     //Create the marker
                     mMap.addMarker(markerOptions);
+                    //Add the marker in order to recreate the state
+                    markerList.add(markerOptions);
 
                 }
-                //If I am here, it means I did not have the position (latitude and longitude) for that searching
+                //If I am here, it means I did not receive the position (latitude and longitude) for that searching
                 catch (NullPointerException e) {
                     //Just don't showing it on the map
                 }
@@ -107,7 +120,6 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
             //Something goes wrong. Let's figure out why
             switch (DataParser.STATUS){
                 case ResponseStatus.ZERO_RESULTS:
-                    //to improve
                     Toast.makeText(MapsActivity.getContext(), "SEEMS WE ARE IN THE DESERT. NOTHING AROUND US", Toast.LENGTH_LONG).show();
                     break;
                 case ResponseStatus.NOT_FOUND:
@@ -127,5 +139,13 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                     break;
             }
         }
+    }
+
+    /**
+     * Callback when app has been resume from onPause. It recreate the precedent state
+     * @param markerList the list of the marker representing the precedent state
+     */
+    public void onNeedRestoreState(List<MarkerOptions> markerList){
+        for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) mMap.addMarker(markerList.get(currentMarker));
     }
 }
