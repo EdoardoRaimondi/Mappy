@@ -1,6 +1,5 @@
 package com.example.app;
 
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
@@ -41,7 +40,6 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
     private static final int MAX_PLACES = 30;
-
     private static final int DEFAULT_ZOOM = 12;
     private static final String GOOGLE_KEY = "AIzaSyBhUH-chcm8iT5iSYmqzmuEbnZVUt93Mmo";
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -54,6 +52,8 @@ public class MapsActivity extends FragmentActivity implements
     private static final String TITLES_KEY = "titles_k";
     private static final String LATITUDES_KEY = "lat_k";
     private static final String LONGITUDES_KEY = "lng_k";
+    private static final String LAT_KEY = "lat_last_k";
+    private static final String LNG_KEY = "lng_last_k";
 
     public static Context mContext;
 
@@ -76,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements
             ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
-            //Create a marker list, in order to be display then
+            // create a marker list, in order to be display then
             if (titles != null) {
                 for (int i = 0; i < titles.size(); i++) {
                     restoreMarkers = new ArrayList<MarkerOptions>();
@@ -97,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements
         // set the current context so I can show eventual error toasts
         setContext();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -343,6 +343,8 @@ public class MapsActivity extends FragmentActivity implements
             savedInstanceState.putStringArrayList(TITLES_KEY, titles);
             savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
             savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
+            savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
+            savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
         }
         // calling super class method
         super.onSaveInstanceState(savedInstanceState);
