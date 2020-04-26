@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -48,6 +49,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements
@@ -68,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
+    private boolean needRestoreState = false;
 
 
     @Override
@@ -84,6 +88,24 @@ public class MapsActivity extends FragmentActivity implements
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
+
+        if(savedInstanceState != null){
+            //Create a marker list, in order to be display then
+            for(int i = 0; i < savedInstanceState.size(); i++){
+                List<MarkerOptions> markers = null;
+                MarkerOptions newMarker = new MarkerOptions();
+                newMarker.title(savedInstanceState.getStringArrayList("titles").get(i));
+                double lat = savedInstanceState.getDoubleArray("lat")[i];
+                double lng = savedInstanceState.getDoubleArray("lng")[i];
+                LatLng latLng = new LatLng(lat, lng);
+                newMarker.position(latLng);
+                newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                //now the marker is created I add it on the marker list
+                markers.add(newMarker);
+
+                onNeedRestoreState(markers);
+            }
+        }
     }
 
 
@@ -116,6 +138,7 @@ public class MapsActivity extends FragmentActivity implements
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
+
 
         task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
             @Override
@@ -290,5 +313,42 @@ public class MapsActivity extends FragmentActivity implements
      */
     public static Context getContext(){
         return mContext;
+    }
+
+    //INSTANCE SAVE
+
+    /**
+     * Callback to save the state when necessary
+     * @param savedInstanceState bundle where to save places information
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
+        //create the empty array to save the info
+        ArrayList<String> titles = null;
+        double[] lat = new double[30]; //max places displayed
+        double[] lng = new double[30];
+        if(markerList != null) {
+            for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
+                //fill the arrays
+                MarkerOptions marker = markerList.get(currentMarker);
+                titles.add(marker.getTitle());
+                lat[currentMarker] = (marker.getPosition().latitude);
+                lng[currentMarker] = (marker.getPosition().longitude);
+            }
+            //now I have all the arrays filled with the information I need
+            savedInstanceState.putStringArrayList("titles", titles);
+            savedInstanceState.putDoubleArray("lat", lat);
+            savedInstanceState.putDoubleArray("lng", lng);
+        }
+    }
+
+    /**
+     * Callback when app has been resume from onPause. It recreate the precedent state
+     * @param markerList the list of the marker representing the precedent state
+     */
+    public void onNeedRestoreState(List<MarkerOptions> markerList){
+        for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) mMap.addMarker(markerList.get(currentMarker));
     }
 }
