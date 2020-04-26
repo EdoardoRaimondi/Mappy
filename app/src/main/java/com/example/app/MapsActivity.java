@@ -63,24 +63,15 @@ public class MapsActivity extends FragmentActivity implements
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
-    private boolean needRestoreState = false;
 
+    private boolean canRestore = false;
+    private List<MarkerOptions> restoreMarkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-        //I set the current context so I can show eventual error toasts
-        setContext();
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
-
+        // restoring instance state if any
         if(savedInstanceState != null){
             ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
@@ -88,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements
             //Create a marker list, in order to be display then
             if (titles != null) {
                 for (int i = 0; i < titles.size(); i++) {
-                    List<MarkerOptions> markers = new ArrayList<MarkerOptions>();
+                    restoreMarkers = new ArrayList<MarkerOptions>();
                     MarkerOptions newMarker = new MarkerOptions();
                     newMarker.title(titles.get(i));
                     double lat = latitudes[i];
@@ -97,11 +88,21 @@ public class MapsActivity extends FragmentActivity implements
                     newMarker.position(latLng);
                     newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
                     //now the marker is created I add it on the marker list
-                    markers.add(newMarker);
-                    onNeedRestoreState(markers);
+                    restoreMarkers.add(newMarker);
+                    canRestore = true;
                 }
             }
         }
+
+        // set the current context so I can show eventual error toasts
+        setContext();
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
     }
 
 
@@ -144,15 +145,19 @@ public class MapsActivity extends FragmentActivity implements
                 Intent requestInfo = getIntent();
                 NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
-
-                //act in order to satisfy the request purpose
-                switch(requestType){
-                    case DISCO:
-                        showNearbyDisco(radius);
-                        break;
-                    case RESTAURANT:
-                        showNearbyRestaurant(radius);
-                        break;
+                if(canRestore){
+                    onNeedRestoreState(restoreMarkers);
+                }
+                else {
+                    //act in order to satisfy the request purpose
+                    switch (requestType) {
+                        case DISCO:
+                            showNearbyDisco(radius);
+                            break;
+                        case RESTAURANT:
+                            showNearbyRestaurant(radius);
+                            break;
+                    }
                 }
             }
         });
