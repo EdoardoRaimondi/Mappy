@@ -1,7 +1,6 @@
 package com.example.app;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -69,7 +68,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
      * @param nearByPlacesList The list of nearby places
      */
     private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
-        if (!nearByPlacesList.isEmpty() && DataParser.STATUS == ResponseStatus.OK) {
+        if (!nearByPlacesList.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (int i = 0; i < nearByPlacesList.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions();
