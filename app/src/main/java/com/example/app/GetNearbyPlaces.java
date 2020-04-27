@@ -96,7 +96,6 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
             }
 
             animateCamera(builder);
-            //Log.d("MARKER LIST ELEMENTS", String.valueOf(markerList.size()));
         }
         else {
             //Something goes wrong. Let's figure out why
