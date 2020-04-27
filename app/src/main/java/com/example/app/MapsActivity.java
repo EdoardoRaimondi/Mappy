@@ -82,7 +82,6 @@ public class MapsActivity extends FragmentActivity implements
             if (titles != null) {
                 if(latitudes != null && longitudes != null) {
                     for (int i = 0; i < titles.size(); i++) {
-                        restoreMarkers = new ArrayList<MarkerOptions>();
                         MarkerOptions newMarker = new MarkerOptions();
                         newMarker.title(titles.get(i));
                         double lat = latitudes[i];
@@ -94,7 +93,6 @@ public class MapsActivity extends FragmentActivity implements
                         restoreMarkers.add(newMarker);
                     }
                     canRestore = true;
-                    //Log.d("RESTORE MARKERS SIZE", String.valueOf(restoreMarkers.size()));
                 }
             }
         }
@@ -332,8 +330,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        //Log.d("Place just arrived", String.valueOf(markerList.size()));
-        // creating empty arrays to save the state
+        //creating empty arrays to save the state
         ArrayList<String> titles = new ArrayList<String>();
         // only the array list titles will tell how many places by its size
         double[] lat = new double[MAX_PLACES];
