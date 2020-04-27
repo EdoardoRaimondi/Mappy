@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class to get the nearby places
@@ -80,7 +81,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
      * @param nearByPlacesList The list of nearby places
      */
     private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
-        if (!nearByPlacesList.isEmpty() && nearByPlacesList != null) {
+        if (!nearByPlacesList.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (int i = 0; i < nearByPlacesList.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -88,28 +89,22 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                 HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
                 String placeName = googleNearbyPlace.get("place_name");
                 String vicinity = googleNearbyPlace.get("vicinity");
-                try {
-                    double lat = Double.parseDouble(googleNearbyPlace.get("lat"));
-                    double lon = Double.parseDouble(googleNearbyPlace.get("lng"));
-                    LatLng latLng = new LatLng(lat, lon);
-                    builder.include(latLng);
+                double lat = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lat")));
+                double lon = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lng")));
+                LatLng latLng = new LatLng(lat, lon);
+                builder.include(latLng);
 
 
-                    //Once get the data, I position the markers of this specific place
-                    markerOptions.position(latLng);
-                    markerOptions.title(placeName + " : " + vicinity);
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                //Once get the data, I position the markers of this specific place
+                markerOptions.position(latLng);
+                markerOptions.title(placeName + " : " + vicinity);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                    //Create the marker
-                    mMap.addMarker(markerOptions);
-                    //Add the marker in order to recreate the state
-                    markerList.add(markerOptions);
+                //Create the marker
+                mMap.addMarker(markerOptions);
+                //Add the marker in order to recreate the state
+                markerList.add(markerOptions);
 
-                }
-                //If I am here, it means I did not receive the position (latitude and longitude) for that searching
-                catch (NullPointerException e) {
-                    //Just don't showing it on the map
-                }
             }
             LatLngBounds bounds = builder.build();
             int padding = 0; // offset from edges of the map in pixels
@@ -142,11 +137,4 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
         }
     }
 
-    /**
-     * Callback when app has been resume from onPause. It recreate the precedent state
-     * @param markerList the list of the marker representing the precedent state
-     */
-    public void onNeedRestoreState(List<MarkerOptions> markerList){
-        for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) mMap.addMarker(markerList.get(currentMarker));
-    }
 }

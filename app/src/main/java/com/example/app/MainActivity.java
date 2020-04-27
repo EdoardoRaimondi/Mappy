@@ -131,8 +131,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public void nearbyRestaurantRequest(View view) {
         Intent showNearbyRestaurant = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.RESTAURANT, radius);
-        Log.d("RADIUS", String.valueOf(radius));
         startActivity(showNearbyRestaurant);
+    }
+
+    /**
+     * Method to send an help lobby request
+     * @param view button {@id button}
+     */
+    public void helpRequest(View view){
+        Intent helpIntent = IntentFactory.createHelpIntentRequest(this);
+        startActivity(helpIntent);
     }
 
     //PERMISSIONS
