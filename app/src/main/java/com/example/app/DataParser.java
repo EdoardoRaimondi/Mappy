@@ -71,21 +71,21 @@ public class DataParser implements MapJSonDataParser{
      */
     private List<HashMap<String, String>> getAllNearbyPlaces(JSONArray jsonArray)
     {
-        int count = jsonArray.length();
+        int count = 0;
+        // changed code here because if there is no connection null pointer exc is thrown
+        if(jsonArray != null) {
+            count = jsonArray.length();
+        }
         List<HashMap<String, String>> NearbyPlacesList = new ArrayList<>();
 
         HashMap<String, String> NearbyPlaceMap = null;
 
-        for (int i=0; i<count; i++)
-        {
-            try
-            {
+        for (int i=0; i<count; i++) {
+            try {
                 NearbyPlaceMap = getSingleNearbyPlace( (JSONObject) jsonArray.get(i) );
                 NearbyPlacesList.add(NearbyPlaceMap);
-
             }
-            catch (JSONException e)
-            {
+            catch (JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -102,14 +102,10 @@ public class DataParser implements MapJSonDataParser{
      * @throws JSONException if Json computation goes wrong
      */
     public List<HashMap<String, String>> parse(String JsonData) throws JSONException {
-        JSONArray jsonArray = null;
         JSONObject jsonObject = new JSONObject(JsonData);
-
-        jsonArray = jsonObject.getJSONArray("results");
-
+        JSONArray jsonArray = jsonObject.getJSONArray("results");
         //The status can assume one of the {@link ResponseStatus.class}
         STATUS = jsonObject.getString("status");
-
         return getAllNearbyPlaces(jsonArray);
     }
 

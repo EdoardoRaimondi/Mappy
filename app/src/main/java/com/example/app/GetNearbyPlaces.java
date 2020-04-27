@@ -63,6 +63,10 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        catch(NullPointerException e){
+            // here because no connection DONT KNOW WHY
+            Log.d("GetNearbyPlaces","You are seeing this message because there is no connection");
+        }
 
         downloadNearbyPlaces(nearByPlacesList);
     }
@@ -73,51 +77,52 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
      * @param nearByPlacesList The list of nearby places
      */
     protected void downloadNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
-        if (!nearByPlacesList.isEmpty()) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (int i = 0; i < nearByPlacesList.size(); i++) {
-                MarkerOptions markerOptions = new MarkerOptions();
-                //Extract the data
-                HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
-                String placeName = googleNearbyPlace.get("place_name");
-                String vicinity = googleNearbyPlace.get("vicinity");
-                double lat = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lat")));
-                double lon = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lng")));
-                LatLng latLng = new LatLng(lat, lon);
-                builder.include(latLng);
+        if(nearByPlacesList != null) {
+            if (!nearByPlacesList.isEmpty()) {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (int i = 0; i < nearByPlacesList.size(); i++) {
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    //Extract the data
+                    HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
+                    String placeName = googleNearbyPlace.get("place_name");
+                    String vicinity = googleNearbyPlace.get("vicinity");
+                    double lat = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lat")));
+                    double lon = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lng")));
+                    LatLng latLng = new LatLng(lat, lon);
+                    builder.include(latLng);
 
 
-                //Once get the data, I position the markers of this specific place
-                markerOptions.position(latLng);
-                markerOptions.title(placeName + " : " + vicinity);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                    //Once get the data, I position the markers of this specific place
+                    markerOptions.position(latLng);
+                    markerOptions.title(placeName + " : " + vicinity);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                displayNearbyPlace(markerOptions);
-            }
+                    displayNearbyPlace(markerOptions);
+                }
 
-            animateCamera(builder);
-        }
-        else {
-            //Something goes wrong. Let's figure out why
-            switch (DataParser.STATUS){
-                case ResponseStatus.ZERO_RESULTS:
-                    Toast.makeText(MapsActivity.getContext(), "SEEMS WE ARE IN THE DESERT. NOTHING AROUND US", Toast.LENGTH_LONG).show();
-                    break;
-                case ResponseStatus.NOT_FOUND:
-                    Toast.makeText(MapsActivity.getContext(), "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
-                    break;
-                case ResponseStatus.INVALID_REQUEST:
-                    Toast.makeText(MapsActivity.getContext(), "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
-                    break;
-                case ResponseStatus.UNKNOWN_ERROR:
-                    Toast.makeText(MapsActivity.getContext(), "TRY AGAIN", Toast.LENGTH_LONG).show();
-                    break;
-                case ResponseStatus.REQUEST_DENIED:
-                    Toast.makeText(MapsActivity.getContext(), "REQUEST DENIED", Toast.LENGTH_LONG).show();
-                    break;
-                case ResponseStatus.OVER_QUERY_LIMIT:
-                    Toast.makeText(MapsActivity.getContext(), "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
-                    break;
+                animateCamera(builder);
+            } else {
+                //Something goes wrong. Let's figure out why
+                switch (DataParser.STATUS) {
+                    case ResponseStatus.ZERO_RESULTS:
+                        Toast.makeText(MapsActivity.getContext(), "SEEMS WE ARE IN THE DESERT. NOTHING AROUND US", Toast.LENGTH_LONG).show();
+                        break;
+                    case ResponseStatus.NOT_FOUND:
+                        Toast.makeText(MapsActivity.getContext(), "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
+                        break;
+                    case ResponseStatus.INVALID_REQUEST:
+                        Toast.makeText(MapsActivity.getContext(), "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
+                        break;
+                    case ResponseStatus.UNKNOWN_ERROR:
+                        Toast.makeText(MapsActivity.getContext(), "TRY AGAIN", Toast.LENGTH_LONG).show();
+                        break;
+                    case ResponseStatus.REQUEST_DENIED:
+                        Toast.makeText(MapsActivity.getContext(), "REQUEST DENIED", Toast.LENGTH_LONG).show();
+                        break;
+                    case ResponseStatus.OVER_QUERY_LIMIT:
+                        Toast.makeText(MapsActivity.getContext(), "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
+                        break;
+                }
             }
         }
     }
