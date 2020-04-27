@@ -1,12 +1,14 @@
 package com.example.app;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -65,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements
     private Location myLastLocation;
 
     private boolean canRestore = false;
-    private List<MarkerOptions> restoreMarkers;
+    private List<MarkerOptions> restoreMarkers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +92,9 @@ public class MapsActivity extends FragmentActivity implements
                         newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
                         //now the marker is created I add it on the marker list
                         restoreMarkers.add(newMarker);
-                        canRestore = true;
                     }
+                    canRestore = true;
+                    //Log.d("RESTORE MARKERS SIZE", String.valueOf(restoreMarkers.size()));
                 }
             }
         }
@@ -324,10 +327,12 @@ public class MapsActivity extends FragmentActivity implements
      * Callback to save the state when necessary
      * @param savedInstanceState Bundle where to save places information
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
+        //Log.d("Place just arrived", String.valueOf(markerList.size()));
         // creating empty arrays to save the state
         ArrayList<String> titles = new ArrayList<String>();
         // only the array list titles will tell how many places by its size

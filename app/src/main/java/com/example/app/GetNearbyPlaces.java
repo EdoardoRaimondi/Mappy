@@ -4,28 +4,20 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -36,7 +28,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     private String googlePlaceData, url;
     private GoogleMap mMap;
 
-    public static List<MarkerOptions> markerList = new ArrayList<MarkerOptions>(); //to save the state
+    public static List<MarkerOptions> markerList = new ArrayList<>(); //to save the state
 
     /**
      * Method to extract the data from the {@link MapsActivity}
@@ -72,7 +64,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
             e.printStackTrace();
         }
 
-        displayNearbyPlaces(nearByPlacesList);
+        downloadNearbyPlaces(nearByPlacesList);
     }
 
     /**
@@ -80,7 +72,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
      * encapsulate them in a marker and display it
      * @param nearByPlacesList The list of nearby places
      */
-    private void displayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
+    protected void downloadNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
         if (!nearByPlacesList.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (int i = 0; i < nearByPlacesList.size(); i++) {
@@ -100,17 +92,11 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                 markerOptions.title(placeName + " : " + vicinity);
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                //Create the marker
-                mMap.addMarker(markerOptions);
-                //Add the marker in order to recreate the state
-                markerList.add(markerOptions);
-
+                displayNearbyPlace(markerOptions);
             }
-            LatLngBounds bounds = builder.build();
-            int padding = 0; // offset from edges of the map in pixels
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-            mMap.animateCamera(cu);
+            animateCamera(builder);
+            //Log.d("MARKER LIST ELEMENTS", String.valueOf(markerList.size()));
         }
         else {
             //Something goes wrong. Let's figure out why
@@ -135,6 +121,36 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                     break;
             }
         }
+    }
+
+    /**
+     * Method to display nearby a single marker on the map and add it on
+     * the restore marker list
+     * @param marker to add
+     */
+    protected void displayNearbyPlace(MarkerOptions marker){
+        //Create the marker
+        mMap.addMarker(marker);
+        //Add the marker in order to recreate the state
+        markerList.add(marker);
+    }
+
+    /**
+     * Method to animate the camera
+     */
+    protected void animateCamera(LatLngBounds.Builder builder){
+        LatLngBounds bounds = builder.build();
+        int padding = 0; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+        mMap.animateCamera(cu);
+    }
+
+    /**
+     * @return current markerList
+     */
+    public List<MarkerOptions> getMarkerList(){
+        return markerList;
     }
 
 }
