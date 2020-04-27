@@ -36,7 +36,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     private String googlePlaceData, url;
     private GoogleMap mMap;
 
-    public static List<MarkerOptions> markerList; //to save the state
+    public static List<MarkerOptions> markerList = new ArrayList<MarkerOptions>(); //to save the state
 
     /**
      * Method to extract the data from the {@link MapsActivity}
