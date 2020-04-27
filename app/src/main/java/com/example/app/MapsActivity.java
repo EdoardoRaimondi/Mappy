@@ -447,8 +447,8 @@ public class MapsActivity extends FragmentActivity implements
         // only the array list titles will tell how many places by its size
         double[] lat = new double[MAX_PLACES];
         double[] lng = new double[MAX_PLACES];
-        if(markerList == null){Log.d("MapsActivity","OH OH CAVALLO OH OH");}
-        if(markerList != null) {
+        if(GetNearbyPlaces.markerList.isEmpty()){Log.d("MapsActivity","OH OH CAVALLO OH OH");}
+        if(!GetNearbyPlaces.markerList.isEmpty()) {
             for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
                 //fill the arrays
                 MarkerOptions marker = markerList.get(currentMarker);
