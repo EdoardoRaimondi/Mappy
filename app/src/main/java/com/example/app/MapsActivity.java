@@ -78,18 +78,20 @@ public class MapsActivity extends FragmentActivity implements
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
             if (titles != null) {
-                for (int i = 0; i < titles.size(); i++) {
-                    restoreMarkers = new ArrayList<MarkerOptions>();
-                    MarkerOptions newMarker = new MarkerOptions();
-                    newMarker.title(titles.get(i));
-                    double lat = latitudes[i];
-                    double lng = longitudes[i];
-                    LatLng latLng = new LatLng(lat, lng);
-                    newMarker.position(latLng);
-                    newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                    //now the marker is created I add it on the marker list
-                    restoreMarkers.add(newMarker);
-                    canRestore = true;
+                if(latitudes != null && longitudes != null) {
+                    for (int i = 0; i < titles.size(); i++) {
+                        restoreMarkers = new ArrayList<MarkerOptions>();
+                        MarkerOptions newMarker = new MarkerOptions();
+                        newMarker.title(titles.get(i));
+                        double lat = latitudes[i];
+                        double lng = longitudes[i];
+                        LatLng latLng = new LatLng(lat, lng);
+                        newMarker.position(latLng);
+                        newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                        //now the marker is created I add it on the marker list
+                        restoreMarkers.add(newMarker);
+                        canRestore = true;
+                    }
                 }
             }
         }
