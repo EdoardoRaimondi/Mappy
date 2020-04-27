@@ -71,18 +71,19 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // restoring instance state if any
         if(savedInstanceState != null){
-            ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
+            ArrayList<String> tt = savedInstanceState.getStringArrayList(TITLES_KEY);
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
-            if (titles != null) {
+            if (tt != null) {
                 if(latitudes != null && longitudes != null) {
-                    for (int i = 0; i < titles.size(); i++) {
+                    for (int i = 0; i < tt.size(); i++) {
                         restoreMarkers = new ArrayList<MarkerOptions>();
                         MarkerOptions newMarker = new MarkerOptions();
-                        newMarker.title(titles.get(i));
+                        newMarker.title(tt.get(i));
                         double lat = latitudes[i];
                         double lng = longitudes[i];
                         LatLng latLng = new LatLng(lat, lng);
@@ -106,7 +107,6 @@ public class MapsActivity extends FragmentActivity implements
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
     }
-
 
     /**
      * Callback when the map fragemnt ui is ready
@@ -149,6 +149,7 @@ public class MapsActivity extends FragmentActivity implements
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
                 if(canRestore){
                     onNeedRestoreState(restoreMarkers);
+                    Log.d("GoogleMapsActivity","Restored");
                 }
                 else {
                     //act in order to satisfy the request purpose
@@ -319,7 +320,6 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     //INSTANCE SAVE
-
     /**
      * Callback to save the state when necessary
      * @param savedInstanceState Bundle where to save places information
@@ -333,6 +333,7 @@ public class MapsActivity extends FragmentActivity implements
         // only the array list titles will tell how many places by its size
         double[] lat = new double[MAX_PLACES];
         double[] lng = new double[MAX_PLACES];
+        if(markerList == null){Log.d("MapsActivity","OH OH CAVALLO OH OH");}
         if(markerList != null) {
             for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
                 //fill the arrays
@@ -348,6 +349,8 @@ public class MapsActivity extends FragmentActivity implements
             savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
             savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
         }
+        Log.d("MapsActivity","KEEPING IN RAM");
+        Log.d("MapsActivity",savedInstanceState.toString());
         // calling super class method
         super.onSaveInstanceState(savedInstanceState);
     }
