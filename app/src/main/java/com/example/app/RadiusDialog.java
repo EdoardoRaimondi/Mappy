@@ -66,13 +66,13 @@ public class RadiusDialog extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(@NonNull Context context) throws ClassCastException {
         super.onAttach(context);
         try {
             RadiusDialogListener listener = (RadiusDialogListener) context;
         }
         catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement RadiusDialogListener");
+            throw new ClassCastException(context.toString() + " must implement RadiusDialogListener");
         }
     }
 

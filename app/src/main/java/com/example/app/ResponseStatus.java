@@ -6,7 +6,7 @@ package com.example.app;
 public class ResponseStatus {
 
     public static final String OK = "OK";
-
+    public static final String IDLE = "IDLE";
     public static final String UNKNOWN_ERROR    = "UNKNOWN_ERROR";
     public static final String OVER_QUERY_LIMIT = "OVER_QUERY_LIMIT";
     public static final String REQUEST_DENIED   = "REQUEST_DENIED";

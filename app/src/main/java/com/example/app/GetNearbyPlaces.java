@@ -28,6 +28,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
 
     private String googlePlaceData;
     private GoogleMap mMap;
+    private String result;
 
     public static List<MarkerOptions> markerList = new ArrayList<>(); //to save the state
 
@@ -103,6 +104,8 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
                 animateCamera(builder);
             }
         }
+
+        result = DataParser.STATUS;
     }
 
     /**
@@ -133,6 +136,10 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      */
     public List<MarkerOptions> getMarkerList(){
         return markerList;
+    }
+
+    public String getResult(){
+        return result;
     }
 
 

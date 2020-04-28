@@ -83,21 +83,19 @@ public class MapsActivity extends FragmentActivity implements
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
-            if (titles != null) {
-                if(latitudes != null && longitudes != null) {
-                    for (int i = 0; i < titles.size(); i++) {
-                        MarkerOptions newMarker = new MarkerOptions();
-                        newMarker.title(titles.get(i));
-                        double lat = latitudes[i];
-                        double lng = longitudes[i];
-                        LatLng latLng = new LatLng(lat, lng);
-                        newMarker.position(latLng);
-                        newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                        //now the marker is created I add it on the marker list
-                        restoreMarkers.add(newMarker);
-                    }
-                    canRestore = true;
+            if (titles != null && latitudes != null && longitudes != null) {
+                for (int i = 0; i < titles.size(); i++) {
+                    MarkerOptions newMarker = new MarkerOptions();
+                    newMarker.title(titles.get(i));
+                    double lat = latitudes[i];
+                    double lng = longitudes[i];
+                    LatLng latLng = new LatLng(lat, lng);
+                    newMarker.position(latLng);
+                    newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                    //now the marker is created I add it on the marker list
+                    restoreMarkers.add(newMarker);
                 }
+                canRestore = true;
             }
         }
 
@@ -158,6 +156,7 @@ public class MapsActivity extends FragmentActivity implements
                     switch (requestType) {
                         case DISCO:
                             showNearbyDisco(radius);
+                            onResult();
                             break;
                         case RESTAURANT:
                             showNearbyRestaurant(radius);
@@ -364,10 +363,10 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    private void onResult(String result){
+    private void onResult(){
         //Something goes wrong. Let's figure out why
         Log.i("SHIT","Result called");
-        switch (result) {
+        switch (DataParser.STATUS) {
 
             case ResponseStatus.ZERO_RESULTS:
                 openRadiusDialog();
@@ -392,6 +391,9 @@ public class MapsActivity extends FragmentActivity implements
             case ResponseStatus.OVER_QUERY_LIMIT:
                 Toast.makeText(MapsActivity.getContext(), "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
                 Log.i("SHIT","WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER");
+                break;
+            case ResponseStatus.IDLE:
+                Log.i("SHIT","IDLE");
                 break;
             default: Log.i("SHIT","OK");
                 break;
