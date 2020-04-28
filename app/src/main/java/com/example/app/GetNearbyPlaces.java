@@ -159,7 +159,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title(placeName);
         markerOptions.position(latLng);
-        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         return markerOptions;
     }
 
