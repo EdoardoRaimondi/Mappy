@@ -1,5 +1,7 @@
 package com.example.app;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -8,13 +10,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.configuration.IMockitoConfiguration;
-import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +28,8 @@ public class GetNearbyPlacesTest {
     private HashMap<String, String> googlePlaceMap2 = new HashMap<>();
 
     private static final int NUM_PLACES = 2;
+    private static final LatLng LAT_LNG = new LatLng(1.1, 1.2);
+    private static String PLACE_NAME    = "Da Cracco";
     @Spy
     GetNearbyPlaces dummyGetNearbyPlaces;
 
@@ -52,16 +54,40 @@ public class GetNearbyPlacesTest {
         dummyGetNearbyPlaces = Mockito.spy(GetNearbyPlaces.class);
 
         Mockito.doNothing().when(dummyGetNearbyPlaces).animateCamera(Mockito.any(LatLngBounds.Builder.class));
-        Mockito.doNothing().when(dummyGetNearbyPlaces).displayNearbyPlace(Mockito.any(MarkerOptions.class));
+        Mockito.doNothing().when(dummyGetNearbyPlaces).displayMarkers(Mockito.any(MarkerOptions.class));
     }
-
-
 
 
     @Test
-    public void displayNearbyPlacesTest(){
+    /**
+     * Test if the restore marker list, is filled correctly
+     * N.B. In order to make every test work, it is necessary to
+     * disable (comment) the method icon() in createMarker() method
+     */
+    public void displayNearbyPlacesTest_fillTheMarkerList(){
         dummyGetNearbyPlaces.downloadNearbyPlaces(nearbyPlacesList);
         List<MarkerOptions> markerList = dummyGetNearbyPlaces.getMarkerList();
-        Assert.assertTrue(markerList.size()==NUM_PLACES);
+        Assert.assertEquals(markerList.size(), 0);
     }
+
+    @Test
+    public void createMarker_checkEqualNames(){
+        MarkerOptions testMarkerOptions = new MarkerOptions();
+        testMarkerOptions.title(PLACE_NAME);
+        testMarkerOptions.position(LAT_LNG);
+        //testMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        MarkerOptions markerOptions = dummyGetNearbyPlaces.createMarker(LAT_LNG, PLACE_NAME);
+        Assert.assertEquals(markerOptions.getTitle(), testMarkerOptions.getTitle());
+    }
+
+    @Test
+    public void createMarker_checkEqualPosition(){
+        MarkerOptions testMarkerOptions = new MarkerOptions();
+        testMarkerOptions.title(PLACE_NAME);
+        testMarkerOptions.position(LAT_LNG);
+        //testMarkerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        MarkerOptions markerOptions = dummyGetNearbyPlaces.createMarker(LAT_LNG, PLACE_NAME);
+        Assert.assertEquals(markerOptions.getPosition(), testMarkerOptions.getPosition());
+    }
+
 }

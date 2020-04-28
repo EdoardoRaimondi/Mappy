@@ -1,14 +1,11 @@
 package com.example.app;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +20,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,7 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,6 +38,7 @@ import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback, RadiusDialog.RadiusDialogListener {
+
 
     private static final int MAX_PLACES = 30;
     private static final int DEFAULT_ZOOM = 12;
@@ -60,8 +56,6 @@ public class MapsActivity extends FragmentActivity implements
     private static final String LAT_KEY = "lat_last_k";
     private static final String LNG_KEY = "lng_last_k";
 
-    public static Context mContext;
-
     private GoogleMap mMap;
     private LocationCallback locationCallback;
 
@@ -72,11 +66,13 @@ public class MapsActivity extends FragmentActivity implements
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         restoreMarkers = new ArrayList<>();
+
         // restoring instance state if any
         if(savedInstanceState != null){
             ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
@@ -99,12 +95,10 @@ public class MapsActivity extends FragmentActivity implements
             }
         }
 
-        // set the current context so I can show eventual error toasts
-        setContext();
-
         // obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
@@ -112,8 +106,9 @@ public class MapsActivity extends FragmentActivity implements
 
 
     /**
-     * Callback when the map fragemnt ui is ready
-     * @param googleMap
+     * Callback when the map fragment ui is ready.
+     * If triggered it means surely a button has been pressed
+     * @param googleMap the map
      */
     @SuppressLint("MissingPermission")
     @Override
@@ -143,8 +138,8 @@ public class MapsActivity extends FragmentActivity implements
         task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                getDeviceLocation();
-                //Get information of what button has been pressed
+                setDeviceLocation();
+                //Get button pressed information
                 Intent requestInfo = getIntent();
                 NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
@@ -153,10 +148,11 @@ public class MapsActivity extends FragmentActivity implements
                 }
                 else {
                     //act in order to satisfy the request purpose
+                    assert requestType != null;
                     switch (requestType) {
                         case DISCO:
                             showNearbyDisco(radius);
-                            onResult();
+
                             break;
                         case RESTAURANT:
                             showNearbyRestaurant(radius);
@@ -172,7 +168,7 @@ public class MapsActivity extends FragmentActivity implements
      * Method to get user location pointer on the map
      */
     @SuppressLint("MissingPermission")
-    private void getDeviceLocation() {
+    private void setDeviceLocation() {
         fusedLocationProviderClient.getLastLocation()
                 .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
@@ -201,8 +197,6 @@ public class MapsActivity extends FragmentActivity implements
                                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
                             }
-                        } else {
-                            return;
                         }
                     }
                 });
@@ -211,7 +205,78 @@ public class MapsActivity extends FragmentActivity implements
 
 
     /**
-     * method to get the url string containing all the place information
+     * Method activated by the nearby button pressure
+     * Send to {@link GetNearbyPlaces} the command to show the nearby disco
+     * @param radius the radius research
+     */
+    private void showNearbyDisco(final long radius){
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            myLastLocation = task.getResult();
+                            if (myLastLocation != null) {
+                                Object[] transferData = new Object[2];
+
+                                //create the request
+                                String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
+                                transferData[0] = mMap;
+                                transferData[1] = urlDisco;
+
+                                //the request will be downloaded and displayed
+                                GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
+                                getNearbyDiscoPlaces.execute(transferData);
+                                getNearbyDiscoPlaces.setOnResultSetListener(new OnResultSetListener() {
+                                    @Override
+                                    public void onResultSet(String result) {
+                                        showResponseInfo(result);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Method activated by the nearby button pressure.
+     * Send to {@link GetNearbyPlaces} the command to show the nearby restaurant
+     * @param radius the radius research
+     */
+    private void showNearbyRestaurant(final long radius){
+        fusedLocationProviderClient.getLastLocation()
+                .addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            myLastLocation = task.getResult();
+                            if (myLastLocation != null) {
+                                Object[] transferData = new Object[2];
+
+                                //create the request
+                                 String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
+                                 transferData[0] = mMap;
+                                 transferData[1] = urlRisto;
+
+                                 //request will be downloaded and displayed
+                                 GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
+                                 getNearbyRestaurantPlaces.execute(transferData);
+                                 getNearbyRestaurantPlaces.setOnResultSetListener(new OnResultSetListener() {
+                                     @Override
+                                     public void onResultSet(String result) {
+                                         showResponseInfo(result);
+                                     }
+                                 });
+
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Method to get the url string containing all the place information
      * @param latitude     of the searching centre position
      * @param longitude    of the searching centre position
      * @param nearbyPlace  to search for
@@ -232,91 +297,23 @@ public class MapsActivity extends FragmentActivity implements
         return googleURL.toString();
     }
 
-    /**
-     * Method activated by the nearby button pressure
-     */
-    private void showNearbyDisco(final long radius){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            myLastLocation = task.getResult();
-                            if (myLastLocation != null) {
-                                Object transferData[] = new Object[2];
-
-                                //create the request
-                                String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
-                                transferData[0] = mMap;
-                                transferData[1] = urlDisco;
-
-                                //the request will be downloaded and displayed
-                                GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
-                                getNearbyDiscoPlaces.execute(transferData);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Method activated by the nearby button pressure
-     */
-    private void showNearbyRestaurant(final long radius){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            myLastLocation = task.getResult();
-                            if (myLastLocation != null) {
-                                Object transferData[] = new Object[2];
-
-                                //create the request
-                                 String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
-                                 transferData[0] = mMap;
-                                 transferData[1] = urlRisto;
-
-                                 //request will be downloaded and displayed
-                                 GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
-                                 getNearbyRestaurantPlaces.execute(transferData);
-
-                            }
-                        }
-                    }
-                });
-    }
-
 
     /**
      * Callback for the activity result. If check is passed, let the method execute
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode the request code
+     * @param resultCode the result code
+     * @param data the data
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 51) {
             if (resultCode == RESULT_OK) {
-                getDeviceLocation();
+                setDeviceLocation();
             }
         }
     }
 
-    /**
-     * Method to set the context
-     */
-    private void setContext(){
-        mContext = getApplicationContext();
-    }
-
-    /**
-     * @return the activity context
-     */
-    public static Context getContext(){
-        return mContext;
-    }
 
     //INSTANCE SAVE
 
@@ -324,13 +321,12 @@ public class MapsActivity extends FragmentActivity implements
      * Callback to save the state when necessary
      * @param savedInstanceState Bundle where to save places information
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
         //creating empty arrays to save the state
-        ArrayList<String> titles = new ArrayList<String>();
+        ArrayList<String> titles = new ArrayList<>();
         // only the array list titles will tell how many places by its size
         double[] lat = new double[MAX_PLACES];
         double[] lng = new double[MAX_PLACES];
@@ -363,47 +359,44 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    private void onResult(){
-        //Something goes wrong. Let's figure out why
-        Log.i("SHIT","Result called");
-        switch (DataParser.STATUS) {
-
+    /**
+     * Method to recognize the response status
+     * and act accordingly (show different dialog).
+     * Act normally if the status is OK
+     * To see all the possible status see {@link ResponseStatus}
+     * @param status of the response
+     */
+    private void showResponseInfo(String status){
+        switch (status) {
             case ResponseStatus.ZERO_RESULTS:
                 openRadiusDialog();
-                Log.i("SHIT","NO RESULTS");
                 break;
             case ResponseStatus.NOT_FOUND:
-                Toast.makeText(MapsActivity.getContext(), "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
-                Log.i("SHIT","WE CAN'T FIND YOU");
+                Toast.makeText(this, "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
                 break;
             case ResponseStatus.INVALID_REQUEST:
-                Toast.makeText(MapsActivity.getContext(), "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
-                Log.i("SHIT","BAD REQUEST. TRY AGAIN");
+                Toast.makeText(this, "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
                 break;
             case ResponseStatus.UNKNOWN_ERROR:
-                Toast.makeText(MapsActivity.getContext(), "TRY AGAIN", Toast.LENGTH_LONG).show();
-                Log.i("SHIT","TRY AGAIN");
+                Toast.makeText(this, "TRY AGAIN", Toast.LENGTH_LONG).show();
                 break;
             case ResponseStatus.REQUEST_DENIED:
-                Toast.makeText(MapsActivity.getContext(), "REQUEST DENIED", Toast.LENGTH_LONG).show();
-                Log.i("SHIT","REQUEST DENIED");
+                Toast.makeText(this, "REQUEST DENIED", Toast.LENGTH_LONG).show();
                 break;
             case ResponseStatus.OVER_QUERY_LIMIT:
-                Toast.makeText(MapsActivity.getContext(), "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
-                Log.i("SHIT","WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER");
-                break;
-            case ResponseStatus.IDLE:
-                Log.i("SHIT","IDLE");
-                break;
-            default: Log.i("SHIT","OK");
+                Toast.makeText(this, "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
                 break;
         }
     }
 
+    /**
+     * Open the dialog in ZERO RESULT status case
+     */
     private void openRadiusDialog(){
         RadiusDialog dialog = new RadiusDialog();
         dialog.show(getSupportFragmentManager(), "example dialog");
     }
+
 
     @Override
     public void applyRadius(int radius) {
