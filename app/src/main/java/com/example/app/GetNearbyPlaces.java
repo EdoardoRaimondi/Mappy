@@ -20,12 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+
 /**
  * Class to get the nearby places
  */
-public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
+public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
 
-    private String googlePlaceData, url;
+    private String googlePlaceData;
     private GoogleMap mMap;
 
     public static List<MarkerOptions> markerList = new ArrayList<>(); //to save the state
@@ -38,15 +39,15 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     @Override
     protected String doInBackground(Object... objects) {
         mMap = (GoogleMap) objects[0];
-        url = (String) objects[1];
+        String url = (String) objects[1];
 
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
             googlePlaceData = downloadUrl.readTheUrl(url);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
-
         return googlePlaceData;
     }
 
@@ -60,7 +61,8 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
         DataParser parser = new DataParser();
         try {
             nearByPlacesList = parser.parse(s);
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             e.printStackTrace();
         }
         catch(NullPointerException e){
@@ -76,7 +78,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
      * encapsulate them in a marker and display it
      * @param nearByPlacesList The list of nearby places
      */
-    protected void downloadNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
+    private void downloadNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
         if(nearByPlacesList != null) {
             if (!nearByPlacesList.isEmpty()) {
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -90,8 +92,6 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                     double lon = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lng")));
                     LatLng latLng = new LatLng(lat, lon);
                     builder.include(latLng);
-
-
                     //Once get the data, I position the markers of this specific place
                     markerOptions.position(latLng);
                     markerOptions.title(placeName + " : " + vicinity);
@@ -101,28 +101,6 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                 }
 
                 animateCamera(builder);
-            } else {
-                //Something goes wrong. Let's figure out why
-                switch (DataParser.STATUS) {
-                    case ResponseStatus.ZERO_RESULTS:
-                        Toast.makeText(MapsActivity.getContext(), "SEEMS WE ARE IN THE DESERT. NOTHING AROUND US", Toast.LENGTH_LONG).show();
-                        break;
-                    case ResponseStatus.NOT_FOUND:
-                        Toast.makeText(MapsActivity.getContext(), "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
-                        break;
-                    case ResponseStatus.INVALID_REQUEST:
-                        Toast.makeText(MapsActivity.getContext(), "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
-                        break;
-                    case ResponseStatus.UNKNOWN_ERROR:
-                        Toast.makeText(MapsActivity.getContext(), "TRY AGAIN", Toast.LENGTH_LONG).show();
-                        break;
-                    case ResponseStatus.REQUEST_DENIED:
-                        Toast.makeText(MapsActivity.getContext(), "REQUEST DENIED", Toast.LENGTH_LONG).show();
-                        break;
-                    case ResponseStatus.OVER_QUERY_LIMIT:
-                        Toast.makeText(MapsActivity.getContext(), "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
-                        break;
-                }
             }
         }
     }
@@ -156,5 +134,6 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
     public List<MarkerOptions> getMarkerList(){
         return markerList;
     }
+
 
 }

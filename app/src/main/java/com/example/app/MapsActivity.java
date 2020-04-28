@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -41,7 +42,7 @@ import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback{
+        OnMapReadyCallback, RadiusDialog.RadiusDialogListener {
 
     private static final int MAX_PLACES = 30;
     private static final int DEFAULT_ZOOM = 12;
@@ -253,7 +254,6 @@ public class MapsActivity extends FragmentActivity implements
                                 //the request will be downloaded and displayed
                                 GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
                                 getNearbyDiscoPlaces.execute(transferData);
-
                             }
                         }
                     }
@@ -281,7 +281,6 @@ public class MapsActivity extends FragmentActivity implements
                                  //request will be downloaded and displayed
                                  GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
                                  getNearbyRestaurantPlaces.execute(transferData);
-
 
                             }
                         }
@@ -359,9 +358,53 @@ public class MapsActivity extends FragmentActivity implements
      * Callback when app has been resume from onPause. It recreate the precedent state
      * @param markerList the list of the marker representing the precedent state
      */
-    public void onNeedRestoreState(List<MarkerOptions> markerList){
+    private void onNeedRestoreState(List<MarkerOptions> markerList){
         for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
             mMap.addMarker(markerList.get(currentMarker));
         }
+    }
+
+    private void onResult(String result){
+        //Something goes wrong. Let's figure out why
+        Log.i("SHIT","Result called");
+        switch (result) {
+
+            case ResponseStatus.ZERO_RESULTS:
+                openRadiusDialog();
+                Log.i("SHIT","NO RESULTS");
+                break;
+            case ResponseStatus.NOT_FOUND:
+                Toast.makeText(MapsActivity.getContext(), "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
+                Log.i("SHIT","WE CAN'T FIND YOU");
+                break;
+            case ResponseStatus.INVALID_REQUEST:
+                Toast.makeText(MapsActivity.getContext(), "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
+                Log.i("SHIT","BAD REQUEST. TRY AGAIN");
+                break;
+            case ResponseStatus.UNKNOWN_ERROR:
+                Toast.makeText(MapsActivity.getContext(), "TRY AGAIN", Toast.LENGTH_LONG).show();
+                Log.i("SHIT","TRY AGAIN");
+                break;
+            case ResponseStatus.REQUEST_DENIED:
+                Toast.makeText(MapsActivity.getContext(), "REQUEST DENIED", Toast.LENGTH_LONG).show();
+                Log.i("SHIT","REQUEST DENIED");
+                break;
+            case ResponseStatus.OVER_QUERY_LIMIT:
+                Toast.makeText(MapsActivity.getContext(), "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
+                Log.i("SHIT","WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER");
+                break;
+            default: Log.i("SHIT","OK");
+                break;
+        }
+    }
+
+    private void openRadiusDialog(){
+        RadiusDialog dialog = new RadiusDialog();
+        dialog.show(getSupportFragmentManager(), "example dialog");
+    }
+
+    @Override
+    public void applyRadius(int radius) {
+
     }
 }

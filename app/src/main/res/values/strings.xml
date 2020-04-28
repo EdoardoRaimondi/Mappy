@@ -14,4 +14,8 @@
         <item>10km</item>
         <item>50km</item>
     </string-array>
+
+    // DIALOGS
+    <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
+    <string name="initial">0 m</string>
 </resources>
