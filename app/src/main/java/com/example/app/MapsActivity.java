@@ -90,6 +90,7 @@ public class MapsActivity extends FragmentActivity implements
                     newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
                     //now the marker is created I add it on the marker list
                     restoreMarkers.add(newMarker);
+                    restoreMarkers.clear();
                 }
                 canRestore = true;
             }
