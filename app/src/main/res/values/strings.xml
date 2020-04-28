@@ -9,7 +9,6 @@
     //Text View NAMES
     <string name="range">Range</string>
 
-
     //Spinner
     <string-array name="RADIUS">
         <item>1km</item>

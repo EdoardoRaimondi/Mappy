@@ -63,6 +63,11 @@ public class MapsActivity extends FragmentActivity implements
     private static final String LAT_KEY = "lat_last_k";
     private static final String LNG_KEY = "lng_last_k";
 
+    //Constant Strings
+    public static final String YES_BUTTON = "YES";
+    public static final String CANCEL_BUTTON = "CANCEL";
+    public static final String SHOW_ROUTE = "Show route on google maps?";
+
     public static Context mContext;
 
     private GoogleMap mMap;
@@ -74,6 +79,7 @@ public class MapsActivity extends FragmentActivity implements
 
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +176,8 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
 
+
+
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -178,10 +186,14 @@ public class MapsActivity extends FragmentActivity implements
         });
     }
 
+    /**
+     * Creates a dialog to confirm or decline the opening of google maps.
+     * @param marker The marker destination
+     */
     private void createDialogToOpenRoute(@NonNull final Marker marker) {
         new AlertDialog.Builder(this)
-                .setTitle("Show route on Google Maps?")
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setTitle(SHOW_ROUTE)
+                .setPositiveButton(YES_BUTTON, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Uri gmmIntentUri = Uri.parse("google.navigation:q=" + marker.getPosition().latitude + "," + marker.getPosition().longitude);
@@ -190,7 +202,7 @@ public class MapsActivity extends FragmentActivity implements
                         startActivity(mapIntent);
                     }
                 })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                .setNegativeButton(CANCEL_BUTTON, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
