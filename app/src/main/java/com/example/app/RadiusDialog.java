@@ -2,6 +2,7 @@ package com.example.app;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,46 +17,52 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import java.util.Objects;
 
 public class RadiusDialog extends AppCompatDialogFragment {
-    
+
+    private static final double M_TO_KM_DIVIDER = 1000.0;
+
     private int actualRadius;
     private TextView textView;
+    private RadiusDialogListener listener;
 
-    // this is insane, I have tryed that but there were exceptions
     RadiusDialog(int radius){
         this.actualRadius = radius;
     }
 
-    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.radius_dialog, null);
 
         textView = view.findViewById(R.id.text_view);
-        SeekBar seekBar = view.findViewById(R.id.seek);
+        final SeekBar seekBar = view.findViewById(R.id.seek);
 
-        seekBar.setMax(50000-actualRadius);
-        if(actualRadius >= 1000){
-            textView.setText(""+ (int) Math.ceil(actualRadius/1000.0)+" km");
+        seekBar.setMax(50000 - actualRadius);
+        String display;
+        if(actualRadius >= M_TO_KM_DIVIDER){
+            display = (int) Math.ceil(actualRadius / M_TO_KM_DIVIDER) + " km";
         }
         else{
-            textView.setText(""+ actualRadius+" m");
+            display = actualRadius + " m";
         }
+        textView.setText(display);
 
         builder.setView(view)
-                .setTitle("Update Radius")
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.radius_title))
+                .setNegativeButton(getString(R.string.radius_cancel_button), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // NO
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.cancel();
                     }
                 })
-                .setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // OK
+                    public void onClick(DialogInterface dialog, int i) {
+                        int progress = seekBar.getProgress();
+                        listener.applyRadius(progress + actualRadius);
                     }
                 });
 
@@ -63,12 +70,14 @@ public class RadiusDialog extends AppCompatDialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int newRadius = progress + actualRadius;
-                if(newRadius >= 1000){
-                    textView.setText(""+ (int) Math.ceil(newRadius/1000.0)+" km");
+                String display;
+                if(newRadius >= M_TO_KM_DIVIDER){
+                    display = (int) Math.ceil(newRadius / M_TO_KM_DIVIDER) + " km";
                 }
                 else{
-                    textView.setText(""+ newRadius+" m");
+                    display = newRadius + " m";
                 }
+                textView.setText(display);
             }
 
             @Override
@@ -80,6 +89,16 @@ public class RadiusDialog extends AppCompatDialogFragment {
             }
         });
         return builder.create();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            listener = (RadiusDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement RadiusDialogListener");
+        }
     }
 
     public interface RadiusDialogListener {

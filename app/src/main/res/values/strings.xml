@@ -16,10 +16,13 @@
     </string-array>
 
     // DIALOGS
-        // radius dialog
-        <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
-        <string name="initial">0 m</string>
-        // basic dialog
-        <string name="ok_button">OK</string>
-        <string name="cancel_button">Cancel</string>
+    // radius dialog
+    <string name="radius_title">Update Radius</string>
+    <string name="radius_ok_button">OK</string>
+    <string name="radius_cancel_button">Cancel</string>
+    <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
+    <string name="initial">0 m</string>
+    // basic dialog
+    <string name="ok_button">OK</string>
+    <string name="cancel_button">Cancel</string>
 </resources>
