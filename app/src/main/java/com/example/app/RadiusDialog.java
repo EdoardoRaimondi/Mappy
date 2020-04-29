@@ -96,7 +96,6 @@ public class RadiusDialog extends AppCompatDialogFragment {
     }
 
     /**
-     * Can be removed? Please
      * @param context pls
      */
     @Override
