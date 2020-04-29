@@ -58,7 +58,6 @@ public class MapsActivity extends FragmentActivity implements
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
-    private RandomicKeySelector keySelector;
 
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
