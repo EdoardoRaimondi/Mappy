@@ -181,4 +181,4 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     }
 
 }
-}
+
