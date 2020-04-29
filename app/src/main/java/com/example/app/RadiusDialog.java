@@ -56,7 +56,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
                 .setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // OK
+
                     }
                 });
 

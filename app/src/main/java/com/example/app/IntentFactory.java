@@ -15,7 +15,7 @@ public class IntentFactory {
      * @param radius      The research radius
      * @return The intent created
      */
-    public static Intent createNearbyRequestIntent(Context context, NearbyRequestType requestType, long radius){
+    public static Intent createNearbyRequestIntent(Context context, NearbyRequestType requestType, int radius){
         Intent intent = new Intent(context, MapsActivity.class);
         intent.putExtra(MapsActivity.NEARBY_KEY, requestType);
         intent.putExtra(MapsActivity.RADIUS, radius);
@@ -31,4 +31,14 @@ public class IntentFactory {
         Intent intent = new Intent(context, HelpActivity.class);
         return intent;
     }
+
+    /**
+     * Method to create a intent in order to return
+     * to the main lobby
+     * @param context of the current activity
+     */
+     public static Intent createLobbyReturn(Context context){
+         Intent intent = new Intent(context, MainActivity.class);
+         return intent;
+     }
 }
