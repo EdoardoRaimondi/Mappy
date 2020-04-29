@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -490,22 +493,61 @@ public class MapsActivity extends FragmentActivity implements
                 openRadiusDialog();
                 break;
             case ResponseStatus.NOT_FOUND:
-                Toast.makeText(this, "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
-                break;
-            case ResponseStatus.INVALID_REQUEST:
-                Toast.makeText(this, "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
-                break;
-            case ResponseStatus.UNKNOWN_ERROR:
-                Toast.makeText(this, "TRY AGAIN", Toast.LENGTH_LONG).show();
-                break;
-            case ResponseStatus.REQUEST_DENIED:
-                Toast.makeText(this, "REQUEST DENIED", Toast.LENGTH_LONG).show();
+                // intent for get position and refresh of activity
                 break;
             case ResponseStatus.OVER_QUERY_LIMIT:
-                Toast.makeText(this, "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(this)
+                        .setTitle("Sorry")
+                        .setMessage("It seems there have been too many requests on our service, try later in a bit.")
+                        .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // shuld open a waiting form
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
             case ResponseStatus.NO_CONNECTION:
-                Toast.makeText(this, "NO INTERNET CONNECTION", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage("Your device isn't connected to any internet provider. Would you like to activate it now?")
+                    .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            // intent for connection
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create()
+                    .show();
+                break;
+                // FOLLOWING STATES SHOULD BE MANAGED BY PROGRAMMERS, THEY ARE NOT USER FAULT
+            case ResponseStatus.INVALID_REQUEST:
+            case ResponseStatus.UNKNOWN_ERROR:
+            case ResponseStatus.REQUEST_DENIED:
+                new AlertDialog.Builder(this)
+                        .setTitle("What the hell")
+                        .setMessage("This error has occured because someone left a bug.")
+                        .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
         }
     }
