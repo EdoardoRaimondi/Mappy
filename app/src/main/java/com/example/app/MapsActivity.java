@@ -40,9 +40,10 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback, RadiusDialog.RadiusDialogListener {
 
 
-    private static final int MAX_PLACES = 30;
-    private static final int DEFAULT_ZOOM = 12;
+    private static final int MAX_PLACES            = 30;
+    private static final int DEFAULT_ZOOM          = 12;
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private static final String GOOGLE_KEY         = "AIzaSyBhUH-chcm8iT5iSYmqzmuEbnZVUt93Mmo";
 
     // activity connectors
     public static final String NEARBY_KEY = "nearby key";
@@ -228,14 +229,13 @@ public class MapsActivity extends FragmentActivity implements
      */
     private String getUrl(double latitude, double longitude, String nearbyPlace, double radius)
     {
-        String google_key = keySelector.selectKey();
 
         StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
         googleURL.append("location=").append(latitude).append(",").append(longitude);
         googleURL.append("&radius=").append(radius);
         googleURL.append("&type=").append(nearbyPlace);
         googleURL.append("&sensor=true");
-        googleURL.append("&key=").append(google_key);
+        googleURL.append("&key=").append(GOOGLE_KEY);
 
         Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
 

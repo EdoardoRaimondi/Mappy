@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DataParser implements MapJSonDataParser{
 
-    public static String STATUS = ResponseStatus.IDLE;
+    public static String STATUS = "";
 
     /**
      * Convert a single json object of the position to an Hash Map
