@@ -4,13 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -37,7 +37,8 @@ import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback{
+        OnMapReadyCallback, RadiusDialog.RadiusDialogListener {
+
 
     private static final int MAX_PLACES = 30;
     private static final int DEFAULT_ZOOM = 12;
@@ -53,8 +54,6 @@ public class MapsActivity extends FragmentActivity implements
     private static final String LONGITUDES_KEY = "lng_k";
     private static final String LAT_KEY = "lat_last_k";
     private static final String LNG_KEY = "lng_last_k";
-
-    public static Context mContext;
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
@@ -75,32 +74,29 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        restoreMarkers = new ArrayList<>();
+
         // restoring instance state if any
         if(savedInstanceState != null){
             ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
-            if (titles != null) {
-                if(latitudes != null && longitudes != null) {
-                    for (int i = 0; i < titles.size(); i++) {
-                        MarkerOptions newMarker = new MarkerOptions();
-                        newMarker.title(titles.get(i));
-                        double lat = latitudes[i];
-                        double lng = longitudes[i];
-                        LatLng latLng = new LatLng(lat, lng);
-                        newMarker.position(latLng);
-                        newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                        // now the marker is created and added on marker list
-                        restoreMarkers.add(newMarker);
-                        canRestore = true;
-                    }
+            if (titles != null && latitudes != null && longitudes != null) {
+                for (int i = 0; i < titles.size(); i++) {
+                    MarkerOptions newMarker = new MarkerOptions();
+                    newMarker.title(titles.get(i));
+                    double lat = latitudes[i];
+                    double lng = longitudes[i];
+                    LatLng latLng = new LatLng(lat, lng);
+                    newMarker.position(latLng);
+                    newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                    //now the marker is created I add it on the marker list
+                    restoreMarkers.add(newMarker);
                 }
+                canRestore = true;
             }
         }
-
-        //I set the current context so I can show eventual error toasts
-        setContext();
 
         // obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -113,8 +109,9 @@ public class MapsActivity extends FragmentActivity implements
 
 
     /**
-     * Callback when the map fragemnt ui is ready
-     * @param googleMap the map ready
+     * Callback when the map fragment ui is ready.
+     * If triggered it means surely a button has been pressed
+     * @param googleMap the map
      */
     @SuppressLint("MissingPermission")
     @Override
@@ -138,16 +135,14 @@ public class MapsActivity extends FragmentActivity implements
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
-
 
         task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                getDeviceLocation();
-                //Get information of what button has been pressed
+                setDeviceLocation();
+                //Get button pressed information
                 Intent requestInfo = getIntent();
                 NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 long radius = requestInfo.getLongExtra(RADIUS, 1000);
@@ -162,6 +157,7 @@ public class MapsActivity extends FragmentActivity implements
                     switch (requestType) {
                         case DISCO:
                             showNearbyDisco(radius);
+
                             break;
                         case RESTAURANT:
                             showNearbyRestaurant(radius);
@@ -186,7 +182,7 @@ public class MapsActivity extends FragmentActivity implements
      * Method to get user location pointer on the map
      */
     @SuppressLint("MissingPermission")
-    private void getDeviceLocation() {
+    private void setDeviceLocation() {
         fusedLocationProviderClient.getLastLocation()
                 .addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
@@ -268,7 +264,12 @@ public class MapsActivity extends FragmentActivity implements
                                 //the request will be downloaded and displayed
                                 GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
                                 getNearbyDiscoPlaces.execute(transferData);
-
+                                getNearbyDiscoPlaces.setOnResultSetListener(new OnResultSetListener() {
+                                    @Override
+                                    public void onResultSet(String result) {
+                                        showResponseInfo(result);
+                                    }
+                                });
                             }
                         }
                     }
@@ -276,8 +277,9 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     /**
-     * Method activated by the relative nearby button pressure
-     * @param radius of research
+     * Method activated by the nearby button pressure.
+     * Send to {@link GetNearbyPlaces} the command to show the nearby restaurant
+     * @param radius the radius research
      */
     private void showNearbyRestaurant(final long radius){
         fusedLocationProviderClient.getLastLocation()
@@ -297,7 +299,12 @@ public class MapsActivity extends FragmentActivity implements
                                  //request will be downloaded and displayed
                                  GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
                                  getNearbyRestaurantPlaces.execute(transferData);
-
+                                 getNearbyRestaurantPlaces.setOnResultSetListener(new OnResultSetListener() {
+                                     @Override
+                                     public void onResultSet(String result) {
+                                         showResponseInfo(result);
+                                     }
+                                 });
 
                             }
                         }
@@ -406,24 +413,11 @@ public class MapsActivity extends FragmentActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 51) {
             if (resultCode == RESULT_OK) {
-                getDeviceLocation();
+                setDeviceLocation();
             }
         }
     }
 
-    /**
-     * Method to set the context
-     */
-    private void setContext(){
-        mContext = getApplicationContext();
-    }
-
-    /**
-     * @return the activity context
-     */
-    public static Context getContext(){
-        return mContext;
-    }
 
     //INSTANCE SAVE
 
@@ -435,7 +429,7 @@ public class MapsActivity extends FragmentActivity implements
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        // creating empty arrays to save the state
+        //creating empty arrays to save the state
         ArrayList<String> titles = new ArrayList<>();
         // only the array list titles will tell how many places by its size
         double[] lat = new double[MAX_PLACES];
@@ -464,9 +458,53 @@ public class MapsActivity extends FragmentActivity implements
      * Callback when app has been resume from onPause. It recreate the precedent state
      * @param markerList the list of the marker representing the precedent state
      */
-    public void onNeedRestoreState(List<MarkerOptions> markerList){
+    private void onNeedRestoreState(List<MarkerOptions> markerList){
         for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
             mMap.addMarker(markerList.get(currentMarker));
         }
+    }
+
+    /**
+     * Method to recognize the response status
+     * and act accordingly (show different dialog).
+     * Act normally if the status is OK
+     * To see all the possible status see {@link ResponseStatus}
+     * @param status of the response
+     */
+    private void showResponseInfo(String status){
+        switch (status) {
+            case ResponseStatus.ZERO_RESULTS:
+                openRadiusDialog();
+                break;
+            case ResponseStatus.NOT_FOUND:
+                Toast.makeText(this, "WE CAN'T FIND YOU", Toast.LENGTH_LONG).show();
+                break;
+            case ResponseStatus.INVALID_REQUEST:
+                Toast.makeText(this, "BAD REQUEST. TRY AGAIN", Toast.LENGTH_LONG).show();
+                break;
+            case ResponseStatus.UNKNOWN_ERROR:
+                Toast.makeText(this, "TRY AGAIN", Toast.LENGTH_LONG).show();
+                break;
+            case ResponseStatus.REQUEST_DENIED:
+                Toast.makeText(this, "REQUEST DENIED", Toast.LENGTH_LONG).show();
+                break;
+            case ResponseStatus.OVER_QUERY_LIMIT:
+                Toast.makeText(this, "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
+    /**
+     * Open the dialog in ZERO RESULT status case
+     */
+    private void openRadiusDialog(){
+        RadiusDialog dialog = new RadiusDialog();
+        dialog.show(getSupportFragmentManager(), "example dialog");
+    }
+
+
+    @Override
+    public void applyRadius(int radius) {
+
     }
 }

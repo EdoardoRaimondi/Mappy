@@ -1,8 +1,5 @@
 package com.example.app;
 
-import android.util.JsonReader;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +13,7 @@ import java.util.List;
  */
 public class DataParser implements MapJSonDataParser{
 
-    public static String STATUS = "";
+    public static String STATUS = ResponseStatus.IDLE;
 
     /**
      * Convert a single json object of the position to an Hash Map
@@ -25,8 +22,7 @@ public class DataParser implements MapJSonDataParser{
      * @throws JSONException if something in the json read goes wrong
      *
      */
-    private HashMap<String, String> getSingleNearbyPlace(JSONObject googlePlaceJSON)
-    {
+    private HashMap<String, String> getSingleNearbyPlace(JSONObject googlePlaceJSON) {
         HashMap<String, String> googlePlaceMap = new HashMap<>();
         String NameOfPlace = "-NA-";
         String vicinity = "-NA-";
@@ -34,20 +30,16 @@ public class DataParser implements MapJSonDataParser{
         String longitude = "";
         String reference = "";
 
-        try
-        {
-            if (!googlePlaceJSON.isNull("name"))
-            {
+        try {
+            if (!googlePlaceJSON.isNull("name")) {
                 NameOfPlace = googlePlaceJSON.getString("name");
             }
-            if (!googlePlaceJSON.isNull("vicinity"))
-            {
+            if (!googlePlaceJSON.isNull("vicinity")) {
                 vicinity = googlePlaceJSON.getString("vicinity");
             }
             latitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
             reference = googlePlaceJSON.getString("reference");
-
 
             googlePlaceMap.put("place_name", NameOfPlace);
             googlePlaceMap.put("vicinity", vicinity);
@@ -55,8 +47,7 @@ public class DataParser implements MapJSonDataParser{
             googlePlaceMap.put("lng", longitude);
             googlePlaceMap.put("reference", reference);
         }
-        catch (JSONException e)
-        {
+        catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -69,23 +60,22 @@ public class DataParser implements MapJSonDataParser{
      * @param jsonArray array containing the nearby places
      * @throws JSONException if json reading goes wrong
      */
-    private List<HashMap<String, String>> getAllNearbyPlaces(JSONArray jsonArray)
-    {
-        int count = jsonArray.length();
+    private List<HashMap<String, String>> getAllNearbyPlaces(JSONArray jsonArray) {
+        int count = 0;
+        // changed code here because if there is no connection null pointer exc is thrown
+        if(jsonArray != null) {
+            count = jsonArray.length();
+        }
         List<HashMap<String, String>> NearbyPlacesList = new ArrayList<>();
 
         HashMap<String, String> NearbyPlaceMap = null;
 
-        for (int i=0; i<count; i++)
-        {
-            try
-            {
+        for (int i=0; i<count; i++) {
+            try {
                 NearbyPlaceMap = getSingleNearbyPlace( (JSONObject) jsonArray.get(i) );
                 NearbyPlacesList.add(NearbyPlaceMap);
-
             }
-            catch (JSONException e)
-            {
+            catch (JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -102,14 +92,10 @@ public class DataParser implements MapJSonDataParser{
      * @throws JSONException if Json computation goes wrong
      */
     public List<HashMap<String, String>> parse(String JsonData) throws JSONException {
-        JSONArray jsonArray = null;
         JSONObject jsonObject = new JSONObject(JsonData);
-
-        jsonArray = jsonObject.getJSONArray("results");
-
+        JSONArray jsonArray = jsonObject.getJSONArray("results");
         //The status can assume one of the {@link ResponseStatus.class}
         STATUS = jsonObject.getString("status");
-
         return getAllNearbyPlaces(jsonArray);
     }
 
