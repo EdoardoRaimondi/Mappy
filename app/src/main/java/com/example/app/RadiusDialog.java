@@ -1,9 +1,9 @@
 package com.example.app;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +14,30 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import java.util.Objects;
-
 public class RadiusDialog extends AppCompatDialogFragment {
 
+    public static final String CURRENT_RADIUS_KEY = "current_rad_k";
+    private int actualRadius;
     private TextView textView;
+    private SeekBar seekBar;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.radius_dialog, null);
+        View view = inflater.inflate(R.layout.radius_dialog, null);
+
+        textView = view.findViewById(R.id.text_view);
+        seekBar = view.findViewById(R.id.seek);
+
+        seekBar.setMax(50000-actualRadius);
+        if(actualRadius >= 1000){
+            textView.setText(""+ (int) Math.ceil(actualRadius/1000.0)+" km");
+        }
+        else{
+            textView.setText(""+ actualRadius+" m");
+        }
 
         builder.setView(view)
                 .setTitle("Update Radius")
@@ -42,18 +54,18 @@ public class RadiusDialog extends AppCompatDialogFragment {
                     }
                 });
 
-        SeekBar seekBar = view.findViewById(R.id.seek);
-        textView = view.findViewById(R.id.text_view);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress >= 1000){
-                    textView.setText(""+ (int) Math.ceil(progress/1000.0)+" km");
+                int newRadius = progress + actualRadius;
+                if(newRadius >= 1000){
+                    textView.setText(""+ (int) Math.ceil(newRadius/1000.0)+" km");
                 }
                 else{
-                    textView.setText(""+ progress+" m");
+                    textView.setText(""+ newRadius+" m");
                 }
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -66,13 +78,14 @@ public class RadiusDialog extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) throws ClassCastException {
+    public void onAttach(Context context) {
         super.onAttach(context);
+
         try {
             RadiusDialogListener listener = (RadiusDialogListener) context;
-        }
-        catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement RadiusDialogListener");
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() +
+                    "must implement ExampleDialogListener");
         }
     }
 

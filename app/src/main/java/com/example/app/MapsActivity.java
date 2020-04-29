@@ -426,6 +426,8 @@ public class MapsActivity extends FragmentActivity implements
      */
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        // calling super class method
+        super.onSaveInstanceState(savedInstanceState);
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
         //creating empty arrays to save the state
@@ -449,8 +451,6 @@ public class MapsActivity extends FragmentActivity implements
             savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
             savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
         }
-        // calling super class method
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     /**
@@ -504,6 +504,6 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void applyRadius(int radius) {
-
+        // refresh this activity with new radius
     }
 }
