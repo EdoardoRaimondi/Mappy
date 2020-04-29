@@ -79,21 +79,28 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String> {
                 HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
                 String placeName = googleNearbyPlace.get("place_name");
                 String vicinity = googleNearbyPlace.get("vicinity");
-                double lat = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lat")));
-                double lon = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lng")));
-                LatLng latLng = new LatLng(lat, lon);
-                builder.include(latLng);
+                try {
+                    double lat = Double.parseDouble(googleNearbyPlace.get("lat"));
+                    double lon = Double.parseDouble(googleNearbyPlace.get("lng"));
+                    LatLng latLng = new LatLng(lat, lon);
+                    builder.include(latLng);
 
 
-                //Once get the data, I position the markers of this specific place
-                markerOptions.position(latLng);
-                markerOptions.title(placeName + " : " + vicinity);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                    //Once get the data, I position the markers of this specific place
+                    markerOptions.position(latLng);
+                    markerOptions.title(placeName + " : " + vicinity);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-                //Create the marker
-                mMap.addMarker(markerOptions);
-                //Add the marker in order to recreate the state
-                markerList.add(markerOptions);
+                    //Create the marker
+                    mMap.addMarker(markerOptions);
+                    //Add the marker in order to recreate the state
+                    markerList.add(markerOptions);
+
+                }
+                //If I am here, it means I did not receive the position (latitude and longitude) for that searching
+                catch (NullPointerException e) {
+                    //Just don't showing it on the map
+                }
 
             }
             LatLngBounds bounds = builder.build();

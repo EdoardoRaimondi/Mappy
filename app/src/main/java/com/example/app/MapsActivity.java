@@ -66,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements
 
     // instance restoring control variables
     private boolean canRestore = false;
-    private List<MarkerOptions> restoreMarkers;
+    private List<MarkerOptions> restoreMarkers = new ArrayList<>();
 
     /**
      * Callback when the activity is created
@@ -84,7 +84,6 @@ public class MapsActivity extends FragmentActivity implements
             if (titles != null) {
                 if(latitudes != null && longitudes != null) {
                     for (int i = 0; i < titles.size(); i++) {
-                        restoreMarkers = new ArrayList<>();
                         MarkerOptions newMarker = new MarkerOptions();
                         newMarker.title(titles.get(i));
                         double lat = latitudes[i];
@@ -99,20 +98,6 @@ public class MapsActivity extends FragmentActivity implements
                 }
             }
         }
-
-        //create a key list
-        ArrayList<String> keys = new ArrayList<>();
-        // edoardo's keys
-        keys.add("AIzaSyBY5JjsICWIElDIkNM77aLl36X-Qh7D6YQ");
-        keys.add("AIzaSyAXVDbrt2btG6elw5_Q3AnCQp4jZnF3e10");
-        keys.add("AIzaSyCU1II2dpnolrtQ7sBO7CLBCIQrfYYLjbA");
-        keys.add("AIzaSyCCye6V4rO1FM_3l2r2bjyrWwEuUIdsbjE");
-        keys.add("AIzaSyC3Xv1AKbmZ3wJ6VXz56BKIwxBguangcQA");
-        // jacopo's key
-        keys.add("AIzaSyBhUH-chcm8iT5iSYmqzmuEbnZVUt93Mmo");
-
-        //pass it to a key selector
-        keySelector = new RandomicKeySelector(keys);
 
         //I set the current context so I can show eventual error toasts
         setContext();
@@ -169,6 +154,7 @@ public class MapsActivity extends FragmentActivity implements
 
                 if(canRestore){
                     onNeedRestoreState(restoreMarkers);
+                    restoreMarkers.clear();
                 }
                 else {
                     //act in order to satisfy the request purpose
