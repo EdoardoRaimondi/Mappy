@@ -21,11 +21,23 @@ public class RadiusDialog extends AppCompatDialogFragment {
     
     private int actualRadius;
     private TextView textView;
+    private NearbyRequestType requestType;
 
-    RadiusDialog(int radius){
+    /**
+     * Set the some context information of the caller activity
+     * @param radius       old radius research
+     * @param requestType  research request type
+     */
+    RadiusDialog(int radius, NearbyRequestType requestType){
         actualRadius = radius;
+        this.requestType = requestType;
     }
 
+    /**
+     * Callback when the dialog is created
+     * @param savedInstanceState for eventual saved data
+     * @return The dialog
+     */
     @SuppressLint("SetTextI18n")
     @NonNull
     @Override
@@ -56,7 +68,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
                 .setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        startActivity(IntentFactory.createNearbyRequestIntent(getContext(), requestType, i));
                     }
                 });
 
@@ -83,6 +95,10 @@ public class RadiusDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
+    /**
+     * Can be removed? Please
+     * @param context pls
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

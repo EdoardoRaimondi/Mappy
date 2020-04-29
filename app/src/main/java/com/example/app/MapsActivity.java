@@ -4,16 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -64,6 +60,8 @@ public class MapsActivity extends FragmentActivity implements
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
+
+    private NearbyRequestType requestType;
     private int radius; //max radius can be 50000m
 
     // instance restoring control variables
@@ -147,7 +145,7 @@ public class MapsActivity extends FragmentActivity implements
                 setDeviceLocation();
                 //Get button pressed information
                 Intent requestInfo = getIntent();
-                NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
+                requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 radius = requestInfo.getIntExtra(RADIUS, 1000);
 
                 if(canRestore){
@@ -516,7 +514,7 @@ public class MapsActivity extends FragmentActivity implements
      * Open the dialog in ZERO RESULT status case
      */
     private void openRadiusDialog(){
-        RadiusDialog dialog = new RadiusDialog(radius);
+        RadiusDialog dialog = new RadiusDialog(radius, requestType);
         dialog.show(getSupportFragmentManager(), "example dialog");
     }
 
@@ -525,4 +523,6 @@ public class MapsActivity extends FragmentActivity implements
     public void applyRadius(int radius) {
         // refresh this activity with new radius
     }
+
+
 }
