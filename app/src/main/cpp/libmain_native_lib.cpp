@@ -7,7 +7,7 @@
 
 extern "C" {
 
-JNIEXPORT jlong
+JNIEXPORT jint
 JNICALL Java_com_example_app_MainActivity_parseRadius(JNIEnv * env, jobject obj, jstring radius){
     const char *nativeString = env->GetStringUTFChars(radius, 0);
     char buffer[10]; //to contain the number

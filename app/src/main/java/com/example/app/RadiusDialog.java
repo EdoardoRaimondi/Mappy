@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,22 +15,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class RadiusDialog extends AppCompatDialogFragment {
+import java.util.Objects;
 
-    public static final String CURRENT_RADIUS_KEY = "current_rad_k";
+public class RadiusDialog extends AppCompatDialogFragment {
+    
     private int actualRadius;
     private TextView textView;
-    private SeekBar seekBar;
 
+    RadiusDialog(int radius){
+        actualRadius = radius;
+    }
+
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.radius_dialog, null);
 
         textView = view.findViewById(R.id.text_view);
-        seekBar = view.findViewById(R.id.seek);
+        SeekBar seekBar = view.findViewById(R.id.seek);
 
         seekBar.setMax(50000-actualRadius);
         if(actualRadius >= 1000){
@@ -78,7 +84,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         try {

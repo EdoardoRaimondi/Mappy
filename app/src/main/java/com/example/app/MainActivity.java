@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
      * Parser for the radius long
      * @param radius to parse
      */
-    public native long parseRadius(String radius);
+    public native int parseRadius(String radius);
 
     /**
      * Library loading

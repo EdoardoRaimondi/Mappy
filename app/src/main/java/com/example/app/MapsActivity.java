@@ -61,10 +61,10 @@ public class MapsActivity extends FragmentActivity implements
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
-
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
+    private int radius; //max radius can be 50000m
 
     // instance restoring control variables
     private boolean canRestore = false;
@@ -148,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements
                 //Get button pressed information
                 Intent requestInfo = getIntent();
                 NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
-                long radius = requestInfo.getLongExtra(RADIUS, 1000);
+                radius = requestInfo.getIntExtra(RADIUS, 1000);
 
                 if(canRestore){
                     onNeedRestoreState(restoreMarkers);
@@ -556,7 +556,7 @@ public class MapsActivity extends FragmentActivity implements
      * Open the dialog in ZERO RESULT status case
      */
     private void openRadiusDialog(){
-        RadiusDialog dialog = new RadiusDialog();
+        RadiusDialog dialog = new RadiusDialog(radius);
         dialog.show(getSupportFragmentManager(), "example dialog");
     }
 
