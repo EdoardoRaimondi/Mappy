@@ -157,7 +157,6 @@ public class MapsActivity extends FragmentActivity implements
                     switch (requestType) {
                         case DISCO:
                             showNearbyDisco(radius);
-
                             break;
                         case RESTAURANT:
                             showNearbyRestaurant(radius);
@@ -333,7 +332,12 @@ public class MapsActivity extends FragmentActivity implements
                                 //request will be downloaded and displayed
                                 GetNearbyPlaces getNearbyTaxiPlaces = new GetNearbyPlaces();
                                 getNearbyTaxiPlaces.execute(transferData);
-
+                                getNearbyTaxiPlaces.setOnResultSetListener(new OnResultSetListener() {
+                                    @Override
+                                    public void onResultSet(String result) {
+                                        showResponseInfo(result);
+                                    }
+                                });
 
                             }
                         }
@@ -363,7 +367,12 @@ public class MapsActivity extends FragmentActivity implements
                                 //request will be downloaded and displayed
                                 GetNearbyPlaces getNearbyHospitals = new GetNearbyPlaces();
                                 getNearbyHospitals.execute(transferData);
-
+                                getNearbyHospitals.setOnResultSetListener(new OnResultSetListener() {
+                                    @Override
+                                    public void onResultSet(String result) {
+                                        showResponseInfo(result);
+                                    }
+                                });
 
                             }
                         }
@@ -393,7 +402,12 @@ public class MapsActivity extends FragmentActivity implements
                                 //request will be downloaded and displayed
                                 GetNearbyPlaces getNearbyPoliceStations = new GetNearbyPlaces();
                                 getNearbyPoliceStations.execute(transferData);
-
+                                getNearbyPoliceStations.setOnResultSetListener(new OnResultSetListener() {
+                                    @Override
+                                    public void onResultSet(String result) {
+                                        showResponseInfo(result);
+                                    }
+                                });
 
                             }
                         }
@@ -489,6 +503,9 @@ public class MapsActivity extends FragmentActivity implements
                 break;
             case ResponseStatus.OVER_QUERY_LIMIT:
                 Toast.makeText(this, "WE CAN'T HANDLE ALL THIS REQUESTS. TRY LATER", Toast.LENGTH_LONG).show();
+                break;
+            case ResponseStatus.NO_CONNECTION:
+                Toast.makeText(this, "NO INTERNET CONNECTION", Toast.LENGTH_LONG).show();
                 break;
         }
     }

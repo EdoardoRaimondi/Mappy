@@ -84,8 +84,9 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
             e.printStackTrace();
         }
         catch(NullPointerException e){
-            // here because no connection
-            Log.d("GetNearbyPlaces","You are seeing this message because there is no connection");
+            // Here because no/slow connection
+            result = ResponseStatus.NO_CONNECTION;
+            loadResult();
         }
 
         downloadNearbyPlaces(nearByPlacesList);
