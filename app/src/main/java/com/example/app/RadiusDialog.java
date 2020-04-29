@@ -2,9 +2,7 @@ package com.example.app;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +20,9 @@ public class RadiusDialog extends AppCompatDialogFragment {
     private int actualRadius;
     private TextView textView;
 
+    // this is insane, I have tryed that but there were exceptions
     RadiusDialog(int radius){
-        actualRadius = radius;
+        this.actualRadius = radius;
     }
 
     @SuppressLint("SetTextI18n")
@@ -81,18 +80,6 @@ public class RadiusDialog extends AppCompatDialogFragment {
             }
         });
         return builder.create();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        try {
-            RadiusDialogListener listener = (RadiusDialogListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() +
-                    "must implement ExampleDialogListener");
-        }
     }
 
     public interface RadiusDialogListener {
