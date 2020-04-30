@@ -40,7 +40,7 @@ import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback, RadiusDialog.RadiusDialogListener {
+        OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener {
 
 
     private static final int MAX_PLACES            = 30;
@@ -58,6 +58,11 @@ public class MapsActivity extends FragmentActivity implements
     private static final String LONGITUDES_KEY = "lng_k";
     private static final String LAT_KEY = "lat_last_k";
     private static final String LNG_KEY = "lng_last_k";
+
+    // dialog keys
+    private static final String NO_CONN_DIALOG = "no_conn_d_k";
+    private static final String OVER_QUERY_DIALOG = "over_query_d_k";
+    private static final String NOT_FOUND_DIALOG = "not_found_d_k";
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
@@ -488,50 +493,36 @@ public class MapsActivity extends FragmentActivity implements
      * @param status of the response
      */
     private void showResponseInfo(String status){
+        BasicDialog dialog;
         switch (status) {
             case ResponseStatus.ZERO_RESULTS:
                 openRadiusDialog();
                 break;
             case ResponseStatus.NOT_FOUND:
-                // intent for get position and refresh of activity
+                dialog = new BasicDialog(
+                        NOT_FOUND_DIALOG,
+                        "Oh crap",
+                        "We are not able to find you, would you like to retry?."
+                );
+                dialog.show(getSupportFragmentManager(), "basic dialog");
                 break;
             case ResponseStatus.OVER_QUERY_LIMIT:
-                new AlertDialog.Builder(this)
-                        .setTitle("Sorry")
-                        .setMessage("It seems there have been too many requests on our service, try later in a bit.")
-                        .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // shuld open a waiting form
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        })
-                        .create()
-                        .show();
+                dialog = new BasicDialog(
+                    OVER_QUERY_DIALOG,
+                    "Warning",
+                    "It seems there have been too many requests on our service, try later in a bit."
+                );
+                dialog.show(getSupportFragmentManager(), "basic dialog");
                 break;
             case ResponseStatus.NO_CONNECTION:
-                new AlertDialog.Builder(this)
-                    .setTitle("Error")
-                    .setMessage("Your device isn't connected to any internet provider. Would you like to activate it now?")
-                    .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            // intent for connection
-                        }
-                    })
-                    .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    })
-                    .create()
-                    .show();
+                dialog = new BasicDialog(
+                        NO_CONN_DIALOG,
+                        "Warning",
+                        "Your device isn't connected to any internet provider. Would you like to activate it now?",
+                        "YES",
+                        "NO"
+                );
+                dialog.show(getSupportFragmentManager(), "basic dialog");
                 break;
                 // FOLLOWING STATES SHOULD BE MANAGED BY PROGRAMMERS, THEY ARE NOT USER FAULT
             case ResponseStatus.INVALID_REQUEST:
@@ -557,12 +548,17 @@ public class MapsActivity extends FragmentActivity implements
      */
     private void openRadiusDialog(){
         RadiusDialog dialog = new RadiusDialog(radius);
-        dialog.show(getSupportFragmentManager(), "example dialog");
+        dialog.show(getSupportFragmentManager(), "radius dialog");
     }
 
 
     @Override
     public void applyRadius(int radius) {
         // refresh this activity with new radius
+    }
+
+    @Override
+    public void onDialogResult(String id, boolean option){
+
     }
 }

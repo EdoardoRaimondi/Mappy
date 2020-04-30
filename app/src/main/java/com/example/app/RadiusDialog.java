@@ -27,7 +27,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
     /**
     * RadiusDialog constructor
     * @param radius the min value of seekbar
-    * */
+    */
     RadiusDialog(int radius){
         this.actualRadius = radius;
     }
@@ -36,7 +36,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
     * Callback to get the radius dialog instance
     * @param savedInstanceState the Bundle of any previous
     * radius dialog if any
-    * */
+    */
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
     * @param context the activity context
     * @throws ClassCastException if the listener is not
     * implemented in activity class
-    * */
+    */
 
     @Override
     public void onAttach(@NonNull Context context) {
