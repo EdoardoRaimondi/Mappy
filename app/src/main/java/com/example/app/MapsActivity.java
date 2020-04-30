@@ -515,7 +515,12 @@ public class MapsActivity extends FragmentActivity implements
      */
     private void openRadiusDialog(){
         RadiusDialog dialog = new RadiusDialog(radius, requestType);
-        dialog.show(getSupportFragmentManager(), "example dialog");
+        try {
+            dialog.show(getSupportFragmentManager(), "example dialog");
+        }
+        catch(IllegalStateException e){
+            //just ignore it
+        }
     }
 
 
