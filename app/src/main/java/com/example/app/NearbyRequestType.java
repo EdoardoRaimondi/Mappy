@@ -4,9 +4,10 @@ package com.example.app;
  * Describe the type of nearby request. In order to distinguish them.
  */
 public enum NearbyRequestType {
-    DISCO,
-    RESTAURANT,
-    HOSPITAL,
-    POLICE,
-    TAXI
+    night_club,
+    restaurant,
+    hospital,
+    police,
+    taxi_stand
+
 }

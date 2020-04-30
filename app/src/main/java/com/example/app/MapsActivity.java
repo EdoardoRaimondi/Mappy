@@ -68,6 +68,16 @@ public class MapsActivity extends FragmentActivity implements
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers = new ArrayList<>();
 
+    private OnLocationSetListener onLocationSetListener;
+
+    /**
+     * Method to set the location listener.
+     * @param listener to set
+     */
+    private void setOnLocationSetListener(OnLocationSetListener listener){
+        onLocationSetListener = listener;
+    }
+
     /**
      * Callback when the activity is created
      */
@@ -156,19 +166,19 @@ public class MapsActivity extends FragmentActivity implements
                     //act in order to satisfy the request purpose
                     assert requestType != null;
                     switch (requestType) {
-                        case DISCO:
+                        case night_club:
                             showNearbyDisco(radius);
                             break;
-                        case RESTAURANT:
+                        case restaurant:
                             showNearbyRestaurant(radius);
                             break;
-                        case TAXI:
+                        case taxi_stand:
                             showNearbyTaxi(radius);
                             break;
-                        case HOSPITAL:
+                        case hospital:
                             showNearbyHospital(radius);
                             break;
-                        case POLICE:
+                        case police:
                             showNearbyPolice(radius);
                             break;
                     }
@@ -190,8 +200,11 @@ public class MapsActivity extends FragmentActivity implements
                         if (task.isSuccessful()) {
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
+                                //trigger the listeners
+                                loadLocation(myLastLocation);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
-                            } else {
+                            }
+                            else {
                                 final LocationRequest locationRequest = LocationRequest.create();
                                 locationRequest.setInterval(10000);
                                 locationRequest.setFastestInterval(5000);
@@ -226,7 +239,7 @@ public class MapsActivity extends FragmentActivity implements
      * @param radius       of the research
      * @return URL string
      */
-    private String getUrl(double latitude, double longitude, String nearbyPlace, double radius)
+    private String getUrl(double latitude, double longitude, String nearbyPlace, int radius)
     {
 
         StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
@@ -245,175 +258,143 @@ public class MapsActivity extends FragmentActivity implements
      * Method activated by the relative nearby button pressure
      * @param radius of research
      */
-    private void showNearbyDisco(final long radius){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
+    private void showNearbyDisco(final int radius) {
+        setOnLocationSetListener(new OnLocationSetListener() {
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.night_club.toString(), radius);
+                Object[] transferData = new Object[2];
+
+                transferData[0] = mMap;
+                transferData[1] = urlDisco;
+
+                //the request will be downloaded and displayed
+                GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
+                getNearbyDiscoPlaces.execute(transferData);
+                getNearbyDiscoPlaces.setOnResultSetListener(new OnResultSetListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            myLastLocation = task.getResult();
-                            if (myLastLocation != null) {
-                                Object[] transferData = new Object[2];
-
-                                //create the request
-                                String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "night_club", radius);
-                                transferData[0] = mMap;
-                                transferData[1] = urlDisco;
-
-                                //the request will be downloaded and displayed
-                                GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
-                                getNearbyDiscoPlaces.execute(transferData);
-                                getNearbyDiscoPlaces.setOnResultSetListener(new OnResultSetListener() {
-                                    @Override
-                                    public void onResultSet(String result) {
-                                        showResponseInfo(result);
-                                    }
-                                });
-                            }
-                        }
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
                     }
                 });
+            }
+        });
     }
+
 
     /**
      * Method activated by the nearby button pressure.
      * Send to {@link GetNearbyPlaces} the command to show the nearby restaurant
      * @param radius the radius research
      */
-    private void showNearbyRestaurant(final long radius){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
+    private void showNearbyRestaurant(final int radius) {
+        setOnLocationSetListener(new OnLocationSetListener() {
+            @Override
+            public void onLocationSet(Location location) {
+                String urlRestaurant = getUrl(location.getLatitude(), location.getLongitude(), NearbyRequestType.restaurant.toString(), radius);
+                Object[] transferData = new Object[2];
+
+                transferData[0] = mMap;
+                transferData[1] = urlRestaurant;
+
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
+                getNearbyRestaurantPlaces.execute(transferData);
+                getNearbyRestaurantPlaces.setOnResultSetListener(new OnResultSetListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            myLastLocation = task.getResult();
-                            if (myLastLocation != null) {
-                                Object[] transferData = new Object[2];
-
-                                //create the request
-                                 String urlRisto = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
-                                 transferData[0] = mMap;
-                                 transferData[1] = urlRisto;
-
-                                 //request will be downloaded and displayed
-                                 GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
-                                 getNearbyRestaurantPlaces.execute(transferData);
-                                 getNearbyRestaurantPlaces.setOnResultSetListener(new OnResultSetListener() {
-                                     @Override
-                                     public void onResultSet(String result) {
-                                         showResponseInfo(result);
-                                     }
-                                 });
-
-                            }
-                        }
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
                     }
                 });
+            }
+        });
     }
 
     /**
      * Method activated by the relative nearby button pressure
      * @param radius of research
      */
-    private void showNearbyTaxi(final long radius){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
+    private void showNearbyTaxi(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlTaxi = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.taxi_stand.toString(), radius);
+                Object[] transferData = new Object[2];
+
+                transferData[0] = mMap;
+                transferData[1] = urlTaxi;
+
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyTaxiPlaces = new GetNearbyPlaces();
+                getNearbyTaxiPlaces.execute(transferData);
+                getNearbyTaxiPlaces.setOnResultSetListener(new OnResultSetListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            myLastLocation = task.getResult();
-                            if (myLastLocation != null) {
-                                Object[] transferData = new Object[2];
-
-                                //create the request
-                                String urlTaxi = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
-                                transferData[0] = mMap;
-                                transferData[1] = urlTaxi;
-
-                                //request will be downloaded and displayed
-                                GetNearbyPlaces getNearbyTaxiPlaces = new GetNearbyPlaces();
-                                getNearbyTaxiPlaces.execute(transferData);
-                                getNearbyTaxiPlaces.setOnResultSetListener(new OnResultSetListener() {
-                                    @Override
-                                    public void onResultSet(String result) {
-                                        showResponseInfo(result);
-                                    }
-                                });
-
-                            }
-                        }
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
                     }
                 });
+            }
+        });
     }
+
 
     /**
      * Method activated by the relative nearby button pressure
      * @param radius of research
      */
-    private void showNearbyHospital(final long radius){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
+    private void showNearbyHospital(final int radius) {
+        setOnLocationSetListener(new OnLocationSetListener() {
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlHospital = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.hospital.toString(), radius);
+                Object[] transferData = new Object[2];
+
+                transferData[0] = mMap;
+                transferData[1] = urlHospital;
+
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyHospitals = new GetNearbyPlaces();
+                getNearbyHospitals.execute(transferData);
+                getNearbyHospitals.setOnResultSetListener(new OnResultSetListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            myLastLocation = task.getResult();
-                            if (myLastLocation != null) {
-                                Object[] transferData = new Object[2];
-
-                                //create the request
-                                String urlHospital = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
-                                transferData[0] = mMap;
-                                transferData[1] = urlHospital;
-
-                                //request will be downloaded and displayed
-                                GetNearbyPlaces getNearbyHospitals = new GetNearbyPlaces();
-                                getNearbyHospitals.execute(transferData);
-                                getNearbyHospitals.setOnResultSetListener(new OnResultSetListener() {
-                                    @Override
-                                    public void onResultSet(String result) {
-                                        showResponseInfo(result);
-                                    }
-                                });
-
-                            }
-                        }
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
                     }
                 });
+            }
+        });
     }
+
 
     /**
      * Method activated by the relative nearby button pressure
      * @param radius of research
      */
-    private void showNearbyPolice(final long radius){
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
+    private void showNearbyPolice(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlPolice = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.police.toString(), radius);
+                Object[] transferData = new Object[2];
+
+                transferData[0] = mMap;
+                transferData[1] = urlPolice;
+
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyPoliceStations = new GetNearbyPlaces();
+                getNearbyPoliceStations.execute(transferData);
+                getNearbyPoliceStations.setOnResultSetListener(new OnResultSetListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            myLastLocation = task.getResult();
-                            if (myLastLocation != null) {
-                                Object[] transferData = new Object[2];
-
-                                //create the request
-                                String urlPolice = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), "restaurant", radius);
-                                transferData[0] = mMap;
-                                transferData[1] = urlPolice;
-
-                                //request will be downloaded and displayed
-                                GetNearbyPlaces getNearbyPoliceStations = new GetNearbyPlaces();
-                                getNearbyPoliceStations.execute(transferData);
-                                getNearbyPoliceStations.setOnResultSetListener(new OnResultSetListener() {
-                                    @Override
-                                    public void onResultSet(String result) {
-                                        showResponseInfo(result);
-                                    }
-                                });
-
-                            }
-                        }
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
                     }
                 });
+            }
+        });
     }
 
     /**
@@ -523,5 +504,14 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
+    /**
+     * Method that triggered the listeners
+     * @param location my last location
+     */
+    private void loadLocation(Location location){
+        if(onLocationSetListener != null){
+            onLocationSetListener.onLocationSet(location);
+        }
+    }
 
 }

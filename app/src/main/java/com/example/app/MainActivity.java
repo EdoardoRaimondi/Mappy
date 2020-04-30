@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view button {@id nearby_disco}
      */
     public void nearbyDiscoRequest(View view) {
-        Intent showNearbyDisco = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.DISCO, radius);
+        Intent showNearbyDisco = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.night_club, radius);
         startActivity(showNearbyDisco);
     }
 
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view button {@id nearby_restaurant}
      */
     public void nearbyRestaurantRequest(View view) {
-        Intent showNearbyRestaurant = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.RESTAURANT, radius);
+        Intent showNearbyRestaurant = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.restaurant, radius);
         startActivity(showNearbyRestaurant);
     }
 

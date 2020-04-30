@@ -19,7 +19,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param view button {@id hospital}
      */
     public void showNearbyHospital(View view){
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.HOSPITAL, 1000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.hospital, 1000);
         startActivity(intent);
     }
 
@@ -28,7 +28,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param view button {@id police}
      */
     public void showNearbyPolice(View view){
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.POLICE, 1000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.police, 1000);
         startActivity(intent);
     }
 
@@ -37,7 +37,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param view button {@id taxi}
      */
     public void showNearbyTaxi(View view){
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.TAXI, 1000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, 1000);
         startActivity(intent);
     }
 }
