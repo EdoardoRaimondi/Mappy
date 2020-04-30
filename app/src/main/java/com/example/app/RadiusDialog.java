@@ -2,7 +2,6 @@ package com.example.app;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -119,28 +118,6 @@ public class RadiusDialog extends AppCompatDialogFragment {
             }
         });
         return builder.create();
-    }
-
-    /**
-    * Callback onAttach to create the listener
-    * that will be called on dialog result.
-    * Result will be passed to the activity that called
-    * the dialog
-    * @param context the activity context
-    * @throws ClassCastException if the listener is not
-    * implemented in activity class
-    */
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-    }
-
-    /**
-     * The listener public interface
-     */
-    public interface RadiusDialogListener {
-        void applyRadius(int radius);
     }
 
 }

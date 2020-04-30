@@ -36,7 +36,7 @@ import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback, RadiusDialog.RadiusDialogListener{
+        OnMapReadyCallback{
 
 
     private static final int MAX_PLACES            = 30;
@@ -516,12 +516,6 @@ public class MapsActivity extends FragmentActivity implements
     private void openRadiusDialog(){
         RadiusDialog dialog = new RadiusDialog(radius, requestType);
         dialog.show(getSupportFragmentManager(), "example dialog");
-    }
-
-
-    @Override
-    public void applyRadius(int radius) {
-        // refresh this activity with new radius
     }
 
 
