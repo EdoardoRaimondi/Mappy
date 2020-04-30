@@ -115,6 +115,9 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
                     MarkerOptions markerOptions = createMarker(latLng, placeName);
 
                     displayMarkers(markerOptions);
+
+                    //Add the marker in order to recreate the state
+                    markerList.add(markerOptions);
                 }
 
                 animateCamera(builder);
@@ -128,15 +131,12 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     }
 
     /**
-     * Method to display nearby a single marker on the map and add it on
-     * the restore marker list
+     * Method to display nearby a single marker on the map
      * @param marker to add
      */
     void displayMarkers(@NonNull MarkerOptions marker){
         //Create the marker
         mMap.addMarker(marker);
-        //Add the marker in order to recreate the state
-        markerList.add(marker);
     }
 
     /**

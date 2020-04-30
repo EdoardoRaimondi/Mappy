@@ -67,7 +67,7 @@ public class GetNearbyPlacesTest {
     public void displayNearbyPlacesTest_fillTheMarkerList(){
         dummyGetNearbyPlaces.downloadNearbyPlaces(nearbyPlacesList);
         List<MarkerOptions> markerList = dummyGetNearbyPlaces.getMarkerList();
-        Assert.assertEquals(markerList.size(), 0);
+        Assert.assertEquals(markerList.size(), 2);
     }
 
     @Test
