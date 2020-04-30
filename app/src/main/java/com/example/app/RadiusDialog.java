@@ -21,6 +21,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
     private static final double M_TO_KM_DIVIDER = 1000.0;
 
     private int actualRadius;
+    private int newRadius;
     private TextView textView;
     private NearbyRequestType requestType;
 
@@ -39,7 +40,6 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * @param savedInstanceState for eventual saved data
      * @return The dialog
      */
-    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -74,19 +74,24 @@ public class RadiusDialog extends AppCompatDialogFragment {
                     /**
                      * Callback when Ok button is pressed
                      * @param dialogInterface the dialog
-                     * @param i the new radius (?)
+                     * @param i (?)
                      */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // i = -1... why?
-                        startActivity(IntentFactory.createNearbyRequestIntent(getContext(), requestType, i));
+                        startActivity(IntentFactory.createNearbyRequestIntent(getContext(), requestType, newRadius));
                     }
                 });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            /**
+             * Callback when user tracks the bar
+             * @param seekBar  the bar displayed
+             * @param progress int representing the position of the user touch on the bar
+             * @param fromUser boolean to check if the progress is from the user
+             */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int newRadius = progress + actualRadius;
+                newRadius = progress + actualRadius;
                 String display;
                 if(newRadius >= M_TO_KM_DIVIDER){
                     display = (int) Math.ceil(newRadius / M_TO_KM_DIVIDER) + " km";
@@ -97,10 +102,18 @@ public class RadiusDialog extends AppCompatDialogFragment {
                 textView.setText(display);
             }
 
+            /**
+             * Callback when the user start tracking the bar
+             * @param seekBar the bar displayed
+             */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
 
+            /**
+             * Callback when the user stop tracking the bar
+             * @param seekBar the bar displayed
+             */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
@@ -121,10 +134,6 @@ public class RadiusDialog extends AppCompatDialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try {
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement RadiusDialogListener");
-        }
     }
 
     /**
