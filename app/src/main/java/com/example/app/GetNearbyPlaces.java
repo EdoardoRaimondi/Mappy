@@ -1,10 +1,11 @@
 package com.example.app;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.app.finals.ResponseStatus;
+import com.example.app.listeners.OnResultSetListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

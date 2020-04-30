@@ -1,12 +1,17 @@
-package com.example.app;
+package com.example.app.factories;
 
 import android.content.Context;
 import android.content.Intent;
 
+import com.example.app.HelpActivity;
+import com.example.app.MainActivity;
+import com.example.app.MapsActivity;
+import com.example.app.finals.NearbyRequestType;
+
 /**
  * Factory class containing a creator method for each type of intent you need
  */
-class IntentFactory {
+public class IntentFactory {
 
     /**
      * Method to create a nearby request Intent
@@ -15,7 +20,7 @@ class IntentFactory {
      * @param radius      The research radius
      * @return The intent created
      */
-    static Intent createNearbyRequestIntent(Context context, NearbyRequestType requestType, int radius){
+    public static Intent createNearbyRequestIntent(Context context, NearbyRequestType requestType, int radius){
         Intent intent = new Intent(context, MapsActivity.class);
         intent.putExtra(MapsActivity.NEARBY_KEY, requestType);
         intent.putExtra(MapsActivity.RADIUS, radius);
@@ -27,7 +32,7 @@ class IntentFactory {
      * @param context of the activity
      * @return The intent created
      */
-    static Intent createHelpIntentRequest(Context context){
+    public static Intent createHelpIntentRequest(Context context){
         Intent intent = new Intent(context, HelpActivity.class);
         return intent;
     }
@@ -37,7 +42,7 @@ class IntentFactory {
      * to the main lobby
      * @param context of the current activity
      */
-     static Intent createLobbyReturn(Context context){
+     public static Intent createLobbyReturn(Context context){
          Intent intent = new Intent(context, MainActivity.class);
          return intent;
      }

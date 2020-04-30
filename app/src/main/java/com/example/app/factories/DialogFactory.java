@@ -1,8 +1,10 @@
-package com.example.app;
+package com.example.app.factories;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import com.example.app.R;
 
 /**
  * Class that create and show dialogs

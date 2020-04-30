@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.finals;
 
 /**
  * Class containing all the possible status for a place response

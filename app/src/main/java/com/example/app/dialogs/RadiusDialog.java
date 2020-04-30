@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -12,6 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import com.example.app.R;
+import com.example.app.factories.IntentFactory;
+import com.example.app.finals.NearbyRequestType;
 
 import java.util.Objects;
 
@@ -29,7 +33,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * @param radius       old radius research
      * @param requestType  research request type
      */
-    RadiusDialog(int radius, NearbyRequestType requestType){
+    public RadiusDialog(int radius, NearbyRequestType requestType){
         actualRadius = radius;
         this.requestType = requestType;
     }

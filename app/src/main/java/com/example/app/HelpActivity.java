@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.app.factories.IntentFactory;
+import com.example.app.finals.NearbyRequestType;
+
 public class HelpActivity extends AppCompatActivity {
 
     @Override

@@ -1,5 +1,7 @@
 package com.example.app;
 
+import com.example.app.interfaces.MapJSonDataParser;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * CLass to parse the google place data
  */
-public class DataParser implements MapJSonDataParser{
+public class DataParser implements MapJSonDataParser {
 
     public static String STATUS = "";
 

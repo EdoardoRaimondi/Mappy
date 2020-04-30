@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.app.factories.IntentFactory;
+import com.example.app.finals.NearbyRequestType;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
