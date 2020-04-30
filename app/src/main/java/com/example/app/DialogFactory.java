@@ -105,4 +105,28 @@ public class DialogFactory {
                 .show();
     }
 
+    /**
+     * Method to show a not found error alert dialog
+     * @param context of the activity where it is showed
+     */
+    public static void showNotFoundAlertDialog(final Context context){
+        new AlertDialog.Builder(context)
+                .setTitle("OH NO")
+                .setMessage("You won, we didn't find you. Retry and see who will win")
+                .setPositiveButton(context.getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        context.startActivity(IntentFactory.createLobbyReturn(context));
+                    }
+                })
+                .setNegativeButton(context.getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
 }

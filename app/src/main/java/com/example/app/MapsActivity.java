@@ -36,7 +36,7 @@ import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener {
+        OnMapReadyCallback, RadiusDialog.RadiusDialogListener{
 
 
     private static final int MAX_PLACES            = 30;
@@ -54,11 +54,6 @@ public class MapsActivity extends FragmentActivity implements
     private static final String LONGITUDES_KEY = "lng_k";
     private static final String LAT_KEY = "lat_last_k";
     private static final String LNG_KEY = "lng_last_k";
-
-    // dialog keys
-    private static final String NO_CONN_DIALOG = "no_conn_d_k";
-    private static final String OVER_QUERY_DIALOG = "over_query_d_k";
-    private static final String NOT_FOUND_DIALOG = "not_found_d_k";
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
@@ -491,18 +486,12 @@ public class MapsActivity extends FragmentActivity implements
      * @param status of the response
      */
     private void showResponseInfo(String status){
-        BasicDialog dialog;
         switch (status) {
             case ResponseStatus.ZERO_RESULTS:
                 openRadiusDialog();
                 break;
             case ResponseStatus.NOT_FOUND:
-                dialog = new BasicDialog(
-                        NOT_FOUND_DIALOG,
-                        "Oh crap",
-                        "We are not able to find you, would you like to retry?."
-                );
-                dialog.show(getSupportFragmentManager(), "basic dialog");
+                DialogFactory.showNotFoundAlertDialog(this);
                 break;
             case ResponseStatus.OVER_QUERY_LIMIT:
                 DialogFactory.showOverQueryAlertDialog(this);

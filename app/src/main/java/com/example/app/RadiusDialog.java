@@ -71,8 +71,14 @@ public class RadiusDialog extends AppCompatDialogFragment {
                     }
                 })
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
+                    /**
+                     * Callback when Ok button is pressed
+                     * @param dialogInterface the dialog
+                     * @param i the new radius (?)
+                     */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // i = -1... why?
                         startActivity(IntentFactory.createNearbyRequestIntent(getContext(), requestType, i));
                     }
                 });
@@ -116,7 +122,6 @@ public class RadiusDialog extends AppCompatDialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            listener = (RadiusDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement RadiusDialogListener");
         }
