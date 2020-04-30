@@ -28,7 +28,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private long radius;
+    private int radius;
 
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";

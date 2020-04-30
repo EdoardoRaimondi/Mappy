@@ -22,21 +22,24 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
     private int actualRadius;
     private TextView textView;
-    private RadiusDialogListener listener;
+    private NearbyRequestType requestType;
 
     /**
-    * RadiusDialog constructor
-    * @param radius the min value of seekbar
-    */
-    RadiusDialog(int radius){
-        this.actualRadius = radius;
+     * Set the some context information of the caller activity
+     * @param radius       old radius research
+     * @param requestType  research request type
+     */
+    RadiusDialog(int radius, NearbyRequestType requestType){
+        actualRadius = radius;
+        this.requestType = requestType;
     }
 
     /**
-    * Callback to get the radius dialog instance
-    * @param savedInstanceState the Bundle of any previous
-    * radius dialog if any
-    */
+     * Callback when the dialog is created
+     * @param savedInstanceState for eventual saved data
+     * @return The dialog
+     */
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -69,9 +72,8 @@ public class RadiusDialog extends AppCompatDialogFragment {
                 })
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        int progress = seekBar.getProgress();
-                        listener.applyRadius(progress + actualRadius);
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(IntentFactory.createNearbyRequestIntent(getContext(), requestType, i));
                     }
                 });
 

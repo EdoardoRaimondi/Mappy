@@ -4,16 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -69,6 +65,8 @@ public class MapsActivity extends FragmentActivity implements
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
+
+    private NearbyRequestType requestType;
     private int radius; //max radius can be 50000m
 
     // instance restoring control variables
@@ -152,7 +150,7 @@ public class MapsActivity extends FragmentActivity implements
                 setDeviceLocation();
                 //Get button pressed information
                 Intent requestInfo = getIntent();
-                NearbyRequestType requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
+                requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 radius = requestInfo.getIntExtra(RADIUS, 1000);
 
                 if(canRestore){
@@ -507,38 +505,18 @@ public class MapsActivity extends FragmentActivity implements
                 dialog.show(getSupportFragmentManager(), "basic dialog");
                 break;
             case ResponseStatus.OVER_QUERY_LIMIT:
-                dialog = new BasicDialog(
-                    OVER_QUERY_DIALOG,
-                    "Warning",
-                    "It seems there have been too many requests on our service, try later in a bit."
-                );
-                dialog.show(getSupportFragmentManager(), "basic dialog");
+                DialogFactory.showOverQueryAlertDialog(this);
                 break;
             case ResponseStatus.NO_CONNECTION:
-                dialog = new BasicDialog(
-                        NO_CONN_DIALOG,
-                        "Warning",
-                        "Your device isn't connected to any internet provider. Would you like to activate it now?",
-                        "YES",
-                        "NO"
-                );
-                dialog.show(getSupportFragmentManager(), "basic dialog");
+                DialogFactory.showNoConnectionAlertDialog(this);
                 break;
                 // FOLLOWING STATES SHOULD BE MANAGED BY PROGRAMMERS, THEY ARE NOT USER FAULT
             case ResponseStatus.INVALID_REQUEST:
             case ResponseStatus.UNKNOWN_ERROR:
+                DialogFactory.showUnknownErrorAlertDialog(this);
+                break;
             case ResponseStatus.REQUEST_DENIED:
-                new AlertDialog.Builder(this)
-                        .setTitle("What the hell")
-                        .setMessage("This error has occured because someone left a bug.")
-                        .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        })
-                        .create()
-                        .show();
+                DialogFactory.showRequestDeniedAlertDialog(this);
                 break;
         }
     }
@@ -547,8 +525,8 @@ public class MapsActivity extends FragmentActivity implements
      * Open the dialog in ZERO RESULT status case
      */
     private void openRadiusDialog(){
-        RadiusDialog dialog = new RadiusDialog(radius);
-        dialog.show(getSupportFragmentManager(), "radius dialog");
+        RadiusDialog dialog = new RadiusDialog(radius, requestType);
+        dialog.show(getSupportFragmentManager(), "example dialog");
     }
 
 
@@ -557,8 +535,5 @@ public class MapsActivity extends FragmentActivity implements
         // refresh this activity with new radius
     }
 
-    @Override
-    public void onDialogResult(String id, boolean option){
 
-    }
 }
