@@ -24,10 +24,19 @@ public class RadiusDialog extends AppCompatDialogFragment {
     private TextView textView;
     private RadiusDialogListener listener;
 
+    /**
+    * RadiusDialog constructor
+    * @param radius the min value of seekbar
+    * */
     RadiusDialog(int radius){
         this.actualRadius = radius;
     }
 
+    /**
+    * Callback to get the radius dialog instance
+    * @param savedInstanceState the Bundle of any previous
+    * radius dialog if any
+    * */
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -91,6 +100,16 @@ public class RadiusDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
+    /**
+    * Callback onAttach to create the listener
+    * that will be called on dialog result.
+    * Result will be passed to the activity that called
+    * the dialog
+    * @param context the activity context
+    * @throws ClassCastException if the listener is not
+    * implemented in activity class
+    * */
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -101,6 +120,9 @@ public class RadiusDialog extends AppCompatDialogFragment {
         }
     }
 
+    /**
+     * The listener public interface
+     */
     public interface RadiusDialogListener {
         void applyRadius(int radius);
     }
