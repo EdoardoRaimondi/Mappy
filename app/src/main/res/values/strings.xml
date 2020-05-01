@@ -25,4 +25,8 @@
     // basic dialog
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
+
+    // TOASTS
+    <string name="no_gps_permission">Well, no GPS means nothing to display</string>
+    <string name="thank_you">Thank you!</string>
 </resources>

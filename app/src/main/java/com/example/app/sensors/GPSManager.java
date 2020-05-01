@@ -14,7 +14,7 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class GPSManager implements LocationListener {
 
-    Context context;
+    private Context context;
 
     public GPSManager(Context context) {
         super();
@@ -25,10 +25,12 @@ public class GPSManager implements LocationListener {
         return ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED;
     }
 
+
     public boolean isGPSOn(){
         if(hasPermissions()){
             try{
                 LocationManager lm = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+                assert lm != null;
                 return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
             }
             catch(Exception exc){
@@ -45,11 +47,11 @@ public class GPSManager implements LocationListener {
         }
         try {
             LocationManager lm = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+            assert lm != null;
             boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if (isGPSEnabled){
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000,10,this);
-                Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                return loc;
+                return lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
             else{
                 return null;

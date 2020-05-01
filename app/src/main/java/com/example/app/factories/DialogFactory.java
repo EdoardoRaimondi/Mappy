@@ -144,6 +144,7 @@ public class DialogFactory {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         context.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        dialog.cancel();
                     }
                 })
                 .setNegativeButton(context.getString(R.string.cancel_button), new DialogInterface.OnClickListener() {

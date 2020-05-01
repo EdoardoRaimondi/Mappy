@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -36,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
     private static final int INVALID_POSITION = -1;
+
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
     private Spinner radiusSpinner;
@@ -45,25 +45,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            checkUserLocationPermission();
-        }
-
-        GPSManager gpsManager = new GPSManager(getApplicationContext());
-        if(!gpsManager.isGPSOn()){
-            DialogFactory.showActivateGPSAlertDialog(this); // should be getApplicationContext() but exception
-        }
-        //create the spinner and fill it
+        // creating spinner and filling it
         radiusSpinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
                 this,
                 R.array.RADIUS,
                 android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
+        // specify the layout to use when the list of choices appears
         grade.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
+        // applying the adapter to the spinner
         radiusSpinner.setAdapter(grade);
-        //set the listener
+        // setting listener
         radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             /**
@@ -87,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //Default radius is 1km
-                radius = 1000;
+                // default radius is 1km
+                radius = getResources().getInteger(R.integer.default_radius);
             }
         });
 
@@ -111,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    /**
+     * Callback when user return here or activity
+     * has just been created
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
         super.onResume();
@@ -120,6 +117,47 @@ public class MainActivity extends AppCompatActivity {
         if(result != ConnectionResult.SUCCESS){
             Dialog dial = google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
             dial.show();
+        }
+        else{
+            GPSManager gpsManager = new GPSManager(getApplicationContext());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if(!gpsManager.hasPermissions()){
+                    if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
+                    }
+                    else{
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
+                    }
+                }
+                else {
+                    if (!gpsManager.isGPSOn()) {
+                        DialogFactory.showActivateGPSAlertDialog(this);
+                    }
+                }
+            }
+            else{
+                // notify user he has to give permissions
+            }
+        }
+    }
+
+    // PERMISSIONS
+
+    /**
+     * Callback to check user permission
+     * @param requestCode   of the permission
+     * @param permissions   of the request
+     * @param grantResults  of the permission request
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_USER_LOCATION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, getString(R.string.thank_you), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, getString(R.string.no_gps_permission), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -150,48 +188,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(helpIntent);
     }
 
-    //PERMISSIONS
-
-    /**
-     * Callback to check user permission
-     * @param requestCode   of the permission
-     * @param permissions   of the request
-     * @param grantResults  of the permission request
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case REQUEST_USER_LOCATION_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    //  mMap.setMyLocationEnabled(true);
-                    //}
-                }
-                else {
-                    Toast.makeText(this, "PERMISSION FAILED", Toast.LENGTH_LONG).show();
-                }
-        }
-    }
-
-    /**
-     * Method to check the user location permission
-     * @return true if it has the permission, false otherwise
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public boolean checkUserLocationPermission(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
-            }
-            else{
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
-            }
-            return false;
-        }
-        return true;
-    }
-
-    //NATIVE METHODS
+    // NATIVE METHODS
 
     /**
      * Parser for the radius long
