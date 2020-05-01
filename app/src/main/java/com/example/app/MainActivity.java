@@ -18,8 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.app.factories.DialogFactory;
 import com.example.app.factories.IntentFactory;
 import com.example.app.finals.NearbyRequestType;
+import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
             checkUserLocationPermission();
         }
 
+        GPSManager gpsManager = new GPSManager(getApplicationContext());
+        if(!gpsManager.isGPSOn()){
+            DialogFactory.showActivateGPSAlertDialog(this);
+        }
         //create the spinner and fill it
         radiusSpinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
