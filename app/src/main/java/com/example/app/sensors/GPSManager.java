@@ -1,5 +1,7 @@
 package com.example.app.sensors;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -8,12 +10,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import static android.content.Context.LOCATION_SERVICE;
 
 public class GPSManager implements LocationListener {
 
+    private static final int REQUEST_USER_LOCATION_CODE = 99;
     private Context context;
 
     public GPSManager(Context context) {
@@ -25,6 +29,9 @@ public class GPSManager implements LocationListener {
         return ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED;
     }
 
+    public boolean canRequestNow(Activity activity){
+        return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION);
+    }
 
     public boolean isGPSOn(){
         if(hasPermissions()){

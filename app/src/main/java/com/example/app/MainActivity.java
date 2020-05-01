@@ -3,7 +3,6 @@ package com.example.app;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -107,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
      * Callback when user return here or activity
      * has just been created
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
         super.onResume();
@@ -122,11 +120,11 @@ public class MainActivity extends AppCompatActivity {
             GPSManager gpsManager = new GPSManager(getApplicationContext());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if(!gpsManager.hasPermissions()){
-                    if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                    if(gpsManager.canRequestNow(this)) {
                         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
                     }
                     else{
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
+                        // show resonable
                     }
                 }
                 else {
