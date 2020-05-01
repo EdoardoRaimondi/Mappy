@@ -108,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements
                     LatLng latLng = new LatLng(lat, lng);
                     newMarker.position(latLng);
                     newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                    //now the marker is created I add it on the marker list
+                    // now the marker is created I add it on the marker list
                     restoreMarkers.add(newMarker);
                 }
                 canRestore = true;
@@ -419,7 +419,6 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-
     //INSTANCE SAVE
 
     /**
@@ -448,8 +447,10 @@ public class MapsActivity extends FragmentActivity implements
             savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
             savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
             // saving current position
-            savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
-            savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
+            if(myLastLocation != null){
+                savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
+                savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
+            }
         }
         // calling super class method
         super.onSaveInstanceState(savedInstanceState);
