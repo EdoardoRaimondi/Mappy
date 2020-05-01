@@ -157,7 +157,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      * @param placeName  title
      * @return marker ready to be displayed
      */
-    protected MarkerOptions createMarker(@NonNull LatLng latLng,@NonNull String placeName){
+    MarkerOptions createMarker(@NonNull LatLng latLng, @NonNull String placeName){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title(placeName);
         markerOptions.position(latLng);
@@ -176,7 +176,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      * Method that trigger the listener and send
      * it the result data
      */
-    private void loadResult(){
+    protected void loadResult(){
         if(onResultSetListener != null) {
             onResultSetListener.onResultSet(result);
         }

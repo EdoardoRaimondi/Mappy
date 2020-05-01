@@ -1,5 +1,9 @@
 package com.example.app;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.example.app.listeners.OnResultSetListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -11,10 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.security.PrivateKey;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +35,14 @@ public class GetNearbyPlacesTest {
     private static final int NUM_PLACES = 2;
     private static final LatLng LAT_LNG = new LatLng(1.1, 1.2);
     private static String PLACE_NAME    = "Da Cracco";
+
     @Spy
     GetNearbyPlaces dummyGetNearbyPlaces;
 
+
     @Before
     public void setUp() throws JSONException {
+        MockitoAnnotations.initMocks(this);
         //need to store the data in a List<HashMap<String, String>>
         //nearbyPlacesList = parser.parse(URL_RESPONSE);
         googlePlaceMap1.put("place_name", "Pizzeria");
@@ -64,11 +72,19 @@ public class GetNearbyPlacesTest {
      * N.B. In order to make every test work, it is necessary to
      * disable (comment) the method icon() in createMarker() method
      */
-    public void displayNearbyPlacesTest_fillTheMarkerList(){
+    public void downloadNearbyPlacesTest_fillTheMarkerList(){
         dummyGetNearbyPlaces.downloadNearbyPlaces(nearbyPlacesList);
         List<MarkerOptions> markerList = dummyGetNearbyPlaces.getMarkerList();
-        Assert.assertEquals(markerList.size(), 2);
+        Assert.assertEquals(markerList.size(), NUM_PLACES);
     }
+
+    @Test
+    public void downloadNearbyPlacesTest_noPlaces(){
+        List<HashMap<String, String>> emptyNearbyPlacesList = new ArrayList<>();
+        dummyGetNearbyPlaces.downloadNearbyPlaces(emptyNearbyPlacesList);
+        Assert.assertEquals(dummyGetNearbyPlaces.getMarkerList().size(), 0);
+    }
+
 
     @Test
     public void createMarker_checkEqualNames(){
