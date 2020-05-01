@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         GPSManager gpsManager = new GPSManager(getApplicationContext());
         if(!gpsManager.isGPSOn()){
-            DialogFactory.showActivateGPSAlertDialog(this);
+            DialogFactory.showActivateGPSAlertDialog(this); // should be getApplicationContext() but exception
         }
         //create the spinner and fill it
         radiusSpinner = findViewById(R.id.spinner);
