@@ -12,9 +12,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,6 +28,8 @@ import com.example.app.finals.NearbyRequestType;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import java.util.Random;
+
 /**
  * Main UI activity. Here the user can choose the main actions.
  * (Need to write every button what actually does, when completed)
@@ -30,18 +37,28 @@ import com.google.android.gms.common.GoogleApiAvailability;
 public class MainActivity extends AppCompatActivity {
 
     private int radius;
+    private int degree    = 0;
+    private int oldDegree = 0;
 
+    //360 / 6 / 2
+    private static final float FACTOR = 30f;
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
     private static final int INVALID_POSITION = -1;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
     private Spinner radiusSpinner;
+    private ImageView wheel;
+    private Random r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        r = new Random();
+
+        wheel = findViewById(R.id.wheel);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkUserLocationPermission();
@@ -94,6 +111,40 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Method that animate the wheel
+     * @param view button {@id lucky_button}
+     */
+    public void spin(View view){
+        oldDegree = degree % 360;
+        degree = r.nextInt(360) + 720;
+        RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f
+        );
+        rotate.setDuration(3600);
+        rotate.setFillAfter(true);
+        rotate.setInterpolator(new DecelerateInterpolator());
+        rotate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                sendRequest(360 - (degree % 360));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        wheel.startAnimation(rotate);
+    }
+
 
     /**
      * Callback to save the state when necessary
@@ -200,4 +251,35 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("libmain_native_lib");
     }
 
+
+    /**
+     * Analize the wheel position and send the corresponding command
+     * @param degrees the result position
+     */
+    private void sendRequest(int degrees){
+        if((degrees >= FACTOR * 1) && (degrees < FACTOR * 3)) {
+            //send some request
+            Log.d("ZONE", "blu");
+        }
+        if((degrees >= FACTOR * 3) && (degrees < FACTOR * 5)){
+            //send some request
+            Log.d("ZONE", "viola");
+        }
+        if((degrees >= FACTOR * 5) && (degrees < FACTOR * 7)){
+            //send some request
+            Log.d("ZONE", "rosso");
+        }
+        if((degrees >= FACTOR * 7) && (degrees < FACTOR * 9)){
+            //send some request
+            Log.d("ZONE", "arancio");
+        }
+        if((degrees >= FACTOR * 9) && (degrees < FACTOR * 11)){
+            //send some request
+            Log.d("ZONE", "giallo");
+        }
+        if((degrees >= FACTOR * 11) && (degrees < FACTOR * 13)){
+            //send some request
+            Log.d("ZONE", "verde");
+        }
+    }
 }
