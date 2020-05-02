@@ -17,7 +17,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left">
+        android:gravity="start">
         <Button
             android:id="@+id/help"
             android:layout_width="wrap_content"
@@ -36,14 +36,14 @@
             android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/logoImageView"
+            android:id="@+id/wheel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:scaleX="1.0"
             android:scaleY="1.0"
             android:src="@drawable/speriamo"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/todo" />
 
         <Space
             android:layout_width="wrap_content"
