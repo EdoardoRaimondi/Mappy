@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int radius;
     private int degree    = 0;
-    private int oldDegree = 0;
 
     //360 / 6 / 2
     private static final float FACTOR = 30f;
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view button {@id lucky_button}
      */
     public void spin(View view){
-        oldDegree = degree % 360;
+        int oldDegree = degree % 360;
         degree = r.nextInt(360) + 720;
         RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
@@ -129,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         rotate.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
@@ -139,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         wheel.startAnimation(rotate);
@@ -253,33 +250,34 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Analize the wheel position and send the corresponding command
+     * Analise the wheel position and send the corresponding command
      * @param degrees the result position
      */
     private void sendRequest(int degrees){
         if((degrees >= FACTOR * 1) && (degrees < FACTOR * 3)) {
             //send some request
-            Log.d("ZONE", "blu");
+            Log.d("ZONE", "galleria d'arte");
         }
         if((degrees >= FACTOR * 3) && (degrees < FACTOR * 5)){
             //send some request
-            Log.d("ZONE", "viola");
+            Log.d("ZONE", "museo");
         }
         if((degrees >= FACTOR * 5) && (degrees < FACTOR * 7)){
             //send some request
-            Log.d("ZONE", "rosso");
+            Log.d("ZONE", "zoo");
         }
         if((degrees >= FACTOR * 7) && (degrees < FACTOR * 9)){
             //send some request
-            Log.d("ZONE", "arancio");
+            Log.d("ZONE", "cinema");
         }
         if((degrees >= FACTOR * 9) && (degrees < FACTOR * 11)){
             //send some request
-            Log.d("ZONE", "giallo");
+            Log.d("ZONE", "luna park");
         }
         if((degrees >= FACTOR * 11) && (degrees < FACTOR * 13)){
             //send some request
-            Log.d("ZONE", "verde");
+            Log.d("ZONE", "parco");
         }
+
     }
 }
