@@ -31,6 +31,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     private String googlePlaceData;
     private GoogleMap mMap;
     private String result;
+
     private OnResultSetListener onResultSetListener;
 
     static List<MarkerOptions> markerList = new ArrayList<>(); //to save the state
@@ -76,7 +77,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      */
     @Override
     protected void onPostExecute(String s) {
-        List<HashMap<String, String>> nearByPlacesList = null;
+        List<Place> nearByPlacesList = null;
         DataParser parser = new DataParser();
         try {
             nearByPlacesList = parser.parse(s);
@@ -100,16 +101,16 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      * @param nearByPlacesList The list of nearby places
      *
      */
-    void downloadNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
+    void downloadNearbyPlaces(List<Place> nearByPlacesList) {
         if(nearByPlacesList != null) {
             if (!nearByPlacesList.isEmpty()) {
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 for (int i = 0; i < nearByPlacesList.size(); i++) {
                     //Extract the data
-                    HashMap<String, String> googleNearbyPlace = nearByPlacesList.get(i);
-                    String placeName = googleNearbyPlace.get("place_name");
-                    double lat = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lat")));
-                    double lon = Double.parseDouble(Objects.requireNonNull(googleNearbyPlace.get("lng")));
+                    Place googleNearbyPlace = nearByPlacesList.get(i);
+                    String placeName = googleNearbyPlace.getName();
+                    double lat = googleNearbyPlace.getLatitude();
+                    double lon = googleNearbyPlace.getLongitude();
                     LatLng latLng = new LatLng(lat, lon);
                     builder.include(latLng);
 

@@ -24,30 +24,21 @@ public class DataParser implements MapJSonDataParser {
      * @throws JSONException if something in the json read goes wrong
      *
      */
-    private HashMap<String, String> getSingleNearbyPlace(JSONObject googlePlaceJSON) {
-        HashMap<String, String> googlePlaceMap = new HashMap<>();
-        String NameOfPlace = "-NA-";
+    private Place getSingleNearbyPlace(JSONObject googlePlaceJSON) {
+        Place googlePlaceMap = new Place();
+        String placeName = "-NA-";
         String vicinity = "-NA-";
         String latitude = "";
         String longitude = "";
         String reference = "";
 
         try {
-            if (!googlePlaceJSON.isNull("name")) {
-                NameOfPlace = googlePlaceJSON.getString("name");
-            }
-            if (!googlePlaceJSON.isNull("vicinity")) {
-                vicinity = googlePlaceJSON.getString("vicinity");
-            }
+            placeName = googlePlaceJSON.getString("name");
             latitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            reference = googlePlaceJSON.getString("reference");
+            //reference = googlePlaceJSON.getString("reference");
 
-            googlePlaceMap.put("place_name", NameOfPlace);
-            googlePlaceMap.put("vicinity", vicinity);
-            googlePlaceMap.put("lat", latitude);
-            googlePlaceMap.put("lng", longitude);
-            googlePlaceMap.put("reference", reference);
+            googlePlaceMap.insertPlace(placeName, latitude, longitude);
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -62,15 +53,15 @@ public class DataParser implements MapJSonDataParser {
      * @param jsonArray array containing the nearby places
      * @throws JSONException if json reading goes wrong
      */
-    private List<HashMap<String, String>> getAllNearbyPlaces(JSONArray jsonArray) {
+    private List<Place> getAllNearbyPlaces(JSONArray jsonArray) {
         int count = 0;
         // changed code here because if there is no connection null pointer exc is thrown
         if(jsonArray != null) {
             count = jsonArray.length();
         }
-        List<HashMap<String, String>> NearbyPlacesList = new ArrayList<>();
+        List<Place> NearbyPlacesList = new ArrayList<>();
 
-        HashMap<String, String> NearbyPlaceMap = null;
+        Place NearbyPlaceMap;
 
         for (int i=0; i<count; i++) {
             try {
@@ -93,7 +84,7 @@ public class DataParser implements MapJSonDataParser {
      * @return List of nearby places (in HashMap format)
      * @throws JSONException if Json computation goes wrong
      */
-    public List<HashMap<String, String>> parse(String JsonData) throws JSONException {
+    public List<Place> parse(String JsonData) throws JSONException {
         JSONObject jsonObject = new JSONObject(JsonData);
         JSONArray jsonArray = jsonObject.getJSONArray("results");
         //The status can assume one of the {@link ResponseStatus.class}

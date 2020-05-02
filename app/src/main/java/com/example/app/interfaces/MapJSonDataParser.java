@@ -1,8 +1,9 @@
 package com.example.app.interfaces;
 
+import com.example.app.Place;
+
 import org.json.JSONException;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -13,11 +14,10 @@ public interface MapJSonDataParser {
     /**
      * Method to parse the Json string data
      * @param JSonData in string form
-     * @return List<HashMap<String, String>> where every Hash Map in the list is a place with
-     * its information (name, latitude, longitude ...)
+     * @return List<Place> {@link Place}
      * @throws JSONException if Json computation goes wrong
      */
-    List<HashMap<String, String>> parse(String JSonData) throws JSONException;
+    List<Place> parse(String JSonData) throws JSONException;
 
 
 }
