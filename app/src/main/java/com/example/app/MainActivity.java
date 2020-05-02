@@ -37,10 +37,13 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private int radius;
-    private int degree    = 0;
+    private int degree = 0;
 
-    //360 / 6 / 2
+    //considering a 360 degree circle divided in 6 sections and
+    //I start from an half of one. I got 360 / 6 / 2.
+    //(so 1 section will be 2 FACTOR large)
     private static final float FACTOR = 30f;
+
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
     private static final int INVALID_POSITION = -1;
@@ -48,15 +51,16 @@ public class MainActivity extends AppCompatActivity {
 
     private Spinner radiusSpinner;
     private ImageView wheel;
-    private Random r;
+    private Random random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        r = new Random();
+        random = new Random();
 
+        //check the wheel
         wheel = findViewById(R.id.wheel);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void spin(View view){
         int oldDegree = degree % 360;
-        degree = r.nextInt(360) + 720;
+        degree = random.nextInt(360) + 720;
         RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f
@@ -241,9 +245,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public native int parseRadius(String radius);
 
-    /**
-     * Library loading
-     */
+    //loading the C++ library
     static {
         System.loadLibrary("libmain_native_lib");
     }
@@ -251,30 +253,31 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Analise the wheel position and send the corresponding command
-     * @param degrees the result position
+     * @param position the result position
      */
-    private void sendRequest(int degrees){
-        if((degrees >= FACTOR * 1) && (degrees < FACTOR * 3)) {
+    private void sendRequest(int position){
+        if((position >= FACTOR * 1) && (position < FACTOR * 3)) {
             //send some request
             Log.d("ZONE", "galleria d'arte");
         }
-        if((degrees >= FACTOR * 3) && (degrees < FACTOR * 5)){
+
+        if((position >= FACTOR * 3) && (position < FACTOR * 5)){
             //send some request
             Log.d("ZONE", "museo");
         }
-        if((degrees >= FACTOR * 5) && (degrees < FACTOR * 7)){
+        if((position >= FACTOR * 5) && (position < FACTOR * 7)){
             //send some request
             Log.d("ZONE", "zoo");
         }
-        if((degrees >= FACTOR * 7) && (degrees < FACTOR * 9)){
+        if((position >= FACTOR * 7) && (position < FACTOR * 9)){
             //send some request
             Log.d("ZONE", "cinema");
         }
-        if((degrees >= FACTOR * 9) && (degrees < FACTOR * 11)){
+        if((position >= FACTOR * 9) && (position < FACTOR * 11)){
             //send some request
             Log.d("ZONE", "luna park");
         }
-        if((degrees >= FACTOR * 11) && (degrees < FACTOR * 13)){
+        if((position >= FACTOR * 11) && (position < FACTOR * 13)){
             //send some request
             Log.d("ZONE", "parco");
         }
