@@ -151,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements
         //check if gps is enabled or not and then request user to enable it
 
         ProgressBar progressBar = findViewById(R.id.prog_bar);
-        ProgressAnimation anim = new ProgressAnimation(progressBar, 0, 100);
+        ProgressAnimation anim = new ProgressAnimation(progressBar, 0, 20);
         anim.setDuration(1000);
         progressBar.startAnimation(anim);
         LocationRequest locationRequest = LocationRequest.create();
@@ -216,6 +216,11 @@ public class MapsActivity extends FragmentActivity implements
                             if (myLastLocation != null) {
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
+                                ProgressBar progressBar = findViewById(R.id.prog_bar);
+                                ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
+                                anim.setDuration(1000);
+                                progressBar.startAnimation(anim);
+                                progressBar.setVisibility(View.GONE);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
                             }
                             else {
@@ -232,6 +237,11 @@ public class MapsActivity extends FragmentActivity implements
                                         }
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
+                                        ProgressBar progressBar = findViewById(R.id.prog_bar);
+                                        ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
+                                        anim.setDuration(1000);
+                                        progressBar.startAnimation(anim);
+                                        progressBar.setVisibility(View.GONE);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
