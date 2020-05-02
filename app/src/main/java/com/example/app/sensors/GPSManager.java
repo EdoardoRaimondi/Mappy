@@ -46,7 +46,7 @@ public class GPSManager implements LocationListener {
         }
         return false;
     }
-
+/*
     public Location getLocation(){
         if (ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
             Log.e("fist","error");
@@ -69,7 +69,7 @@ public class GPSManager implements LocationListener {
         }
         return null;
     }
-
+*/
     @Override
     public void onLocationChanged(Location location) {
     }

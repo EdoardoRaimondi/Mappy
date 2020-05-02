@@ -9,6 +9,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.example.app.dialogs.RadiusDialog;
@@ -89,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         restoreMarkers = new ArrayList<>();
@@ -146,6 +149,11 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         //check if gps is enabled or not and then request user to enable it
+
+        ProgressBar progressBar = findViewById(R.id.prog_bar);
+        ProgressAnimation anim = new ProgressAnimation(progressBar, 0, 100);
+        anim.setDuration(1000);
+        progressBar.startAnimation(anim);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
@@ -223,6 +231,7 @@ public class MapsActivity extends FragmentActivity implements
                                             return;
                                         }
                                         myLastLocation = locationResult.getLastLocation();
+                                        loadLocation(myLastLocation);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
