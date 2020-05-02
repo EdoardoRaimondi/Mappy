@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 
 import com.example.app.finals.ResponseStatus;
+import com.example.app.listeners.OnMarkersDownloadedListener;
 import com.example.app.listeners.OnResultSetListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,10 +30,10 @@ import java.util.Objects;
 public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
 
     private String googlePlaceData;
-    private GoogleMap mMap;
     private String result;
 
-    private OnResultSetListener onResultSetListener;
+    private OnResultSetListener         onResultSetListener;
+    private OnMarkersDownloadedListener onMarkersDownloadedListener;
 
     static List<MarkerOptions> markerList = new ArrayList<>(); //to save the state
 
@@ -40,7 +41,9 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      * Constructor in order to set null the listener
      */
     public GetNearbyPlaces(){
-        onResultSetListener = null;
+
+        onMarkersDownloadedListener = null;
+        onResultSetListener         = null;
     }
 
     /**
@@ -52,14 +55,21 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     }
 
     /**
+     * Set the listener following the {@link OnResultSetListener} interface
+     * @param listener to build
+     */
+    public void setOnMarkersDownloadedListener(OnMarkersDownloadedListener listener){
+        onMarkersDownloadedListener = listener;
+    }
+
+    /**
      * Method to extract the data from the {@link MapsActivity}
      * @param  objects A two dimension array containing the map and the url request from the {@link MainActivity}
      * @return string representing the data
      */
     @Override
     protected String doInBackground(Object... objects) {
-        mMap = (GoogleMap) objects[0];
-        String url = (String) objects[1];
+        String url = (String) objects[0];
 
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
@@ -95,8 +105,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     }
 
     /**
-     * It takes the information of the nearby places from the URL request.
-     * Other methods encapsulate them in markers and display them
+     * Create places marker and trigger the listeners on {@link MapsActivity}
      * Package private for testing
      * @param nearByPlacesList The list of nearby places
      *
@@ -115,14 +124,12 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
                     builder.include(latLng);
 
                     MarkerOptions markerOptions = createMarker(latLng, placeName);
-
-                    displayMarkers(markerOptions);
-
                     //Add the marker in order to recreate the state
                     markerList.add(markerOptions);
                 }
 
-                animateCamera(builder);
+                //We have all the markers. Let's trigger the listener
+                loadMarkers(builder);
 
             }
         }
@@ -130,26 +137,6 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
         result = DataParser.STATUS;
         //We have the result status. Let's trigger the listener
         loadResult();
-    }
-
-    /**
-     * Method to display nearby a single marker on the map
-     * @param marker to add
-     */
-    void displayMarkers(@NonNull MarkerOptions marker){
-        //Create the marker
-        mMap.addMarker(marker);
-    }
-
-    /**
-     * Method to animate the camera
-     */
-    void animateCamera(@NonNull LatLngBounds.Builder builder){
-        LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-        mMap.animateCamera(cu);
     }
 
     /**
@@ -180,6 +167,16 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     protected void loadResult(){
         if(onResultSetListener != null) {
             onResultSetListener.onResultSet(result);
+        }
+    }
+
+    /**
+     * Method to trigger the listener and sens it the result data
+     * @param builder to animate the camera
+     */
+    protected void loadMarkers(LatLngBounds.Builder builder){
+        if(onMarkersDownloadedListener != null) {
+            onMarkersDownloadedListener.onMarkersDownloaded(getMarkerList(), builder);
         }
     }
 
