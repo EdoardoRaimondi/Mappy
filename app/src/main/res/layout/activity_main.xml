@@ -17,17 +17,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start">
+        android:layout_weight="0.2"
+        android:gravity="bottom|start">
+
         <Button
             android:id="@+id/help"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="helpRequest"
-            android:text="@string/help"/>
+            android:text="@string/help"
+            android:layout_marginLeft="20dp"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0.7"
         android:gravity="center">
 
         <Space
@@ -39,11 +44,11 @@
             android:id="@+id/wheel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/todo"
             android:scaleType="fitXY"
             android:scaleX="1.0"
             android:scaleY="1.0"
-            android:src="@drawable/speriamo"
-            android:contentDescription="@string/todo" />
+            android:src="@drawable/speriamo" />
 
         <Space
             android:layout_width="wrap_content"
@@ -55,18 +60,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        >
+        android:layout_weight="0.1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
         <Button
             android:id="@+id/nearby_disco"
-            android:onClick="nearbyDiscoRequest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/party"
-            />
+            android:onClick="nearbyDiscoRequest"
+            android:text="@string/party" />
 
         <Space
             android:layout_width="wrap_content"
@@ -75,11 +81,10 @@
 
         <Button
             android:id="@+id/lucky_button"
-            android:onClick="spin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/lucky"
-            />
+            android:onClick="spin"
+            android:text="@string/lucky" />
 
         <Space
             android:layout_width="wrap_content"
@@ -88,11 +93,10 @@
 
         <Button
             android:id="@+id/button2"
-            android:onClick="nearbyRestaurantRequest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/restaurant"
-            />
+            android:onClick="nearbyRestaurantRequest"
+            android:text="@string/restaurant" />
     </LinearLayout>
 
 </LinearLayout>
