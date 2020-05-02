@@ -25,4 +25,5 @@
     // basic dialog
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
+    <string name="spinning_wheel">spinning_wheel</string>
 </resources>
