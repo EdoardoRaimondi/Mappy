@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
 
-    private static final int MAX_PLACES            = 30;
+    private static final int MAX_PLACES            = 100;
     private static final int DEFAULT_ZOOM          = 12;
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     private static final String GOOGLE_KEY         = "AIzaSyBhUH-chcm8iT5iSYmqzmuEbnZVUt93Mmo";
@@ -573,6 +574,9 @@ public class MapsActivity extends FragmentActivity implements
                 break;
                 // FOLLOWING STATES SHOULD BE MANAGED BY PROGRAMMERS, THEY ARE NOT USER FAULT
             case ResponseStatus.INVALID_REQUEST:
+            case ResponseStatus.CONNECTION_LOW:
+                DialogFactory.showNoConnectionAlertDialog(this);
+                break;
             case ResponseStatus.UNKNOWN_ERROR:
                 DialogFactory.showUnknownErrorAlertDialog(this);
                 break;

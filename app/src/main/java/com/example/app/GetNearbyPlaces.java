@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,9 +75,12 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
             googlePlaceData = downloadUrl.readTheUrl(url);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        } catch(UnknownHostException e){
+            result = ResponseStatus.CONNECTION_LOW;
+            loadResult();
+        } catch (IOException e) {
+            result = ResponseStatus.CONNECTION_LOW;
+            loadResult();
         }
         return googlePlaceData;
     }
