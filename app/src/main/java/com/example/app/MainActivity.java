@@ -63,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
         //check the wheel
         wheel = findViewById(R.id.wheel);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            checkUserLocationPermission();
-        }
-
         //create the spinner and fill it
         radiusSpinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
