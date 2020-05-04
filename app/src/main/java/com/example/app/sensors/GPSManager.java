@@ -36,14 +36,16 @@ public class GPSManager implements LocationListener {
     public boolean isGPSOn(){
         if(hasPermissions()){
             try{
-                LocationManager lm = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-                assert lm != null;
-                return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                LocationManager manager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+                assert manager != null;
+                return manager.isProviderEnabled( LocationManager.GPS_PROVIDER );
             }
             catch(Exception exc){
+                Log.d("GPSManager", exc.toString());
 
             }
         }
+        Log.d("GPSManager", "ARRIVED HERE");
         return false;
     }
 /*
