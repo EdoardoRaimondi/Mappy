@@ -41,11 +41,10 @@ public class GPSManager implements LocationListener {
                 return manager.isProviderEnabled( LocationManager.GPS_PROVIDER );
             }
             catch(Exception exc){
-                Log.d("GPSManager", exc.toString());
+                // no exception ever thrown
 
             }
         }
-        Log.d("GPSManager", "ARRIVED HERE");
         return false;
     }
 /*
