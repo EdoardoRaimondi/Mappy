@@ -29,4 +29,8 @@
     // TOASTS
     <string name="no_gps_permission">Well, no GPS means nothing to display</string>
     <string name="thank_you">Thank you!</string>
+    <string name="spinning_wheel">spinning_wheel</string>
+    <string name="help">HELP</string>
+    <string name="lucky">LUCKY</string>
+    <string name="todo">TODO</string>
 </resources>

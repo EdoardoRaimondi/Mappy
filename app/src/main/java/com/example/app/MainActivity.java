@@ -9,9 +9,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -22,6 +27,8 @@ import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import java.util.Random;
+
 /**
  * Main UI activity. Here the user can choose the main actions.
  * (Need to write every button what actually does, when completed)
@@ -29,6 +36,12 @@ import com.google.android.gms.common.GoogleApiAvailability;
 public class MainActivity extends AppCompatActivity {
 
     private int radius;
+    private int degree = 0;
+
+    //considering a 360 degree circle divided in 6 sections and
+    //I start from an half of one. I got 360 / 6 / 2.
+    //(so 1 section will be 2 FACTOR large)
+    private static final float FACTOR = 30f;
 
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
@@ -37,13 +50,24 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
     private Spinner radiusSpinner;
+    private ImageView wheel;
+    private Random random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // creating spinner and filling it
+        random = new Random();
+
+        //check the wheel
+        wheel = findViewById(R.id.wheel);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            checkUserLocationPermission();
+        }
+
+        //create the spinner and fill it
         radiusSpinner = findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
                 this,
@@ -90,6 +114,38 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Method that animate the wheel
+     * @param view button {@id lucky_button}
+     */
+    public void spin(View view){
+        int oldDegree = degree % 360;
+        degree = random.nextInt(360) + 720;
+        RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f
+        );
+        rotate.setDuration(3600);
+        rotate.setFillAfter(true);
+        rotate.setInterpolator(new DecelerateInterpolator());
+        rotate.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                sendRequest(360 - (degree % 360));
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        wheel.startAnimation(rotate);
+    }
+
 
     /**
      * Callback to save the state when necessary
@@ -193,11 +249,42 @@ public class MainActivity extends AppCompatActivity {
      */
     public native int parseRadius(String radius);
 
-    /**
-     * Library loading
-     */
+    //loading the C++ library
     static {
         System.loadLibrary("libmain_native_lib");
     }
 
+
+    /**
+     * Analise the wheel position and send the corresponding command
+     * @param position the result position
+     */
+    private void sendRequest(int position){
+        if((position >= FACTOR * 1) && (position < FACTOR * 3)) {
+            //send some request
+            Log.d("ZONE", "galleria d'arte");
+        }
+
+        if((position >= FACTOR * 3) && (position < FACTOR * 5)){
+            //send some request
+            Log.d("ZONE", "museo");
+        }
+        if((position >= FACTOR * 5) && (position < FACTOR * 7)){
+            //send some request
+            Log.d("ZONE", "zoo");
+        }
+        if((position >= FACTOR * 7) && (position < FACTOR * 9)){
+            //send some request
+            Log.d("ZONE", "cinema");
+        }
+        if((position >= FACTOR * 9) && (position < FACTOR * 11)){
+            //send some request
+            Log.d("ZONE", "luna park");
+        }
+        if((position >= FACTOR * 11) && (position < FACTOR * 13)){
+            //send some request
+            Log.d("ZONE", "parco");
+        }
+
+    }
 }
