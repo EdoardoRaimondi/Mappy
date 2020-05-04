@@ -12,4 +12,5 @@ public class ResponseStatus {
     public static final String ZERO_RESULTS     = "ZERO_RESULTS";
     public static final String NOT_FOUND        = "NOT_FOUND";
     public static final String INVALID_REQUEST  = "INVALID_REQUEST";
+    public static final String CONNECTION_LOW   = "CONNECTION_LOW";
 }
