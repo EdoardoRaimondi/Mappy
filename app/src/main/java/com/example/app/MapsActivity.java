@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -222,8 +223,10 @@ public class MapsActivity extends FragmentActivity implements
                             if (myLastLocation != null) {
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
+                                animateProgress(30,50,1000);
                                 //progressBar.setVisibility(View.GONE);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                animateProgress(50,100,1000);
                             }
                             else {
                                 final LocationRequest locationRequest = LocationRequest.create();
@@ -239,7 +242,9 @@ public class MapsActivity extends FragmentActivity implements
                                         }
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
+                                        animateProgress(30,50,1000);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                        animateProgress(50,100,1000);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
@@ -634,7 +639,21 @@ public class MapsActivity extends FragmentActivity implements
     private void animateProgress(int from, int to, int duration){
         Animation anim = new ProgressAnimation(progressBar, from, to);
         anim.setDuration(duration);
-        progressBar.startAnimation(anim);
+        if(to == 100){
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    progressBar.setVisibility(View.GONE);
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+
+            });
+        }
+        progressBar.setAnimation(anim);
     }
 
 }
