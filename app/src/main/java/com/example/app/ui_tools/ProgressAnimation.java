@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.ui_tools;
 
 import android.view.animation.Animation;
 import android.view.animation.Transformation;

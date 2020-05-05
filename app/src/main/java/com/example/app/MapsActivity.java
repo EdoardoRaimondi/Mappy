@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnMarkersDownloadedListener;
 import com.example.app.listeners.OnResultSetListener;
+import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -199,6 +199,24 @@ public class MapsActivity extends FragmentActivity implements
                         case police:
                             showNearbyPolice(radius);
                             break;
+                        case museum:
+                            showNearbyMuseum(radius);
+                            break;
+                        case art_gallery:
+                            showNearbyArtGallery(radius);
+                            break;
+                        case tourist_attraction:
+                            showNearbyAttraction(radius);
+                            break;
+                        case zoo:
+                            showNearbyZoo(radius);
+                            break;
+                        case movie_theater:
+                            showNearbyCinema(radius);
+                            break;
+                        case park:
+                            showNearbyPark(radius);
+                            break;
                     }
                 }
             }
@@ -297,22 +315,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.night_club.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlDisco;
                 //the request will be downloaded and displayed
                 GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
-                getNearbyDiscoPlaces.execute(urlDisco);
-                getNearbyDiscoPlaces.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyDiscoPlaces.execute(transferData);
                 getNearbyDiscoPlaces.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -342,22 +350,12 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onLocationSet(Location location) {
                 String urlRestaurant = getUrl(location.getLatitude(), location.getLongitude(), NearbyRequestType.restaurant.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlRestaurant;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
-                getNearbyRestaurantPlaces.execute(urlRestaurant);
-                getNearbyRestaurantPlaces.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyRestaurantPlaces.execute(transferData);
                 getNearbyRestaurantPlaces.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -386,22 +384,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlTaxi = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.taxi_stand.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlTaxi;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyTaxiPlaces = new GetNearbyPlaces();
-                getNearbyTaxiPlaces.execute(urlTaxi);
-                getNearbyTaxiPlaces.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyTaxiPlaces.execute(transferData);
                 getNearbyTaxiPlaces.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -431,22 +419,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlHospital = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.hospital.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlHospital;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyHospitals = new GetNearbyPlaces();
-                getNearbyHospitals.execute(urlHospital);
-                getNearbyHospitals.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyHospitals.execute(transferData);
                 getNearbyHospitals.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -476,22 +454,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlPolice = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.police.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlPolice;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyPoliceStations = new GetNearbyPlaces();
-                getNearbyPoliceStations.execute(urlPolice);
-                getNearbyPoliceStations.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyPoliceStations.execute(transferData);
                 getNearbyPoliceStations.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -505,6 +473,215 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
     }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyZoo(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlZoo = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.zoo.toString(), radius);
+
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlZoo;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyZoo = new GetNearbyPlaces();
+                getNearbyZoo.execute(transferData);
+                getNearbyZoo.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyPark(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlPark = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.park.toString(), radius);
+
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlPark;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyParks = new GetNearbyPlaces();
+                getNearbyParks.execute(transferData);
+                getNearbyParks.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyMuseum(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlMuseum = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.museum.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlMuseum;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyMuseum = new GetNearbyPlaces();
+                getNearbyMuseum.execute(transferData);
+                getNearbyMuseum.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyArtGallery(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlGallery = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.art_gallery.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlGallery;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyArtGallery = new GetNearbyPlaces();
+                getNearbyArtGallery.execute(transferData);
+                getNearbyArtGallery.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyAttraction(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlAttraction = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.tourist_attraction.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlAttraction;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyAttractions = new GetNearbyPlaces();
+                getNearbyAttractions.execute(transferData);
+                getNearbyAttractions.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyCinema(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlCinema = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.movie_theater.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlCinema;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyAttractions = new GetNearbyPlaces();
+                getNearbyAttractions.execute(transferData);
+                getNearbyAttractions.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+
+
 
     /**
      * Callback for the activity result. If check is passed, let the method execute
@@ -627,15 +804,5 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    /**
-     * Method to animate the camera
-     */
-    void animateCamera(LatLngBounds.Builder builder){
-        LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-        mMap.animateCamera(cu);
-    }
 
 }

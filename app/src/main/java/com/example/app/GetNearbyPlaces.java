@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 
 import com.example.app.finals.ResponseStatus;
+import com.example.app.interfaces.GooglePlace;
 import com.example.app.listeners.OnMarkersDownloadedListener;
 import com.example.app.listeners.OnResultSetListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -30,11 +31,11 @@ import java.util.Objects;
  */
 public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
 
-    private String googlePlaceData;
+    private String googlePlaceData, url;
     private String result;
+    private GoogleMap mMap;
 
     private OnResultSetListener         onResultSetListener;
-    private OnMarkersDownloadedListener onMarkersDownloadedListener;
 
     static List<MarkerOptions> markerList = new ArrayList<>(); //to save the state
 
@@ -42,9 +43,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      * Constructor in order to set null the listener
      */
     public GetNearbyPlaces(){
-
-        onMarkersDownloadedListener = null;
-        onResultSetListener         = null;
+        onResultSetListener = null;
     }
 
     /**
@@ -56,21 +55,14 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     }
 
     /**
-     * Set the listener following the {@link OnResultSetListener} interface
-     * @param listener to build
-     */
-    public void setOnMarkersDownloadedListener(OnMarkersDownloadedListener listener){
-        onMarkersDownloadedListener = listener;
-    }
-
-    /**
      * Method to extract the data from the {@link MapsActivity}
      * @param  objects A two dimension array containing the map and the url request from the {@link MainActivity}
      * @return string representing the data
      */
     @Override
     protected String doInBackground(Object... objects) {
-        String url = (String) objects[0];
+        mMap = (GoogleMap) objects[0];
+        url = (String) objects[1];
 
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
@@ -130,11 +122,11 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
                     MarkerOptions markerOptions = createMarker(latLng, placeName);
                     //Add the marker in order to recreate the state
                     markerList.add(markerOptions);
+
+                    mMap.addMarker(markerOptions);
+
                 }
-
-                //We have all the markers. Let's trigger the listener
-                loadMarkers(builder);
-
+                animateCamera(builder);
             }
         }
 
@@ -175,13 +167,14 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     }
 
     /**
-     * Method to trigger the listener and sens it the result data
-     * @param builder to animate the camera
+     * Method to animate the camera
      */
-    protected void loadMarkers(LatLngBounds.Builder builder){
-        if(onMarkersDownloadedListener != null) {
-            onMarkersDownloadedListener.onMarkersDownloaded(getMarkerList(), builder);
-        }
+    void animateCamera(LatLngBounds.Builder builder){
+        LatLngBounds bounds = builder.build();
+        int padding = 0; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+        mMap.animateCamera(cu);
     }
 
 }
