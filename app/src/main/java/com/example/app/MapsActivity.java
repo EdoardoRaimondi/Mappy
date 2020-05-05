@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -70,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleMap mMap;
     private LocationCallback locationCallback;
     private MapView mapView;
+    private ProgressBar progressBar;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
 
@@ -95,9 +97,10 @@ public class MapsActivity extends FragmentActivity implements
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_maps);
+        progressBar = findViewById(R.id.prog_bar);
         restoreMarkers = new ArrayList<>();
 
         // restoring instance state if any
@@ -154,10 +157,8 @@ public class MapsActivity extends FragmentActivity implements
 
         //check if gps is enabled or not and then request user to enable it
 
-        ProgressBar progressBar = findViewById(R.id.prog_bar);
-        ProgressAnimation anim = new ProgressAnimation(progressBar, 0, 20);
-        anim.setDuration(1000);
-        progressBar.startAnimation(anim);
+
+        animateProgress(0,10,1000);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
@@ -171,6 +172,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 setDeviceLocation();
+                animateProgress(10,30,2000);
                 //Get button pressed information
                 Intent requestInfo = getIntent();
                 requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
@@ -220,11 +222,7 @@ public class MapsActivity extends FragmentActivity implements
                             if (myLastLocation != null) {
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
-                                ProgressBar progressBar = findViewById(R.id.prog_bar);
-                                ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
-                                anim.setDuration(1000);
-                                progressBar.startAnimation(anim);
-                                progressBar.setVisibility(View.GONE);
+                                //progressBar.setVisibility(View.GONE);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
                             }
                             else {
@@ -241,11 +239,6 @@ public class MapsActivity extends FragmentActivity implements
                                         }
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
-                                        ProgressBar progressBar = findViewById(R.id.prog_bar);
-                                        ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
-                                        anim.setDuration(1000);
-                                        progressBar.startAnimation(anim);
-                                        progressBar.setVisibility(View.GONE);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
@@ -636,6 +629,12 @@ public class MapsActivity extends FragmentActivity implements
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
         mMap.animateCamera(cu);
+    }
+
+    private void animateProgress(int from, int to, int duration){
+        Animation anim = new ProgressAnimation(progressBar, from, to);
+        anim.setDuration(duration);
+        progressBar.startAnimation(anim);
     }
 
 }

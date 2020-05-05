@@ -77,12 +77,14 @@ public class BasicDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         listener.onDialogResult(id, false);
+                        dialog.dismiss();
                     }
                 })
                 .setPositiveButton(this.textForOkButton, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         listener.onDialogResult(id, true);
+                        dialog.dismiss();
                     }
                 });
 
