@@ -54,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements
     private static final int MAX_PLACES            = 100;
     private static final int DEFAULT_ZOOM          = 12;
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-    private static final String GOOGLE_KEY         = "AIzaSyBhUH-chcm8iT5iSYmqzmuEbnZVUt93Mmo";
+    private static final String GOOGLE_KEY         = "AIzaSyBf3WMUTEJtCWJpoBqQFbmUjuyhx-Q3P_Q";
 
     // activity connectors
     public static final String NEARBY_KEY = "nearby key";
