@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 
 import com.example.app.finals.ResponseStatus;
-import com.example.app.interfaces.GooglePlace;
-import com.example.app.listeners.OnMarkersDownloadedListener;
 import com.example.app.listeners.OnResultSetListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,15 +13,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -112,11 +109,9 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 for (int i = 0; i < nearByPlacesList.size(); i++) {
                     //Extract the data
-                    Place googleNearbyPlace = nearByPlacesList.get(i);
-                    String placeName = googleNearbyPlace.getName();
-                    double lat = googleNearbyPlace.getLatitude();
-                    double lon = googleNearbyPlace.getLongitude();
-                    LatLng latLng = new LatLng(lat, lon);
+                    Place googleNearbyLocalPlace = nearByPlacesList.get(i);
+                    String placeName = googleNearbyLocalPlace.getName();
+                    LatLng latLng = googleNearbyLocalPlace.getLatLng();
                     builder.include(latLng);
 
                     MarkerOptions markerOptions = createMarker(latLng, placeName);

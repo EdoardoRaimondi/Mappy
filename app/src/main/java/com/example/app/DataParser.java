@@ -1,13 +1,15 @@
 package com.example.app;
 
 import com.example.app.interfaces.MapJSonDataParser;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,26 +27,38 @@ public class DataParser implements MapJSonDataParser {
      *
      */
     private Place getSingleNearbyPlace(JSONObject googlePlaceJSON) {
-        Place googlePlaceMap = new Place();
+        Place place = null;
         String placeName = "-NA-";
         String vicinity = "-NA-";
-        String latitude = "";
-        String longitude = "";
-        String reference = "";
+        double latitude;
+        double longitude;
+        int priceLevel;
 
         try {
             placeName = googlePlaceJSON.getString("name");
-            latitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat");
-            longitude = googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng");
+            latitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat"));
+            longitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng"));
             //reference = googlePlaceJSON.getString("reference");
-
-            googlePlaceMap.insertPlace(placeName, latitude, longitude);
+            if(googlePlaceJSON.has("price")) {
+                priceLevel = googlePlaceJSON.getInt("price");
+                place = Place.builder()
+                        .setLatLng(new LatLng(latitude, longitude))
+                        .setName(placeName)
+                        .setPriceLevel(priceLevel)
+                        .build();
+            }
+            else {
+                place = Place.builder()
+                        .setLatLng(new LatLng(latitude, longitude))
+                        .setName(placeName)
+                        .build();
+            }
         }
         catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return googlePlaceMap;
+        return place;
     }
 
 
@@ -59,21 +73,21 @@ public class DataParser implements MapJSonDataParser {
         if(jsonArray != null) {
             count = jsonArray.length();
         }
-        List<Place> NearbyPlacesList = new ArrayList<>();
+        List<Place> nearbyPlacesList = new ArrayList<>();
 
-        Place NearbyPlaceMap;
+        Place nearbyLocalPlaceMap;
 
         for (int i=0; i<count; i++) {
             try {
-                NearbyPlaceMap = getSingleNearbyPlace( (JSONObject) jsonArray.get(i) );
-                NearbyPlacesList.add(NearbyPlaceMap);
+                nearbyLocalPlaceMap = getSingleNearbyPlace( (JSONObject) jsonArray.get(i) );
+                nearbyPlacesList.add(nearbyLocalPlaceMap);
             }
             catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        return NearbyPlacesList;
+        return nearbyPlacesList;
     }
 
 

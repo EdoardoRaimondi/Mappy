@@ -177,6 +177,7 @@ public class MapsActivity extends FragmentActivity implements
                 radius = requestInfo.getIntExtra(RADIUS, 1000);
 
                 if(canRestore){
+                    mMap.clear();
                     displayMarkers(restoreMarkers);
                     restoreMarkers.clear();
                 }
@@ -743,8 +744,7 @@ public class MapsActivity extends FragmentActivity implements
     private void displayMarkers(List<MarkerOptions> markerList){
         for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
             mMap.addMarker(markerList.get(currentMarker));
-        }
-    }
+        }    }
 
     /**
      * Method to recognize the response status
@@ -803,6 +803,4 @@ public class MapsActivity extends FragmentActivity implements
             onLocationSetListener.onLocationSet(location);
         }
     }
-
-
 }
