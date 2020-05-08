@@ -101,7 +101,6 @@ public class MapsActivity extends FragmentActivity implements
         // restoring instance state if any
         if(savedInstanceState != null){
             String[] titles = savedInstanceState.getStringArray(TITLES_KEY);
-            Log.d("MapsActivity","restoring " + titles.length + " markers");
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
@@ -711,9 +710,6 @@ public class MapsActivity extends FragmentActivity implements
         super.onSaveInstanceState(savedInstanceState);
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        //creating empty arrays to save the state
-        ArrayList<String> titles = new ArrayList<>();
-        Log.d("","saving " + markerList.size() + " places");
         // only the array list titles will tell how many places by its size
         if(markerList.size() > 0) {
             String[] title = new String[markerList.size()];
@@ -745,7 +741,8 @@ public class MapsActivity extends FragmentActivity implements
     private void displayMarkers(List<MarkerOptions> markerList){
         for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
             mMap.addMarker(markerList.get(currentMarker));
-        }    }
+        }
+    }
 
     /**
      * Method to recognize the response status
