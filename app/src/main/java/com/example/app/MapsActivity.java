@@ -4,15 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -23,6 +20,7 @@ import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnMarkersDownloadedListener;
 import com.example.app.listeners.OnResultSetListener;
+import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -52,11 +50,9 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
-
-    private static final int MAX_PLACES            = 100;
     private static final int DEFAULT_ZOOM          = 12;
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-    private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s"; // Google is shit
+    private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
     // activity connectors
     public static final String NEARBY_KEY = "nearby key";
@@ -72,7 +68,6 @@ public class MapsActivity extends FragmentActivity implements
     private GoogleMap mMap;
     private LocationCallback locationCallback;
     private MapView mapView;
-    private ProgressBar progressBar;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
 
@@ -99,21 +94,20 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_maps);
-        progressBar = findViewById(R.id.prog_bar);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         restoreMarkers = new ArrayList<>();
 
         // restoring instance state if any
         if(savedInstanceState != null){
-            ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
+            String[] titles = savedInstanceState.getStringArray(TITLES_KEY);
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
             if (titles != null && latitudes != null && longitudes != null) {
-                for (int i = 0; i < titles.size(); i++) {
+                for (int i = 0; i < titles.length; i++) {
                     MarkerOptions newMarker = new MarkerOptions();
-                    newMarker.title(titles.get(i));
+                    newMarker.title(titles[i]);
                     double lat = latitudes[i];
                     double lng = longitudes[i];
                     LatLng latLng = new LatLng(lat, lng);
@@ -158,8 +152,10 @@ public class MapsActivity extends FragmentActivity implements
 
         //check if gps is enabled or not and then request user to enable it
 
-
-        animateProgress(0,10,1000);
+        ProgressBar progressBar = findViewById(R.id.prog_bar);
+        ProgressAnimation anim = new ProgressAnimation(progressBar, 0, 20);
+        anim.setDuration(1000);
+        progressBar.startAnimation(anim);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
@@ -173,13 +169,13 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 setDeviceLocation();
-                animateProgress(10,30,2000);
                 //Get button pressed information
                 Intent requestInfo = getIntent();
                 requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
                 radius = requestInfo.getIntExtra(RADIUS, 1000);
 
                 if(canRestore){
+                    mMap.clear();
                     displayMarkers(restoreMarkers);
                     restoreMarkers.clear();
                 }
@@ -202,6 +198,24 @@ public class MapsActivity extends FragmentActivity implements
                         case police:
                             showNearbyPolice(radius);
                             break;
+                        case museum:
+                            showNearbyMuseum(radius);
+                            break;
+                        case art_gallery:
+                            showNearbyArtGallery(radius);
+                            break;
+                        case tourist_attraction:
+                            showNearbyAttraction(radius);
+                            break;
+                        case zoo:
+                            showNearbyZoo(radius);
+                            break;
+                        case movie_theater:
+                            showNearbyCinema(radius);
+                            break;
+                        case park:
+                            showNearbyPark(radius);
+                            break;
                     }
                 }
             }
@@ -223,10 +237,12 @@ public class MapsActivity extends FragmentActivity implements
                             if (myLastLocation != null) {
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
-                                animateProgress(30,50,1000);
-                                //progressBar.setVisibility(View.GONE);
+                                ProgressBar progressBar = findViewById(R.id.prog_bar);
+                                ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
+                                anim.setDuration(1000);
+                                progressBar.startAnimation(anim);
+                                progressBar.setVisibility(View.GONE);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
-                                animateProgress(50,100,1000);
                             }
                             else {
                                 final LocationRequest locationRequest = LocationRequest.create();
@@ -242,9 +258,12 @@ public class MapsActivity extends FragmentActivity implements
                                         }
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
-                                        animateProgress(30,50,1000);
+                                        ProgressBar progressBar = findViewById(R.id.prog_bar);
+                                        ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
+                                        anim.setDuration(1000);
+                                        progressBar.startAnimation(anim);
+                                        progressBar.setVisibility(View.GONE);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
-                                        animateProgress(50,100,1000);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
@@ -295,22 +314,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlDisco = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.night_club.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlDisco;
                 //the request will be downloaded and displayed
                 GetNearbyPlaces getNearbyDiscoPlaces = new GetNearbyPlaces();
-                getNearbyDiscoPlaces.execute(urlDisco);
-                getNearbyDiscoPlaces.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyDiscoPlaces.execute(transferData);
                 getNearbyDiscoPlaces.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -340,22 +349,12 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onLocationSet(Location location) {
                 String urlRestaurant = getUrl(location.getLatitude(), location.getLongitude(), NearbyRequestType.restaurant.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlRestaurant;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyRestaurantPlaces = new GetNearbyPlaces();
-                getNearbyRestaurantPlaces.execute(urlRestaurant);
-                getNearbyRestaurantPlaces.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyRestaurantPlaces.execute(transferData);
                 getNearbyRestaurantPlaces.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -384,22 +383,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlTaxi = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.taxi_stand.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlTaxi;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyTaxiPlaces = new GetNearbyPlaces();
-                getNearbyTaxiPlaces.execute(urlTaxi);
-                getNearbyTaxiPlaces.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyTaxiPlaces.execute(transferData);
                 getNearbyTaxiPlaces.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -429,22 +418,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlHospital = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.hospital.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlHospital;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyHospitals = new GetNearbyPlaces();
-                getNearbyHospitals.execute(urlHospital);
-                getNearbyHospitals.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyHospitals.execute(transferData);
                 getNearbyHospitals.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -474,22 +453,12 @@ public class MapsActivity extends FragmentActivity implements
             public void onLocationSet(Location location) {
                 //create the request
                 String urlPolice = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.police.toString(), radius);
-
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlPolice;
                 //request will be downloaded and displayed
                 GetNearbyPlaces getNearbyPoliceStations = new GetNearbyPlaces();
-                getNearbyPoliceStations.execute(urlPolice);
-                getNearbyPoliceStations.setOnMarkersDownloadedListener(new OnMarkersDownloadedListener() {
-                    /**
-                     * Callback when the markers are ready to be displayed
-                     * @param markers the list of markers
-                     * @param builder to animate the camera
-                     */
-                    @Override
-                    public void onMarkersDownloaded(List<MarkerOptions> markers, LatLngBounds.Builder builder) {
-                        displayMarkers(markers);
-                        animateCamera(builder);
-                    }
-                });
+                getNearbyPoliceStations.execute(transferData);
                 getNearbyPoliceStations.setOnResultSetListener(new OnResultSetListener() {
                     /**
                      * Callback when the response result is ready
@@ -503,6 +472,215 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
     }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyZoo(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlZoo = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.zoo.toString(), radius);
+
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlZoo;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyZoo = new GetNearbyPlaces();
+                getNearbyZoo.execute(transferData);
+                getNearbyZoo.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyPark(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlPark = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.park.toString(), radius);
+
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlPark;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyParks = new GetNearbyPlaces();
+                getNearbyParks.execute(transferData);
+                getNearbyParks.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyMuseum(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlMuseum = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.museum.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlMuseum;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyMuseum = new GetNearbyPlaces();
+                getNearbyMuseum.execute(transferData);
+                getNearbyMuseum.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyArtGallery(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlGallery = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.art_gallery.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlGallery;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyArtGallery = new GetNearbyPlaces();
+                getNearbyArtGallery.execute(transferData);
+                getNearbyArtGallery.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyAttraction(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlAttraction = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.tourist_attraction.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlAttraction;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyAttractions = new GetNearbyPlaces();
+                getNearbyAttractions.execute(transferData);
+                getNearbyAttractions.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Method activated by the relative nearby button pressure
+     * @param radius of research
+     */
+    private void showNearbyCinema(final int radius){
+        setOnLocationSetListener(new OnLocationSetListener() {
+            /**
+             * Callback when the position is ready
+             * @param location the centre of the research
+             */
+            @Override
+            public void onLocationSet(Location location) {
+                //create the request
+                String urlCinema = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), NearbyRequestType.movie_theater.toString(), radius);
+                Object[] transferData = new Object[2];
+                transferData[0] = mMap;
+                transferData[1] = urlCinema;
+                //request will be downloaded and displayed
+                GetNearbyPlaces getNearbyAttractions = new GetNearbyPlaces();
+                getNearbyAttractions.execute(transferData);
+                getNearbyAttractions.setOnResultSetListener(new OnResultSetListener() {
+                    /**
+                     * Callback when the response result is ready
+                     * @param result to get
+                     */
+                    @Override
+                    public void onResultSet(String result) {
+                        showResponseInfo(result);
+                    }
+                });
+            }
+        });
+    }
+
+
+
 
     /**
      * Callback for the activity result. If check is passed, let the method execute
@@ -527,34 +705,33 @@ public class MapsActivity extends FragmentActivity implements
      * @param savedInstanceState Bundle where to save places information
      */
     @Override
-    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // calling super class method
+        super.onSaveInstanceState(savedInstanceState);
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        //creating empty arrays to save the state
-        ArrayList<String> titles = new ArrayList<>();
         // only the array list titles will tell how many places by its size
-        double[] lat = new double[MAX_PLACES];
-        double[] lng = new double[MAX_PLACES];
-        if(markerList != null) {
+        if(markerList.size() > 0) {
+            String[] title = new String[markerList.size()];
+            double[] lat = new double[markerList.size()];
+            double[] lng = new double[markerList.size()];
             for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
                 // filling the arrays
                 MarkerOptions marker = markerList.get(currentMarker);
-                titles.add(marker.getTitle());
+                title[currentMarker] = marker.getTitle();
                 lat[currentMarker] = marker.getPosition().latitude;
                 lng[currentMarker] = marker.getPosition().longitude;
             }
             // now arrays are filled with the information I need
-            savedInstanceState.putStringArrayList(TITLES_KEY, titles);
+            savedInstanceState.putStringArray(TITLES_KEY, title);
             savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
             savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
             // saving current position
-            if(myLastLocation != null){
+            if (myLastLocation != null) {
                 savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
                 savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
             }
         }
-        // calling super class method
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     /**
@@ -624,36 +801,4 @@ public class MapsActivity extends FragmentActivity implements
             onLocationSetListener.onLocationSet(location);
         }
     }
-
-    /**
-     * Method to animate the camera
-     */
-    void animateCamera(LatLngBounds.Builder builder){
-        LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-        mMap.animateCamera(cu);
-    }
-
-    private void animateProgress(int from, int to, int duration){
-        Animation anim = new ProgressAnimation(progressBar, from, to);
-        anim.setDuration(duration);
-        if(to == 100){
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {}
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    progressBar.setVisibility(View.GONE);
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {}
-
-            });
-        }
-        progressBar.setAnimation(anim);
-    }
-
 }

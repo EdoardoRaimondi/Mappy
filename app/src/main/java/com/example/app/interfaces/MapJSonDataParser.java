@@ -1,6 +1,6 @@
 package com.example.app.interfaces;
 
-import com.example.app.Place;
+import com.google.android.libraries.places.api.model.Place;
 
 import org.json.JSONException;
 
@@ -14,7 +14,7 @@ public interface MapJSonDataParser {
     /**
      * Method to parse the Json string data
      * @param JSonData in string form
-     * @return List<Place> {@link Place}
+     * @return List<Place>
      * @throws JSONException if Json computation goes wrong
      */
     List<Place> parse(String JSonData) throws JSONException;

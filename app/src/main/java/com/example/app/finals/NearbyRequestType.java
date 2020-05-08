@@ -8,6 +8,11 @@ public enum NearbyRequestType {
     restaurant,
     hospital,
     police,
-    taxi_stand
-
+    taxi_stand,
+    zoo,
+    museum,
+    art_gallery,
+    park,
+    movie_theater,
+    tourist_attraction
 }

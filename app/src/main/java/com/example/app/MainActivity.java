@@ -258,31 +258,30 @@ public class MainActivity extends AppCompatActivity {
      * Analise the wheel position and send the corresponding command
      * @param position the result position
      */
-    private void sendRequest(int position){
-        if((position >= FACTOR * 1) && (position < FACTOR * 3)) {
-            //send some request
-            Log.d("ZONE", "galleria d'arte");
+    private void sendRequest(int position) {
+        if ((position >= FACTOR * 1) && (position < FACTOR * 3)) {
+            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.art_gallery, radius);
+            startActivity(intent);
         }
-
-        if((position >= FACTOR * 3) && (position < FACTOR * 5)){
-            //send some request
-            Log.d("ZONE", "museo");
+        if ((position >= FACTOR * 3) && (position < FACTOR * 5)){
+            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.museum, radius);
+            startActivity(intent);
         }
         if((position >= FACTOR * 5) && (position < FACTOR * 7)){
-            //send some request
-            Log.d("ZONE", "zoo");
+            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.zoo, radius);
+            startActivity(intent);
         }
         if((position >= FACTOR * 7) && (position < FACTOR * 9)){
-            //send some request
-            Log.d("ZONE", "cinema");
+            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.movie_theater, radius);
+            startActivity(intent);
         }
         if((position >= FACTOR * 9) && (position < FACTOR * 11)){
-            //send some request
-            Log.d("ZONE", "luna park");
+            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.tourist_attraction, radius);
+            startActivity(intent);
         }
         if((position >= FACTOR * 11) && (position < FACTOR * 13)){
-            //send some request
-            Log.d("ZONE", "parco");
+            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.park, radius);
+            startActivity(intent);
         }
 
     }
