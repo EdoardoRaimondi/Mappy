@@ -17,6 +17,8 @@ import com.example.app.R;
 
 import java.util.Objects;
 
+//
+
 public class BasicDialog extends AppCompatDialogFragment {
 
     private String id;
