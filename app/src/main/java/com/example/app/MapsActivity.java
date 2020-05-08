@@ -50,11 +50,9 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
-
-    private static final int MAX_PLACES            = 100;
     private static final int DEFAULT_ZOOM          = 12;
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-    private static final String GOOGLE_KEY         = "AIzaSyBf3WMUTEJtCWJpoBqQFbmUjuyhx-Q3P_Q";
+    private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
     // activity connectors
     public static final String NEARBY_KEY = "nearby key";
@@ -95,21 +93,22 @@ public class MapsActivity extends FragmentActivity implements
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         restoreMarkers = new ArrayList<>();
 
         // restoring instance state if any
         if(savedInstanceState != null){
-            ArrayList<String> titles = savedInstanceState.getStringArrayList(TITLES_KEY);
+            String[] titles = savedInstanceState.getStringArray(TITLES_KEY);
+            Log.d("MapsActivity","restoring " + titles.length + " markers");
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
             // create a marker list, in order to be display then
             if (titles != null && latitudes != null && longitudes != null) {
-                for (int i = 0; i < titles.size(); i++) {
+                for (int i = 0; i < titles.length; i++) {
                     MarkerOptions newMarker = new MarkerOptions();
-                    newMarker.title(titles.get(i));
+                    newMarker.title(titles[i]);
                     double lat = latitudes[i];
                     double lng = longitudes[i];
                     LatLng latLng = new LatLng(lat, lng);
@@ -707,34 +706,36 @@ public class MapsActivity extends FragmentActivity implements
      * @param savedInstanceState Bundle where to save places information
      */
     @Override
-    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // calling super class method
+        super.onSaveInstanceState(savedInstanceState);
         // getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
         //creating empty arrays to save the state
         ArrayList<String> titles = new ArrayList<>();
+        Log.d("","saving " + markerList.size() + " places");
         // only the array list titles will tell how many places by its size
-        double[] lat = new double[MAX_PLACES];
-        double[] lng = new double[MAX_PLACES];
-        if(markerList != null) {
+        if(markerList.size() > 0) {
+            String[] title = new String[markerList.size()];
+            double[] lat = new double[markerList.size()];
+            double[] lng = new double[markerList.size()];
             for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
                 // filling the arrays
                 MarkerOptions marker = markerList.get(currentMarker);
-                titles.add(marker.getTitle());
+                title[currentMarker] = marker.getTitle();
                 lat[currentMarker] = marker.getPosition().latitude;
                 lng[currentMarker] = marker.getPosition().longitude;
             }
             // now arrays are filled with the information I need
-            savedInstanceState.putStringArrayList(TITLES_KEY, titles);
+            savedInstanceState.putStringArray(TITLES_KEY, title);
             savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
             savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
             // saving current position
-            if(myLastLocation != null){
+            if (myLastLocation != null) {
                 savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
                 savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
             }
         }
-        // calling super class method
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     /**

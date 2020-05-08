@@ -41,6 +41,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
      */
     public GetNearbyPlaces(){
         onResultSetListener = null;
+        markerList = new ArrayList<>();
     }
 
     /**
