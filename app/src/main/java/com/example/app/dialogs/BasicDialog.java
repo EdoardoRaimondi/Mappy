@@ -17,8 +17,6 @@ import com.example.app.R;
 
 import java.util.Objects;
 
-//
-
 public class BasicDialog extends AppCompatDialogFragment {
 
     private String id;
@@ -33,24 +31,10 @@ public class BasicDialog extends AppCompatDialogFragment {
      * @param id the identifier of this dialog
      * @param title the title of dialog
      * @param text the dialog message
-     */
-    BasicDialog(String id, String title, String text){
-        this.id = id;
-        this.title = title;
-        this.text = text;
-        this.textForOkButton = getString(R.string.ok_button);
-        this.textForCancelButton = getString(R.string.cancel_button);
-    }
-
-    /**
-     * RadiusDialog constructor
-     * @param id the identifier of this dialog
-     * @param title the title of dialog
-     * @param text the dialog message
      * @param textForCancelButton the label of negative button
      * @param textForOkButton the label of positive button
      */
-    BasicDialog(String id, String title, String text, String textForOkButton, String textForCancelButton){
+    public BasicDialog(String id, String title, String text, String textForOkButton, String textForCancelButton){
         this.id = id;
         this.title = title;
         this.text = text;
@@ -62,7 +46,6 @@ public class BasicDialog extends AppCompatDialogFragment {
      * Callback to get the basic dialog instance
      * @param savedInstanceState the Bundle of any previous basic dialog if any
      */
-    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));

@@ -15,14 +15,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.app.R;
-import com.example.app.factories.IntentFactory;
-import com.example.app.finals.NearbyRequestType;
 
 import java.util.Objects;
 
 public class RadiusDialog extends AppCompatDialogFragment {
 
-    private static final double M_TO_KM_DIVIDER = 1000;
+    private static final double M_TO_KM_DIVIDER = 1000.0;
 
     private int actualRadius;
     private int newRadius;
@@ -56,7 +54,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
         seekBar.setMax(R.integer.max_radius - actualRadius);
         String display;
         if(actualRadius >= M_TO_KM_DIVIDER){
-            display = actualRadius / M_TO_KM_DIVIDER + " km";
+            display = (int) Math.ceil(actualRadius / M_TO_KM_DIVIDER) + " km";
         }
         else{
             display = actualRadius + " m";
@@ -74,12 +72,13 @@ public class RadiusDialog extends AppCompatDialogFragment {
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     /**
                      * Callback when Ok button is pressed
-                     * @param dialogInterface the dialog
+                     * @param dialog the dialog
                      * @param i (?)
                      */
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(DialogInterface dialog, int i) {
                         listener.onRadiusDialogResult(newRadius);
+                        dialog.dismiss();
                     }
                 });
 

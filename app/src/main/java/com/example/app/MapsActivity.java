@@ -14,13 +14,14 @@ import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.DialogFactory;
 import com.example.app.factories.IntentFactory;
+import com.example.app.factories.UrlFactory;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
-import com.example.app.listeners.OnMarkersDownloadedListener;
 import com.example.app.listeners.OnResultSetListener;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,7 +32,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -39,7 +39,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,11 +48,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback, RadiusDialog.RadiusDialogListener {
+public class MapsActivity
+        extends FragmentActivity
+        implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener {
 
     private static final int DEFAULT_ZOOM          = 12;
-    private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
     private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
     // activity connectors
@@ -236,7 +236,6 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-
     /**
      * method to get the url string containing all the place information
      * @param latitude     of the searching centre position
@@ -245,19 +244,14 @@ public class MapsActivity extends FragmentActivity implements
      * @param radius       of the research
      * @return URL string
      */
-    private String getUrl(double latitude, double longitude, String nearbyPlace, int radius)
-    {
-
-        StringBuilder googleURL = new StringBuilder(NEARBY_URL_REQUEST);
-        googleURL.append("location=").append(latitude).append(",").append(longitude);
-        googleURL.append("&radius=").append(radius);
-        googleURL.append("&type=").append(nearbyPlace);
-        googleURL.append("&sensor=true");
-        googleURL.append("&key=").append(GOOGLE_KEY);
-
-        Log.d("GoogleMapsActivity", "url = " + googleURL.toString());
-
-        return googleURL.toString();
+    private String getUrl(double latitude, double longitude, String nearbyPlace, int radius) {
+        String[] label = {"location", "radius", "type", "sensor", "key"};
+        String location = "" + latitude + "," + longitude;
+        String[] value = {location, Integer.toString(radius), nearbyPlace, "true", GOOGLE_KEY};
+        String url = UrlFactory.getUrl(NEARBY_URL_DOMAIN, label, value);
+        // TODO: remove following line on production
+        Log.d("GoogleMapsActivity", "url = " + url);
+        return url;
     }
 
 
@@ -290,9 +284,6 @@ public class MapsActivity extends FragmentActivity implements
              }
          });
      }
-
-
-
 
 
     /**
@@ -375,7 +366,7 @@ public class MapsActivity extends FragmentActivity implements
                     //just ignore it
                 }
                 break;
-            case ResponseStatus.NOT_FOUND:
+            /*case ResponseStatus.NOT_FOUND:
                 DialogFactory.showNotFoundAlertDialog(this);
                 break;
             case ResponseStatus.OVER_QUERY_LIMIT:
@@ -394,6 +385,16 @@ public class MapsActivity extends FragmentActivity implements
                 break;
             case ResponseStatus.REQUEST_DENIED:
                 DialogFactory.showRequestDeniedAlertDialog(this);
+                break;*/
+            default:
+                BasicDialog dial = new BasicDialog("test", "ERROR","Failed", "OK", "Cancel");
+                try {
+                    dial.show(getSupportFragmentManager(), "test");
+                }
+                catch(IllegalStateException e){
+                    //just ignore it
+                    Log.d("BasicDialog", "FAILED");
+                }
                 break;
         }
     }
@@ -426,6 +427,11 @@ public class MapsActivity extends FragmentActivity implements
             });
         }
         progressBar.setAnimation(anim);
+    }
+
+    // dialogs return listeners
+    public void onDialogResult(String id, boolean option){
+
     }
 
     public void onRadiusDialogResult(int radius){
