@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -70,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLastLocation;
+    private ProgressBar progressBar;
 
     private NearbyRequestType requestType;
     private int radius; //max radius can be 50000m
@@ -95,7 +97,8 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        progressBar = findViewById(R.id.prog_bar);
+        animateProgress(0,10,1000);
         restoreMarkers = new ArrayList<>();
 
         // restoring instance state if any
@@ -151,11 +154,6 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         //check if gps is enabled or not and then request user to enable it
-
-        ProgressBar progressBar = findViewById(R.id.prog_bar);
-        ProgressAnimation anim = new ProgressAnimation(progressBar, 0, 20);
-        anim.setDuration(1000);
-        progressBar.startAnimation(anim);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
@@ -178,6 +176,7 @@ public class MapsActivity extends FragmentActivity implements
                     mMap.clear();
                     displayMarkers(restoreMarkers);
                     restoreMarkers.clear();
+                    animateProgress(0,99,1000);
                 }
                 else {
                     //act in order to satisfy the request purpose
@@ -237,12 +236,8 @@ public class MapsActivity extends FragmentActivity implements
                             if (myLastLocation != null) {
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
-                                ProgressBar progressBar = findViewById(R.id.prog_bar);
-                                ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
-                                anim.setDuration(1000);
-                                progressBar.startAnimation(anim);
-                                progressBar.setVisibility(View.GONE);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                animateProgress(0,99,1000);
                             }
                             else {
                                 final LocationRequest locationRequest = LocationRequest.create();
@@ -258,12 +253,8 @@ public class MapsActivity extends FragmentActivity implements
                                         }
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
-                                        ProgressBar progressBar = findViewById(R.id.prog_bar);
-                                        ProgressAnimation anim = new ProgressAnimation(progressBar, 20, 100);
-                                        anim.setDuration(1000);
-                                        progressBar.startAnimation(anim);
-                                        progressBar.setVisibility(View.GONE);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                        animateProgress(0,99,1000);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
@@ -800,5 +791,25 @@ public class MapsActivity extends FragmentActivity implements
         if(onLocationSetListener != null){
             onLocationSetListener.onLocationSet(location);
         }
+    }
+
+    private void animateProgress(int from, int to, int duration){
+        Animation anim = new ProgressAnimation(progressBar, from, to);
+        anim.setDuration(duration);
+        if(to == 100){
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    progressBar.setVisibility(View.GONE);
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+
+            });
+        }
+        progressBar.setAnimation(anim);
     }
 }
