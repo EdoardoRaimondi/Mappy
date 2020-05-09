@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String SPINNER_KEY = "spinner_k";
     private static final int INVALID_POSITION = -1;
 
+    private static final int SET_HOME_MODE = 0;
+    private static final int VIEW_HOME_MODE = 1;
+
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
     private Spinner radiusSpinner;
@@ -238,6 +241,24 @@ public class MainActivity extends AppCompatActivity {
     public void helpRequest(View view){
         Intent helpIntent = IntentFactory.createHelpIntentRequest(this);
         startActivity(helpIntent);
+    }
+
+    /**
+     * Method to set the home
+     * @param view button {@id home}
+     */
+    public void setHome(View view){
+        Intent homeIntent = IntentFactory.createSetHomeRequest(this, SET_HOME_MODE);
+        startActivity(homeIntent);
+    }
+
+    /**
+     * Marks the user current position as home
+     * @param view button {@id home}
+     */
+    public void viewHome(View view){
+        Intent homeIntent = IntentFactory.createSetHomeRequest(this, VIEW_HOME_MODE);
+        startActivity(homeIntent);
     }
 
     // NATIVE METHODS

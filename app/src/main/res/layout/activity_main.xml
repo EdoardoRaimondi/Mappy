@@ -27,6 +27,23 @@
             android:onClick="helpRequest"
             android:text="@string/help"
             android:layout_marginLeft="20dp"/>
+
+        <Button
+            android:id="@+id/home"
+            android:layout_width="129dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="170dp"
+            android:layout_weight="1"
+            android:onClick="setHome"
+            android:text="Set Home" />
+
+        <Button
+            android:id="@+id/view_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="home"
+            android:onClick="viewHome"/>
     </LinearLayout>
 
     <LinearLayout
