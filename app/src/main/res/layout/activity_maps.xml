@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapsActivity"
     android:orientation="vertical"
-    android:windowNoTitle="true"
-    android:windowActionBar="false"
-    android:windowFullscreen="true"
-    android:windowContentOverlay="@null"
+    android:animateLayoutChanges="true"
     >
 
     <ProgressBar
@@ -18,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animationResolution="100"
-        android:background="#FFFFFF"
+        android:alpha="0.4"
+        android:background="#00000000"
         android:clickable="false"
         android:max="100" />
     <fragment
@@ -28,4 +26,4 @@
         android:layout_height="match_parent"
         tools:context=".MapsActivity"
         />
-</RelativeLayout>
+</LinearLayout>

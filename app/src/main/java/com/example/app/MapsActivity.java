@@ -96,9 +96,13 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
         setContentView(R.layout.activity_maps);
         progressBar = findViewById(R.id.prog_bar);
-        animateProgress(0,10,1000);
+        animateProgress(0,20,1000);
         restoreMarkers = new ArrayList<>();
 
         // restoring instance state if any
@@ -176,7 +180,7 @@ public class MapsActivity extends FragmentActivity implements
                     mMap.clear();
                     displayMarkers(restoreMarkers);
                     restoreMarkers.clear();
-                    animateProgress(0,99,1000);
+                    animateProgress(20,100,1000);
                 }
                 else {
                     //act in order to satisfy the request purpose
@@ -237,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
-                                animateProgress(0,99,1000);
+                                animateProgress(20,100,1000);
                             }
                             else {
                                 final LocationRequest locationRequest = LocationRequest.create();
@@ -254,7 +258,7 @@ public class MapsActivity extends FragmentActivity implements
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
-                                        animateProgress(0,99,1000);
+                                        animateProgress(20,100,1000);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
@@ -803,7 +807,8 @@ public class MapsActivity extends FragmentActivity implements
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    progressBar.setVisibility(View.GONE);
+                    // progressBar.setVisibility(View.GONE); resizing is horrible
+                    // TODO: shuld make progress bar floating or transparent
                 }
                 @Override
                 public void onAnimationRepeat(Animation animation) {}
