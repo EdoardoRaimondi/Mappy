@@ -106,7 +106,8 @@ public class BasicDialog extends AppCompatDialogFragment {
         super.onAttach(context);
         try {
             listener = (BasicDialogListener) context;
-        } catch (ClassCastException e) {
+        }
+        catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement BasicDialogListener");
         }
     }

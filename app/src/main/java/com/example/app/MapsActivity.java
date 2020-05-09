@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.DialogFactory;
+import com.example.app.factories.IntentFactory;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
@@ -49,7 +50,7 @@ import java.util.List;
 
 
 public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback{
+        OnMapReadyCallback, RadiusDialog.RadiusDialogListener {
 
     private static final int DEFAULT_ZOOM          = 12;
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -778,7 +779,7 @@ public class MapsActivity extends FragmentActivity implements
      * Open the dialog in ZERO RESULT status case
      */
     private void openRadiusDialog(){
-        RadiusDialog dialog = new RadiusDialog(radius, requestType);
+        RadiusDialog dialog = new RadiusDialog(radius);
         try {
             dialog.show(getSupportFragmentManager(), "example dialog");
         }
@@ -816,5 +817,9 @@ public class MapsActivity extends FragmentActivity implements
             });
         }
         progressBar.setAnimation(anim);
+    }
+
+    public void onRadiusDialogResult(int radius){
+        startActivity(IntentFactory.createNearbyRequestIntent(this, requestType, radius));
     }
 }

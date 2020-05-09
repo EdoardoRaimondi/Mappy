@@ -27,6 +27,7 @@ import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+
 import java.util.Random;
 
 /**
@@ -187,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         DialogFactory.showActivateGPSAlertDialog(this);
                     }
                     if(!gpsManager.isInternetProviderEnabled()){
-                        DialogFactory.showActivateGPSAlertDialog(this);
+
                     }
                 }
             }
