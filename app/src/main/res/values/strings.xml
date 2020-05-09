@@ -29,6 +29,9 @@
     <string name="sorry_message">It seems there have been too many requests on our service, try later in a bit.</string>
     <string name="ohno">Oh no</string>
     <string name="unknown_err">Something really strange happened. Try again please</string>
+    <string name="hey">Hey!</string>
+    <string name="no_gps">What did you expect, this is a navigator app. Turn GPS on?</string>
+    <string name="no_conn">What did you expect, we need an Internet provider to search pleaces nearby you. Activate now?</string>
 
     // TOASTS
     <string name="no_gps_permission">Well, no GPS means nothing to display</string>

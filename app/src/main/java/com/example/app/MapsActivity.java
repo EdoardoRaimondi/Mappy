@@ -435,16 +435,32 @@ public class MapsActivity
         progressBar.setAnimation(anim);
     }
 
-    // dialogs return listeners
+    // DIALOGS LISTENERS
+
+    /**
+     * BasicDialog common listener
+     * @param id the identifyer of dialog that was dismissed
+     * @param option the option choosen by user
+     */
     public void onDialogResult(String id, boolean option){
         switch(id){
             case OQL_ID:
                 if(option){
                     startActivity(IntentFactory.createLobbyReturn(this));
                 }
+                break;
+            case UNKWERR:
+                if(option){
+                    startActivity(IntentFactory.createLobbyReturn(this));
+                }
+                break;
         }
     }
 
+    /**
+     * RadiusDialog listener
+     * @param radius new radius of research
+     */
     public void onRadiusDialogResult(int radius){
         startActivity(IntentFactory.createNearbyRequestIntent(this, requestType, radius));
     }

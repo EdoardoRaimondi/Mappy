@@ -51,7 +51,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
         textView = view.findViewById(R.id.text_view);
         final SeekBar seekBar = view.findViewById(R.id.seek);
 
-        seekBar.setMax(R.integer.max_radius - actualRadius);
+        seekBar.setMax(getResources().getInteger(R.integer.max_radius) - actualRadius);
         String display;
         if(actualRadius >= M_TO_KM_DIVIDER){
             display = (int) Math.ceil(actualRadius / M_TO_KM_DIVIDER) + " km";
