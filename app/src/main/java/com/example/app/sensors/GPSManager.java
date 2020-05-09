@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -17,7 +16,6 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public class GPSManager implements LocationListener {
 
-    private static final int REQUEST_USER_LOCATION_CODE = 99;
     private Context context;
 
     public GPSManager(Context context) {
@@ -37,12 +35,27 @@ public class GPSManager implements LocationListener {
         if(hasPermissions()){
             try{
                 LocationManager manager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-                assert manager != null;
-                return manager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+                if(manager != null){
+                    return manager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+                }
             }
             catch(Exception exc){
                 // no exception ever thrown
+                return false;
+            }
+        }
+        return false;
+    }
 
+    public boolean isInternetProviderEnabled(){
+        if(hasPermissions()) {
+            try {
+                LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                if(manager != null){
+                    return manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                }
+            } catch (Exception exc) {
+                return false;
             }
         }
         return false;
