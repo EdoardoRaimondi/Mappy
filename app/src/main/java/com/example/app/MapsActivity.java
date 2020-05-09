@@ -1,8 +1,6 @@
 package com.example.app;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
@@ -13,10 +11,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
-import com.example.app.factories.DialogFactory;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.NearbyRequestType;
@@ -47,7 +43,6 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MapsActivity
         extends FragmentActivity
         implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener {
@@ -56,9 +51,11 @@ public class MapsActivity
     private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
     private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
+    private static final String TAG = "MapsActivity";
+
     // activity connectors
-    public static final String NEARBY_KEY = "nearby key";
-    public static final String RADIUS = "radius";
+    public static final String NEARBY_KEY = "nearby_k";
+    public static final String RADIUS = "radius_k";
 
     // instance state keys
     private static final String TITLES_KEY = "titles_k";
@@ -66,6 +63,10 @@ public class MapsActivity
     private static final String LONGITUDES_KEY = "lng_k";
     private static final String LAT_KEY = "lat_last_k";
     private static final String LNG_KEY = "lng_last_k";
+
+    // basic dialogs ids
+    private static final String OQL_ID = "oql_id";
+    private static final String UNKWERR = "unkerr_id";
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
@@ -83,16 +84,11 @@ public class MapsActivity
 
     private OnLocationSetListener onLocationSetListener;
 
-    /**
-     * Method to set the location listener.
-     * @param listener to set
-     */
-    private void setOnLocationSetListener(OnLocationSetListener listener){
-        onLocationSetListener = listener;
-    }
+    // BEGIN OF ACTIVITY'S LIFE CYCLE CALLBACKS
 
     /**
      * Callback when the activity is created
+     * @param savedInstanceState the Bundle of previous instance state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +133,49 @@ public class MapsActivity
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
     }
 
+    /**
+     * Callback to save the state when necessary
+     * @param savedInstanceState Bundle where to save places information
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // calling super class method
+        super.onSaveInstanceState(savedInstanceState);
+        // getting the list of found nearby places
+        List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
+        // only the array list titles will tell how many places by its size
+        if(markerList.size() > 0) {
+            String[] title = new String[markerList.size()];
+            double[] lat = new double[markerList.size()];
+            double[] lng = new double[markerList.size()];
+            for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
+                // filling the arrays
+                MarkerOptions marker = markerList.get(currentMarker);
+                title[currentMarker] = marker.getTitle();
+                lat[currentMarker] = marker.getPosition().latitude;
+                lng[currentMarker] = marker.getPosition().longitude;
+            }
+            // now arrays are filled with the information I need
+            savedInstanceState.putStringArray(TITLES_KEY, title);
+            savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
+            savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
+            // saving current position
+            if (myLastLocation != null) {
+                savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
+                savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
+            }
+        }
+    }
+
+    // END OF ACTIVITY'S LIFE CYCLE CALLBACKS
+
+    /**
+     * Method to set the location listener.
+     * @param listener to set
+     */
+    private void setOnLocationSetListener(OnLocationSetListener listener){
+        onLocationSetListener = listener;
+    }
 
     /**
      * Callback when the map fragment ui is ready.
@@ -190,7 +229,6 @@ public class MapsActivity
         });
     }
 
-
     /**
      * Method to get user location pointer on the map
      */
@@ -235,7 +273,6 @@ public class MapsActivity
                 });
     }
 
-
     /**
      * method to get the url string containing all the place information
      * @param latitude     of the searching centre position
@@ -254,7 +291,11 @@ public class MapsActivity
         return url;
     }
 
-
+    /**
+     * Method to show markers on the map
+     * @param radius the radius to search
+     * @param type the type of place to display
+     */
      private void showPlaces(final int radius, final NearbyRequestType type){
          setOnLocationSetListener(new OnLocationSetListener() {
              /**
@@ -285,7 +326,6 @@ public class MapsActivity
          });
      }
 
-
     /**
      * Callback for the activity result. If check is passed, let the method execute
      * @param requestCode activity request code
@@ -298,42 +338,6 @@ public class MapsActivity
         if (requestCode == 51) {
             if (resultCode == RESULT_OK) {
                 setDeviceLocation();
-            }
-        }
-    }
-
-    //INSTANCE SAVE
-
-    /**
-     * Callback to save the state when necessary
-     * @param savedInstanceState Bundle where to save places information
-     */
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // calling super class method
-        super.onSaveInstanceState(savedInstanceState);
-        // getting the list of found nearby places
-        List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        // only the array list titles will tell how many places by its size
-        if(markerList.size() > 0) {
-            String[] title = new String[markerList.size()];
-            double[] lat = new double[markerList.size()];
-            double[] lng = new double[markerList.size()];
-            for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
-                // filling the arrays
-                MarkerOptions marker = markerList.get(currentMarker);
-                title[currentMarker] = marker.getTitle();
-                lat[currentMarker] = marker.getPosition().latitude;
-                lng[currentMarker] = marker.getPosition().longitude;
-            }
-            // now arrays are filled with the information I need
-            savedInstanceState.putStringArray(TITLES_KEY, title);
-            savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
-            savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
-            // saving current position
-            if (myLastLocation != null) {
-                savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
-                savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
             }
         }
     }
@@ -356,46 +360,42 @@ public class MapsActivity
      * @param status of the response
      */
     private void showResponseInfo(String status){
-        switch (status) {
-            case ResponseStatus.ZERO_RESULTS:
-                RadiusDialog dialog = new RadiusDialog(radius);
-                try {
-                    dialog.show(getSupportFragmentManager(), "example dialog");
-                }
-                catch(IllegalStateException e){
-                    //just ignore it
-                }
-                break;
-            /*case ResponseStatus.NOT_FOUND:
-                DialogFactory.showNotFoundAlertDialog(this);
-                break;
-            case ResponseStatus.OVER_QUERY_LIMIT:
-                DialogFactory.showOverQueryAlertDialog(this);
-                break;
-            case ResponseStatus.NO_CONNECTION:
-                DialogFactory.showNoConnectionAlertDialog(this);
-                break;
-                // FOLLOWING STATES SHOULD BE MANAGED BY PROGRAMMERS, THEY ARE NOT USER FAULT
-            case ResponseStatus.INVALID_REQUEST:
-            case ResponseStatus.CONNECTION_LOW:
-                DialogFactory.showNoConnectionAlertDialog(this);
-                break;
-            case ResponseStatus.UNKNOWN_ERROR:
-                DialogFactory.showUnknownErrorAlertDialog(this);
-                break;
-            case ResponseStatus.REQUEST_DENIED:
-                DialogFactory.showRequestDeniedAlertDialog(this);
-                break;*/
-            default:
-                BasicDialog dial = new BasicDialog("test", "ERROR","Failed", "OK", "Cancel");
-                try {
-                    dial.show(getSupportFragmentManager(), "test");
-                }
-                catch(IllegalStateException e){
-                    //just ignore it
-                    Log.d("BasicDialog", "FAILED");
-                }
-                break;
+        try{
+            switch (status) {
+                case ResponseStatus.ZERO_RESULTS:
+                    RadiusDialog dialog = new RadiusDialog(radius);
+                    dialog.show(getSupportFragmentManager(), TAG);
+                    break;
+                case ResponseStatus.OVER_QUERY_LIMIT:
+                    new BasicDialog(
+                            OQL_ID,
+                            getString(R.string.sorry),
+                            getString(R.string.sorry_message),
+                            getString(R.string.ok_button),
+                            getString(R.string.cancel_button)
+                    ).show(getSupportFragmentManager(), TAG);
+                    break;
+                // GPS is disabled or no Internet provider
+                case ResponseStatus.NOT_FOUND:
+                case ResponseStatus.NO_CONNECTION:
+                case ResponseStatus.CONNECTION_LOW:
+                    startActivity(IntentFactory.createLobbyReturn(this));
+                    break;
+                case ResponseStatus.INVALID_REQUEST:
+                case ResponseStatus.UNKNOWN_ERROR:
+                case ResponseStatus.REQUEST_DENIED:
+                    new BasicDialog(
+                            UNKWERR,
+                            getString(R.string.ohno),
+                            getString(R.string.unknown_err),
+                            getString(R.string.ok_button),
+                            getString(R.string.cancel_button)
+                    ).show(getSupportFragmentManager(), TAG);
+                    break;
+            }
+        }
+        catch(IllegalStateException exc){
+            // TODO: missing resume
         }
     }
 
@@ -409,6 +409,12 @@ public class MapsActivity
         }
     }
 
+    /**
+     * Method to animate UX progress bar
+     * @param from % starting point
+     * @param to % end point
+     * @param duration animation duration
+     */
     private void animateProgress(int from, int to, int duration){
         Animation anim = new ProgressAnimation(progressBar, from, to);
         anim.setDuration(duration);
@@ -431,7 +437,12 @@ public class MapsActivity
 
     // dialogs return listeners
     public void onDialogResult(String id, boolean option){
-
+        switch(id){
+            case OQL_ID:
+                if(option){
+                    startActivity(IntentFactory.createLobbyReturn(this));
+                }
+        }
     }
 
     public void onRadiusDialogResult(int radius){
