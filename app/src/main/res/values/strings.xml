@@ -22,13 +22,21 @@
     <string name="radius_cancel_button">Cancel</string>
     <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
     <string name="initial">0 m</string>
-    // basic dialog
+    // basic dialogs
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
+    <string name="sorry">Sorry</string>
+    <string name="sorry_message">It seems there have been too many requests on our service, try later in a bit.</string>
+    <string name="ohno">Oh no</string>
+    <string name="unknown_err">Something really strange happened. Try again please</string>
+    <string name="hey">Hey!</string>
+    <string name="no_gps">What did you expect, this is a navigator app. Turn GPS on?</string>
+    <string name="no_conn">What did you expect, we need an Internet provider to search pleaces nearby you. Activate now?</string>
 
     // TOASTS
     <string name="no_gps_permission">Well, no GPS means nothing to display</string>
     <string name="thank_you">Thank you!</string>
+
     <string name="spinning_wheel">spinning_wheel</string>
     <string name="help">HELP</string>
     <string name="lucky">LUCKY</string>

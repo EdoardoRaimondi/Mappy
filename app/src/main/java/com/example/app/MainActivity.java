@@ -3,13 +3,10 @@ package com.example.app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -21,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.app.factories.DialogFactory;
+import com.example.app.dialogs.BasicDialog;
 import com.example.app.factories.IntentFactory;
 import com.example.app.finals.HomeMode;
 import com.example.app.finals.NearbyRequestType;
@@ -35,7 +32,7 @@ import java.util.Random;
  * Main UI activity. Here the user can choose the main actions.
  * (Need to write every button what actually does, when completed)
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener{
 
     private int radius;
     private int degree = 0;
@@ -49,18 +46,26 @@ public class MainActivity extends AppCompatActivity {
     private static final String SPINNER_KEY = "spinner_k";
     private static final int INVALID_POSITION = -1;
 
+    private static final String TAG = "MainActivity";
+
+    // basic dialogs ids
+    private static final String NO_CONN_ID = "no_conn_id";
+    private static final String NO_GPS_ID = "no_gps_id";
+
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
     private Spinner radiusSpinner;
     private ImageView wheel;
     private Random random;
 
+    // BEGIN OF ACTIVITY'S LIFE CYCLE CALLBACKS
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         random = new Random();
 
@@ -116,6 +121,76 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Callback to save the state when necessary
+     * @param savedInstanceState Bundle where to save places information
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(SPINNER_KEY, radiusSpinner.getSelectedItemPosition());
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    /**
+     * Callback when user return here or activity
+     * has just been created
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // checking Google Play services apk
+        GoogleApiAvailability google = GoogleApiAvailability.getInstance();
+        int result = google.isGooglePlayServicesAvailable(this);
+        if(result != ConnectionResult.SUCCESS){
+            Dialog dial = google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
+            dial.show();
+        }
+        else{
+            GPSManager gpsManager = new GPSManager(getApplicationContext());
+            if(!gpsManager.hasPermissions()){
+                if(gpsManager.canRequestNow(this)) {
+                    gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
+                }
+                else{
+                    // TODO: show reasonable
+                }
+            }
+            else {
+                if (!gpsManager.isGPSOn() || !gpsManager.isProviderEnabled()) {
+                    new BasicDialog(
+                            NO_GPS_ID,
+                            getString(R.string.hey),
+                            getString(R.string.no_gps),
+                            getString(R.string.ok_button),
+                            getString(R.string.cancel_button)
+                    ).show(getSupportFragmentManager(), TAG);
+                }
+            }
+        }
+    }
+
+    // PERMISSIONS
+
+    /**
+     * Callback to check user permission
+     * @param requestCode   of the permission
+     * @param permissions   of the request
+     * @param grantResults  of the permission request
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_USER_LOCATION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, getString(R.string.thank_you), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, getString(R.string.no_gps_permission), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    // END OF ACTIVITY'S LIFE CYCLE CALLBACKS
+
+    /**
      * Method that animate the wheel
      * @param view button {@id lucky_button}
      */
@@ -144,74 +219,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         wheel.startAnimation(rotate);
-    }
-
-
-    /**
-     * Callback to save the state when necessary
-     * @param savedInstanceState Bundle where to save places information
-     */
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(SPINNER_KEY, radiusSpinner.getSelectedItemPosition());
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    /**
-     * Callback when user return here or activity
-     * has just been created
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // checking Google Play services apk
-        GoogleApiAvailability google = GoogleApiAvailability.getInstance();
-        int result = google.isGooglePlayServicesAvailable(this);
-        if(result != ConnectionResult.SUCCESS){
-            Dialog dial = google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
-            dial.show();
-        }
-        else{
-            GPSManager gpsManager = new GPSManager(getApplicationContext());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if(!gpsManager.hasPermissions()){
-                    if(gpsManager.canRequestNow(this)) {
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
-                    }
-                    else{
-                        // show resonable
-                    }
-                }
-                else {
-                    if (!gpsManager.isGPSOn()) {
-                        DialogFactory.showActivateGPSAlertDialog(this);
-                    }
-                }
-            }
-            else{
-                // notify user he has to give permissions
-            }
-        }
-    }
-
-    // PERMISSIONS
-
-    /**
-     * Callback to check user permission
-     * @param requestCode   of the permission
-     * @param permissions   of the request
-     * @param grantResults  of the permission request
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_USER_LOCATION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, getString(R.string.thank_you), Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(this, getString(R.string.no_gps_permission), Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     /**
@@ -303,5 +310,28 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+    }
+
+    // DIALOGS LISTENERS
+
+    /**
+     * BasicDialog common listener
+     * @param id the identifyer of dialog that was dismissed
+     * @param option the option choosen by user
+     */
+    @Override
+    public void onDialogResult(String id, boolean option){
+        switch(id){
+            case NO_CONN_ID:
+                if(option){
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+                break;
+            case NO_GPS_ID:
+                if(option){
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+                break;
+        }
     }
 }
