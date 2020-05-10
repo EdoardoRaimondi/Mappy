@@ -4,7 +4,7 @@ package com.example.app.finals;
  * Class containing all the possible status for a place response
  */
 public class ResponseStatus {
-    public static final String OK = "OK";
+
     public static final String NO_CONNECTION    = "NO_CONNECTION";
     public static final String UNKNOWN_ERROR    = "UNKNOWN_ERROR";
     public static final String OVER_QUERY_LIMIT = "OVER_QUERY_LIMIT";

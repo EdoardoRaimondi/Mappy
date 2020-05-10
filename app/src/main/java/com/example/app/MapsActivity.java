@@ -15,7 +15,6 @@ import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
-import com.example.app.factories.DialogFactory;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
@@ -49,7 +48,7 @@ public class MapsActivity
         extends FragmentActivity
         implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener {
 
-    private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
     private static final String TAG = "MapsActivity";
@@ -244,7 +243,7 @@ public class MapsActivity
                             if (myLastLocation != null) {
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
                                 animateProgress(20,100,1000);
                             }
                             else {
@@ -261,7 +260,7 @@ public class MapsActivity
                                         }
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
                                         animateProgress(20,100,1000);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
