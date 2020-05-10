@@ -1,7 +1,7 @@
 package com.example.app.listeners;
 
 /**
- * Listener interface
+ * Query result listener interface
  */
 public interface OnResultSetListener {
 

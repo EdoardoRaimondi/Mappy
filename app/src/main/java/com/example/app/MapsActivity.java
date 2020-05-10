@@ -15,10 +15,10 @@ import android.widget.RelativeLayout;
 
 import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.DialogFactory;
+import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
-import com.example.app.listeners.OnMarkersDownloadedListener;
 import com.example.app.listeners.OnResultSetListener;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -29,7 +29,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -37,7 +36,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,7 +48,6 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback{
 
-    private static final int DEFAULT_ZOOM          = 12;
     private static final String NEARBY_URL_REQUEST = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
@@ -242,7 +239,7 @@ public class MapsActivity extends FragmentActivity implements
                                 anim.setDuration(1000);
                                 progressBar.startAnimation(anim);
                                 progressBar.setVisibility(View.GONE);
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
                             }
                             else {
                                 final LocationRequest locationRequest = LocationRequest.create();
@@ -263,7 +260,7 @@ public class MapsActivity extends FragmentActivity implements
                                         anim.setDuration(1000);
                                         progressBar.startAnimation(anim);
                                         progressBar.setVisibility(View.GONE);
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), DEFAULT_ZOOM));
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };

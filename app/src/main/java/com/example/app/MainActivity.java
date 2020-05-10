@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.app.factories.DialogFactory;
 import com.example.app.factories.IntentFactory;
+import com.example.app.finals.HomeMode;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     // constants for restoring instance of views
     private static final String SPINNER_KEY = "spinner_k";
     private static final int INVALID_POSITION = -1;
-
-    private static final int SET_HOME_MODE = 0;
-    private static final int VIEW_HOME_MODE = 1;
 
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
@@ -248,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view button {@id home}
      */
     public void setHome(View view){
-        Intent homeIntent = IntentFactory.createSetHomeRequest(this, SET_HOME_MODE);
+        Intent homeIntent = IntentFactory.createHomeRequest(this, HomeMode.setMode);
         startActivity(homeIntent);
     }
 
@@ -257,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view button {@id home}
      */
     public void viewHome(View view){
-        Intent homeIntent = IntentFactory.createSetHomeRequest(this, VIEW_HOME_MODE);
+        Intent homeIntent = IntentFactory.createHomeRequest(this, HomeMode.viewMode);
         startActivity(homeIntent);
     }
 

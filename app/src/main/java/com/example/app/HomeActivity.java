@@ -4,18 +4,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.app.factories.IntentFactory;
+import com.example.app.finals.HomeMode;
+import com.example.app.finals.MapsParameters;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -36,15 +34,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.ArrayList;
-
 public class HomeActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private GoogleMap mMap;
     private MapView mapView;
 
-    private static int mode;
+    private static HomeMode mode;
 
     public Location homeLocation;
     private LocationCallback locationCallback;
@@ -119,15 +115,12 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 Intent intentInfo = getIntent();
-                mode = intentInfo.getIntExtra(SET_KEY, -1);
+                mode = (HomeMode) intentInfo.getSerializableExtra(SET_KEY);
                 switch (mode) {
-                    //Need to wrap all this number in a final class
-                    case -1: //User want to see a home that he doesn't set
-                      break;
-                    case 0: //User want to set home
+                    case setMode: //User want to set home
                       setHome();
                       break;
-                    case 1: //User want to view his last home
+                    case viewMode: //User want to view his last home
                        viewHome();
                        break;
                 }
@@ -144,7 +137,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                         if (task.isSuccessful()) {
                             homeLocation = task.getResult();
                             if (homeLocation != null) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), 12));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
                                 mMap.addMarker(new MarkerOptions().position(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude())));
                             } else {
                                 final LocationRequest locationRequest = LocationRequest.create();
@@ -164,7 +157,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                                         anim.setDuration(1000);
                                         progressBar.startAnimation(anim);
                                         progressBar.setVisibility(View.GONE);
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), 12));
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
                                         mMap.addMarker(new MarkerOptions().position(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude())));
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
@@ -185,13 +178,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         MarkerOptions home = new MarkerOptions();
         home.title(HOME);
         home.position(new LatLng(homeLat, homelng));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLat, homelng), 12));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLat, homelng), MapsParameters.DEFAULT_ZOOM));
         mMap.addMarker(home);
     }
 
     /**
      * Callback when the method is onPause.
-     * Save the current home coordinates
+     * Save the current home coordinates for future access
      */
     @Override
     protected void onPause() {

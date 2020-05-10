@@ -1,15 +1,13 @@
 package com.example.app.factories;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.app.HelpActivity;
 import com.example.app.HomeActivity;
 import com.example.app.MainActivity;
 import com.example.app.MapsActivity;
+import com.example.app.finals.HomeMode;
 import com.example.app.finals.NearbyRequestType;
 
 /**
@@ -56,10 +54,10 @@ public class IntentFactory {
      * Method to create a intent in order to set
      * a marker in the current user position
      * @param context of the activity
-     * @param mode 1 = view home mode, 0 = set home mode
+     * @param mode of the command (view or set)
      * @return the intent
      */
-    public static Intent createSetHomeRequest(Context context, int mode){
+    public static Intent createHomeRequest(Context context, HomeMode mode){
         Intent intent = new Intent(context, HomeActivity.class);
         intent.putExtra(HomeActivity.SET_KEY, mode);
         return intent;
