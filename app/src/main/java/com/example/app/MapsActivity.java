@@ -50,7 +50,7 @@ public class MapsActivity
         extends FragmentActivity
         implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener {
 
-    private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
     private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
     private static final String TAG = "MapsActivity";
@@ -433,22 +433,11 @@ public class MapsActivity
 
     /**
      * BasicDialog common listener
-     * @param id the identifyer of dialog that was dismissed
+     * @param id the identifier of dialog that was dismissed
      * @param option the option choosen by user
      */
     public void onDialogResult(String id, boolean option){
-        switch(id){
-            case OQL_ID:
-                if(option){
-                    startActivity(IntentFactory.createLobbyReturn(this));
-                }
-                break;
-            case UNK_ERR:
-                if(option){
-                    startActivity(IntentFactory.createLobbyReturn(this));
-                }
-                break;
-        }
+        startActivity(IntentFactory.createLobbyReturn(this));
     }
 
     /**
