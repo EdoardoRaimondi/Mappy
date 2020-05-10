@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.IntentFactory;
@@ -367,13 +368,12 @@ public class MapsActivity
                     dialog.show(getSupportFragmentManager(), TAG);
                     break;
                 case ResponseStatus.OVER_QUERY_LIMIT:
-                    new BasicDialog(
-                            OQL_ID,
-                            getString(R.string.sorry),
-                            getString(R.string.sorry_message),
-                            getString(R.string.ok_button),
-                            getString(R.string.cancel_button)
-                    ).show(getSupportFragmentManager(), TAG);
+                    BasicDialog.BasicDialogBuilder overQueryBuilder = new BasicDialog.BasicDialogBuilder(OQL_ID);
+                    overQueryBuilder.setTitle(getString(R.string.sorry));
+                    overQueryBuilder.setText(getString(R.string.sorry_message));
+                    overQueryBuilder.setTextForOkButton(getString(R.string.ok_button));
+                    overQueryBuilder.setTextForCancelButton(getString(R.string.cancel_button));
+                    overQueryBuilder.build().show(getSupportFragmentManager(), TAG);
                     break;
                 // GPS is disabled or no Internet provider
                 case ResponseStatus.NOT_FOUND:
@@ -384,16 +384,16 @@ public class MapsActivity
                 case ResponseStatus.INVALID_REQUEST:
                 case ResponseStatus.UNKNOWN_ERROR:
                 case ResponseStatus.REQUEST_DENIED:
-                    new BasicDialog(
-                            UNKWERR,
-                            getString(R.string.ohno),
-                            getString(R.string.unknown_err),
-                            getString(R.string.ok_button),
-                            getString(R.string.cancel_button)
-                    ).show(getSupportFragmentManager(), TAG);
+                    BasicDialog.BasicDialogBuilder requestDeniedBuilder = new BasicDialog.BasicDialogBuilder(OQL_ID);
+                    requestDeniedBuilder.setTitle(getString(R.string.ohno));
+                    requestDeniedBuilder.setText(getString(R.string.unknown_err));
+                    requestDeniedBuilder.setTextForOkButton(getString(R.string.ok_button));
+                    requestDeniedBuilder.setTextForCancelButton(getString(R.string.cancel_button));
+                    requestDeniedBuilder.build().show(getSupportFragmentManager(), TAG);
                     break;
             }
         }
+
         catch(IllegalStateException exc){
             // TODO: missing resume
         }
@@ -426,7 +426,7 @@ public class MapsActivity
                 public void onAnimationRepeat(Animation animation) {}
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    // TODO: shuld make progress bar floating or transparent
+                    // TODO: should make progress bar floating or transparent
                     progressBar.setVisibility(View.GONE); // resizing is horrible
                 }
 

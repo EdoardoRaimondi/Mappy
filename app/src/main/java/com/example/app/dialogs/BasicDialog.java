@@ -26,21 +26,6 @@ public class BasicDialog extends AppCompatDialogFragment {
     private String textForCancelButton;
     private BasicDialogListener listener;
 
-    /**
-     * RadiusDialog constructor
-     * @param id the identifier of this dialog
-     * @param title the title of dialog
-     * @param text the dialog message
-     * @param textForCancelButton the label of negative button
-     * @param textForOkButton the label of positive button
-     */
-    public BasicDialog(String id, String title, String text, String textForOkButton, String textForCancelButton){
-        this.id = id;
-        this.title = title;
-        this.text = text;
-        this.textForOkButton = textForOkButton;
-        this.textForCancelButton = textForCancelButton;
-    }
 
     /**
      * Callback to get the basic dialog instance
@@ -100,6 +85,67 @@ public class BasicDialog extends AppCompatDialogFragment {
      */
     public interface BasicDialogListener {
         void onDialogResult(String id, boolean option);
+    }
+
+    /**
+     * Builder for basic dialog
+     */
+    public static class BasicDialogBuilder {
+
+        private String id;
+        private String title;
+        private String text;
+        private String textForOkButton;
+        private String textForCancelButton;
+
+        /**
+         * Builder constructor
+         * @param id of the dialog
+         */
+        public BasicDialogBuilder(String id){
+            this.id = id;
+        }
+
+        /**
+         * @param title to set
+         */
+        public void setTitle(String title){
+            this.title = title;
+        }
+
+        /**
+         * @param text to set
+         */
+        public void setText(String text){
+            this.text = text;
+        }
+
+        /**
+         * @param textForOkButton to set
+         */
+        public void setTextForOkButton(String textForOkButton){
+            this.textForOkButton = textForOkButton;
+        }
+
+        /**
+         * @param textForCancelButton to set
+         */
+        public void setTextForCancelButton(String textForCancelButton){
+            this.textForCancelButton = textForCancelButton;
+        }
+
+        /**
+         * @return A basic dialog instance built with the parameters set
+         */
+        public BasicDialog build(){
+            BasicDialog basicDialog = new BasicDialog();
+            basicDialog.id    = this.id;
+            basicDialog.title = this.title;
+            basicDialog.text  = this.text;
+            basicDialog.textForOkButton = this.textForOkButton;
+            basicDialog.textForCancelButton = this.textForCancelButton;
+            return basicDialog;
+        }
     }
 
 }

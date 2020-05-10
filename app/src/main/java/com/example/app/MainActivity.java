@@ -156,13 +156,12 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
             }
             else {
                 if (!gpsManager.isGPSOn() || !gpsManager.isProviderEnabled()) {
-                    new BasicDialog(
-                            NO_GPS_ID,
-                            getString(R.string.hey),
-                            getString(R.string.no_gps),
-                            getString(R.string.ok_button),
-                            getString(R.string.cancel_button)
-                    ).show(getSupportFragmentManager(), TAG);
+                    BasicDialog.BasicDialogBuilder noGpsBuilder = new BasicDialog.BasicDialogBuilder(NO_GPS_ID);
+                    noGpsBuilder.setTitle(getString(R.string.hey));
+                    noGpsBuilder.setText(getString(R.string.no_gps));
+                    noGpsBuilder.setTextForOkButton(getString(R.string.ok_button));
+                    noGpsBuilder.setTextForCancelButton(getString(R.string.cancel_button));
+                    noGpsBuilder.build().show(getSupportFragmentManager(), TAG);
                 }
             }
         }
