@@ -17,6 +17,7 @@ import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.MapsParameters;
+import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
@@ -67,7 +68,7 @@ public class MapsActivity
 
     // basic dialogs ids
     private static final String OQL_ID = "oql_id";
-    private static final String UNKWERR = "unkerr_id";
+    private static final String UNK_ERR = "unk_err_id";
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
@@ -198,11 +199,7 @@ public class MapsActivity
             layoutParams.setMargins(0, 0, 40, 180);
         }
 
-        //check if gps is enabled or not and then request user to enable it
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        final LocationRequest locationRequest = MapsUtility.createLocationRequest();
 
         final LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
@@ -248,10 +245,7 @@ public class MapsActivity
                                 animateProgress(20,100,1000);
                             }
                             else {
-                                final LocationRequest locationRequest = LocationRequest.create();
-                                locationRequest.setInterval(10000);
-                                locationRequest.setFastestInterval(5000);
-                                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                                final LocationRequest locationRequest = MapsUtility.createLocationRequest();
                                 locationCallback = new LocationCallback() {
                                     @Override
                                     public void onLocationResult(LocationResult locationResult) {
@@ -449,7 +443,7 @@ public class MapsActivity
                     startActivity(IntentFactory.createLobbyReturn(this));
                 }
                 break;
-            case UNKWERR:
+            case UNK_ERR:
                 if(option){
                     startActivity(IntentFactory.createLobbyReturn(this));
                 }
