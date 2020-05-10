@@ -121,13 +121,15 @@ public class HomeActivity extends FragmentActivity implements
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 Intent intentInfo = getIntent();
                 mode = (HomeMode) intentInfo.getSerializableExtra(SET_KEY);
-                switch (mode) {
-                    case setMode: //User want to set home
-                        setHome();
-                        break;
-                    case viewMode: //User want to view his last home
-                        viewHome();
-                        break;
+                if (mode != null) {
+                    switch (mode) {
+                        case setMode: //User want to set home
+                            setHome();
+                            break;
+                        case viewMode: //User want to view his last home
+                            viewHome();
+                            break;
+                    }
                 }
             }
         });
@@ -138,6 +140,7 @@ public class HomeActivity extends FragmentActivity implements
                 homeSetBuilder.setTitle("WONDERFUL");
                 homeSetBuilder.setText("You're new home looks gorgeous");
                 homeSetBuilder.setTextForOkButton("GREAT");
+                homeSetBuilder.setTextForCancelButton("SET MANUALLY");
                 homeSetBuilder.build().show(getSupportFragmentManager(), TAG);
             }
 
@@ -198,7 +201,7 @@ public class HomeActivity extends FragmentActivity implements
      * nothing is showed
      */
     private void viewHome() {
-        if (homeLocation == null) {
+        if (homeLat == 0.0 && homeLng == 0.0) {
             BasicDialog.BasicDialogBuilder homeSetBuilder = new BasicDialog.BasicDialogBuilder(HM_NULL);
             homeSetBuilder.setTitle("ARE YOU A HOMELESS?");
             homeSetBuilder.setText("You need to set a home before, we don't make miracle");
@@ -206,11 +209,8 @@ public class HomeActivity extends FragmentActivity implements
             homeSetBuilder.build().show(getSupportFragmentManager(), TAG);
         }
         else {
-            MarkerOptions home = new MarkerOptions();
-            home.title(HOME);
-            home.position(new LatLng(homeLat, homeLng));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLat, homeLng), MapsParameters.DEFAULT_ZOOM));
-            mMap.addMarker(home);
+            mMap.addMarker(createHomeMarker(homeLat, homeLng));
         }
     }
 
@@ -243,15 +243,16 @@ public class HomeActivity extends FragmentActivity implements
      */
     private void displayHome(Location homeLocation) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude())));
+        mMap.addMarker(createHomeMarker(homeLocation.getLatitude(), homeLocation.getLongitude()));
     }
 
     /**
      * Trigger the listener when everything has been all right
      */
     private void homeSet() {
-        if (onHomeSetListener != null)
+        if (onHomeSetListener != null) {
             onHomeSetListener.onHomeSet();
+        }
     }
 
     /**
@@ -267,16 +268,29 @@ public class HomeActivity extends FragmentActivity implements
     /**
      * BasicDialog common listener
      *
-     * @param id     the identifyer of dialog that was dismissed
-     * @param option the option choosen by user
+     * @param id     the identifier of dialog that was dismissed
+     * @param positiveButton the option chosen by user
      */
-    public void onDialogResult(String id, boolean option) {
+    public void onDialogResult(String id, boolean positiveButton) {
         switch (id) {
             case HM_SET:
-                startActivity(IntentFactory.createLobbyReturn(this));
+                if(positiveButton)
+                   startActivity(IntentFactory.createLobbyReturn(this));
+                else // user wants to set it manually. So let him do it, little piece of shit
+                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(LatLng point) {
+                            mMap.clear();
+                            //set the new home location
+                            homeLocation.setLatitude(point.latitude);
+                            homeLocation.setLongitude(point.longitude);
+                            mMap.addMarker(createHomeMarker(point.latitude, point.longitude));
+                            homeSet();
+                        }
+                    });
                 break;
             case HM_NOT_SET:
-                if (!option) startActivity(IntentFactory.createLobbyReturn(this));
+                if (!positiveButton) startActivity(IntentFactory.createLobbyReturn(this));
                 else {
                     //User click "Retry"
                     setHome();
@@ -286,6 +300,20 @@ public class HomeActivity extends FragmentActivity implements
                 setHome();
                 break;
         }
+    }
+
+    /**
+     * Method to create an home marker
+     * @param lat latitude
+     * @param lng longitude
+     * @return markerOption
+     */
+    private MarkerOptions createHomeMarker(double lat, double lng){
+        MarkerOptions marker = new MarkerOptions();
+        marker.title("HOME SWEET HOME");
+        LatLng latLng = new LatLng(lat, lng);
+        marker.position(latLng);
+        return marker;
     }
 }
 
