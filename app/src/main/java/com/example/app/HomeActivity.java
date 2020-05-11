@@ -183,6 +183,7 @@ public class HomeActivity extends FragmentActivity implements
                                         }
                                         homeLocation = locationResult.getLastLocation();
                                         displayHome(homeLocation);
+                                        homeSet();
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
