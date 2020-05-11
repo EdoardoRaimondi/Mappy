@@ -318,7 +318,6 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
      * @param id the identifyer of dialog that was dismissed
      * @param option the option choosen by user
      */
-    @Override
     public void onDialogResult(String id, boolean option){
         switch(id){
             case NO_CONN_ID:
