@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
 
@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="TODO"
             android:scaleType="fitXY"
+            android:onClick="spin"
             android:scaleX="1.1"
             android:scaleY="1.1"
             android:src="@drawable/speriamo" />
@@ -73,6 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:onClick="helpRequest"
             android:focusable="true"
             android:src="@android:drawable/ic_menu_help"
             app:elevation="0sp" />
@@ -89,6 +91,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_add_location"
+            android:onClick="setHome"
             app:elevation="0sp" />
     </LinearLayout>
 </LinearLayout>
