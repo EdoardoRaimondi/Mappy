@@ -19,8 +19,27 @@
 
     <!-- Main presentation of fragment -->
     <style name="MainStyle">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/absoluteWhite</item>
         <item name="android:orientation">vertical</item>
+    </style>
+
+    <!-- Floating button container style -->
+    <style name="FloatContainer">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginRight">@dimen/float_container_margin_lateral</item>
+        <item name="android:layout_marginLeft">@dimen/float_container_margin_lateral</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginBottom">@dimen/float_container_margin_lateral</item>
+    </style>
+
+    <!-- Radius button style -->
+    <style name="RadiusButtonStyle">
+        <item name="android:textColor">@color/absoluteWhite</item>
+        <item name="elevation">@dimen/rad_btn_elevation</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/rad_btn_t_s</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">@dimen/rad_btn_pading</item>
     </style>
 
 </resources>
