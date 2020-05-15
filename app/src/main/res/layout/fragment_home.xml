@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="1 km"
+            android:text="@string/initial"
             android:textSize="17sp" />
 
         <LinearLayout
@@ -48,9 +48,8 @@
             android:id="@+id/wheel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/wheel_descr"
             android:scaleType="fitXY"
-            android:onClick="spin"
             android:scaleX="1.1"
             android:scaleY="1.1"
             android:src="@drawable/speriamo" />
@@ -74,7 +73,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:onClick="helpRequest"
             android:focusable="true"
             android:src="@android:drawable/ic_menu_help"
             app:elevation="0sp" />
@@ -85,13 +83,12 @@
             android:layout_weight="1" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_place"
+            android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_add_location"
-            android:onClick="setHome"
             app:elevation="0sp" />
     </LinearLayout>
 </LinearLayout>

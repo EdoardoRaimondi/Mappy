@@ -2,132 +2,57 @@ package com.example.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.app.dialogs.BasicDialog;
-import com.example.app.factories.IntentFactory;
-import com.example.app.finals.HomeMode;
-import com.example.app.finals.NearbyRequestType;
 import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-
-import java.util.Random;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
  * Main UI activity. Here the user can choose the main actions.
- * (Need to write every button what actually does, when completed)
  */
 public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener{
 
-    private int radius;
-    private int degree = 0;
-
-    //considering a 360 degree circle divided in 6 sections and
-    //I start from an half of one. I got 360 / 6 / 2.
-    //(so 1 section will be 2 FACTOR large)
-    private static final float FACTOR = 30f;
-
-    // constants for restoring instance of views
-    private static final String SPINNER_KEY = "spinner_k";
-    private static final int INVALID_POSITION = -1;
-
-    private static final String TAG = "MainActivity";
-
+    // CONSTS
     // basic dialogs ids
     private static final String NO_CONN_ID = "no_conn_id";
     private static final String NO_GPS_ID = "no_gps_id";
-
+    // tag for dialogs and logs
+    private static final String TAG = "MainActivity";
+    // type of location request
     private static final int REQUEST_USER_LOCATION_CODE = 99;
 
-    private Spinner radiusSpinner;
-    private ImageView wheel;
-    private Random random;
-
-    // BEGIN OF ACTIVITY'S LIFE CYCLE CALLBACKS
-
+    // BEGIN OF MAIN ACTIVITY'S LIFE CYCLE CALLBACKS
+    /**
+     * Callback invoked while creating MainActivity
+     * @param savedInstanceState the Bundle were previous state has been saved
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
-        random = new Random();
-
-        //check the wheel
-        wheel = findViewById(R.id.wheel);
-
-        //create the spinner and fill it
-        radiusSpinner = findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> grade = ArrayAdapter.createFromResource(
-                this,
-                R.array.RADIUS,
-                android.R.layout.simple_spinner_item);
-        // specify the layout to use when the list of choices appears
-        grade.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // applying the adapter to the spinner
-        radiusSpinner.setAdapter(grade);
-        // setting listener
-        radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            /**
-             * Callback when an item from the radiusSpinner is selected
-             * @param parent    adapter view
-             * @param view      reference to the spinner widget
-             * @param position  of the item
-             * @param id        of the spinner
-             */
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // An radius was selected. You can retrieve the selected item using
-                String radiusString = parent.getItemAtPosition(position).toString();
-                //Set the desired radius
-                radius = parseRadius(radiusString);
-            }
-
-            /**
-             * Callback when the user don't select items
-             * @param parent adapter view
-             */
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // default radius is 1km
-                radius = getResources().getInteger(R.integer.default_radius);
-            }
-        });
-
-        // restoring instance status of views
-        if(savedInstanceState != null) {
-            int spinnerSelected = savedInstanceState.getInt(SPINNER_KEY, INVALID_POSITION);
-            if(spinnerSelected != INVALID_POSITION){
-                radiusSpinner.setSelection(spinnerSelected);
-            }
-        }
-    }
-
-    /**
-     * Callback to save the state when necessary
-     * @param savedInstanceState Bundle where to save places information
-     */
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt(SPINNER_KEY, radiusSpinner.getSelectedItemPosition());
-        super.onSaveInstanceState(savedInstanceState);
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // passing each menu id as a set of ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
     }
 
     /**
@@ -168,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     }
 
     // PERMISSIONS
-
     /**
      * Callback to check user permission
      * @param requestCode   of the permission
@@ -187,132 +111,9 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         }
     }
 
-    // END OF ACTIVITY'S LIFE CYCLE CALLBACKS
+    // END OF MAIN ACTIVITY'S LIFE CYCLE CALLBACKS
 
-    /**
-     * Method that animate the wheel
-     * @param view button {@id lucky_button}
-     */
-    public void spin(View view){
-        int oldDegree = degree % 360;
-        degree = random.nextInt(360) + 720;
-        RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f
-        );
-        rotate.setDuration(3600);
-        rotate.setFillAfter(true);
-        rotate.setInterpolator(new DecelerateInterpolator());
-        rotate.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                sendRequest(360 - (degree % 360));
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        wheel.startAnimation(rotate);
-    }
-
-    /**
-     * Method to send a nearby disco showing request to the Maps activity
-     * @param view button {@id nearby_disco}
-     */
-    public void nearbyDiscoRequest(View view) {
-        Intent showNearbyDisco = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.night_club, radius);
-        startActivity(showNearbyDisco);
-    }
-
-    /**
-     * Method to send a nearby restaurant showing request to the Maps activity
-     * @param view button {@id nearby_restaurant}
-     */
-    public void nearbyRestaurantRequest(View view) {
-        Intent showNearbyRestaurant = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.restaurant, radius);
-        startActivity(showNearbyRestaurant);
-    }
-
-    /**
-     * Method to send an help lobby request
-     * @param view button {@id button}
-     */
-    public void helpRequest(View view){
-        Intent helpIntent = IntentFactory.createHelpIntentRequest(this);
-        startActivity(helpIntent);
-    }
-
-    /**
-     * Method to set the home
-     * @param view button {@id home}
-     */
-    public void setHome(View view){
-        Intent homeIntent = IntentFactory.createHomeRequest(this, HomeMode.setMode);
-        startActivity(homeIntent);
-    }
-
-    /**
-     * Marks the user current position as home
-     * @param view button {@id home}
-     */
-    public void viewHome(View view){
-        Intent homeIntent = IntentFactory.createHomeRequest(this, HomeMode.viewMode);
-        startActivity(homeIntent);
-    }
-
-    // NATIVE METHODS
-
-    /**
-     * Parser for the radius long
-     * @param radius to parse
-     */
-    public native int parseRadius(String radius);
-
-    //loading the C++ library
-    static {
-        System.loadLibrary("libmain_native_lib");
-    }
-
-
-    /**
-     * Analise the wheel position and send the corresponding command
-     * @param position the result position
-     */
-    private void sendRequest(int position) {
-        if ((position >= FACTOR * 1) && (position < FACTOR * 3)) {
-            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.art_gallery, radius);
-            startActivity(intent);
-        }
-        if ((position >= FACTOR * 3) && (position < FACTOR * 5)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.museum, radius);
-            startActivity(intent);
-        }
-        if((position >= FACTOR * 5) && (position < FACTOR * 7)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.zoo, radius);
-            startActivity(intent);
-        }
-        if((position >= FACTOR * 7) && (position < FACTOR * 9)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.movie_theater, radius);
-            startActivity(intent);
-        }
-        if((position >= FACTOR * 9) && (position < FACTOR * 11)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.tourist_attraction, radius);
-            startActivity(intent);
-        }
-        if((position >= FACTOR * 11) && (position < FACTOR * 13)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.park, radius);
-            startActivity(intent);
-        }
-
-    }
-
-    // DIALOGS LISTENERS
-
+    // DIALOGS RESULT LISTENER
     /**
      * BasicDialog common listener
      * @param id the identifyer of dialog that was dismissed

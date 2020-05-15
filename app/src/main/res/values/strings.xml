@@ -44,4 +44,5 @@
     <string name="help">HELP</string>
     <string name="lucky">LUCKY</string>
     <string name="todo">TODO</string>
+    <string name="wheel_descr">fortune spinning wheel on pressed</string>
 </resources>
