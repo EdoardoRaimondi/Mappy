@@ -23,6 +23,7 @@
             android:layout_weight=".70">
 
             <TextView
+                android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -30,8 +31,11 @@
                 android:textSize="@dimen/radius_text_size" />
 
             <SeekBar
+                android:id="@+id/seek"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:progressDrawable="@drawable/seek_drawable"
+                android:thumb="@drawable/seek_thumb" />
         </LinearLayout>
         <Button
             android:id="@+id/more"

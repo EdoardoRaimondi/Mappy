@@ -2,4 +2,5 @@
 <resources>
     <integer name="default_radius">1000</integer>
     <integer name="max_radius">50000</integer>
+    <integer name="radius_increment">50</integer>
 </resources>

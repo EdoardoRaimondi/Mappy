@@ -9,6 +9,8 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,16 +26,19 @@ import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
-    private int radius;
     private int degree = 0;
     // considering a 360 degree circle divided in 6 sections and
     // I start from an half of one. I got 360 / 6 / 2.
     // (so 1 section will be 2 FACTOR large)
     private static final float FACTOR = 30f;
+
+    private static final String BAR_KEY = "bar_k";
+
+    private static final double M_TO_KM_DIVIDER = 1000.0;
     // view components
+    private SeekBar bar;
+    private TextView txt;
     private ImageView wheel;
-    private FloatingActionButton sos;
-    private FloatingActionButton home;
 
     private Random random;
     private HomeViewModel homeViewModel;
@@ -45,8 +50,17 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         wheel = root.findViewById(R.id.wheel);
-        sos = root.findViewById(R.id.sos);
-        home = root.findViewById(R.id.home);
+        FloatingActionButton sos = root.findViewById(R.id.sos);
+        FloatingActionButton home = root.findViewById(R.id.home);
+        bar = root.findViewById(R.id.seek);
+        if(savedInstanceState != null){
+            int savedRadius = savedInstanceState.getInt(BAR_KEY, getResources().getInteger(R.integer.default_radius));
+            bar.setProgress(savedRadius);
+        }
+        else{
+            bar.setProgress(getResources().getInteger(R.integer.default_radius));
+        }
+        txt = root.findViewById(R.id.text);
 
         random = new Random();
 
@@ -96,17 +110,91 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        bar.setProgress(getResources().getInteger(R.integer.default_radius));
+        bar.setMax(getResources().getInteger(R.integer.max_radius));
+        bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            /**
+             * Callback when user tracks the bar
+             * @param seekBar  the bar displayed
+             * @param progress int representing the position of the user touch on the bar
+             * @param fromUser boolean to check if the progress is from the user
+             */
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                String display;
+                if(progress >= M_TO_KM_DIVIDER){
+                    display = (int) Math.ceil(progress / M_TO_KM_DIVIDER) + " km";
+                }
+                else{
+                    display = progress + " m";
+                }
+                txt.setText(display);
+            }
+
+            /**
+             * Callback when the user start tracking the bar
+             * @param seekBar the bar displayed
+             */
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            /**
+             * Callback when the user stop tracking the bar
+             * @param seekBar the bar displayed
+             */
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        root.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bar.setProgress(bar.getProgress() + getResources().getInteger(R.integer.radius_increment));
+                fineIncrement();
+            }
+        });
+
+        root.findViewById(R.id.less).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bar.setProgress(bar.getProgress() - getResources().getInteger(R.integer.radius_increment));
+                fineIncrement();
+            }
+        });
         return root;
+    }
+
+    /**
+     * Callback to save the state when necessary
+     * @param savedInstanceState Bundle where to save places information
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(BAR_KEY, bar.getProgress());
     }
 
     // END OF HOME FRAGMENT LIFE CYCLE
 
     // UTILITY METHODS
+
+    private void fineIncrement(){
+        int progress = bar.getProgress();
+        int decimals = progress % (int) M_TO_KM_DIVIDER;
+        if(decimals != 0){
+            String display = (int) Math.ceil(progress / M_TO_KM_DIVIDER) + " km ";
+            display += decimals + " m";
+            txt.setText(display);
+        }
+    }
     /**
      * Analise the wheel position and send the corresponding command
      * @param position the result position
      */
     private void sendRequest(int position) {
+        int radius = bar.getProgress();
         if ((position >= FACTOR * 1) && (position < FACTOR * 3)) {
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.art_gallery, radius);
             startActivity(intent);
