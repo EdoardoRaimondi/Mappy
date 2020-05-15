@@ -1,31 +1,24 @@
 <resources>
     <string name="app_name">App</string>
+
+    <!-- TABS FOR MAIN ACTIVITY -->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Saved</string>
     <string name="title_notifications">Search</string>
     <string name="title_activity_maps">Map</string>
 
-    //BUTTON NAMES
-    <string name="party">FIESTA</string>
-    <string name="restaurant">DAMN HUNGRY</string>
+    <!-- RADIUS SELECTOR -->
+    <string name="initial">1 km</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 
-    //Spinner
-    <string-array name="RADIUS">
-        <item>1km</item>
-        <item>2km</item>
-        <item>5km</item>
-        <item>10km</item>
-        <item>50km</item>
-    </string-array>
-
-    // DIALOGS
-    // radius dialog
+    <!-- DIALOGS -->
+    <!-- radius dialog -->
     <string name="radius_title">Update Radius</string>
     <string name="radius_ok_button">OK</string>
     <string name="radius_cancel_button">Cancel</string>
     <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
-    <string name="initial">0 m</string>
-    // basic dialogs
+    <!-- basic dialogs -->
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
     <string name="sorry">Sorry</string>
@@ -36,13 +29,10 @@
     <string name="no_gps">What did you expect, this is a navigator app. Turn GPS on?</string>
     <string name="no_conn">What did you expect, we need an Internet provider to search pleaces nearby you. Activate now?</string>
 
-    // TOASTS
+    <!-- TOASTS -->
     <string name="no_gps_permission">Well, no GPS means nothing to display</string>
     <string name="thank_you">Thank you!</string>
 
-    <string name="spinning_wheel">spinning_wheel</string>
-    <string name="help">HELP</string>
-    <string name="lucky">LUCKY</string>
-    <string name="todo">TODO</string>
+    <!-- DESCRIPTIONS -->
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
 </resources>
