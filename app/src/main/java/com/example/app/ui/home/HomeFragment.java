@@ -169,6 +169,9 @@ public class HomeFragment extends Fragment {
         root.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!fineRadius){
+                    adjustFine();
+                }
                 if(bar.getProgress() + getResources().getInteger(R.integer.radius_increment) <= getResources().getInteger(R.integer.max_radius)){
                     bar.setProgress(bar.getProgress() + getResources().getInteger(R.integer.radius_increment));
                     fineIncrement();
@@ -182,6 +185,9 @@ public class HomeFragment extends Fragment {
         root.findViewById(R.id.less).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!fineRadius){
+                    adjustFine();
+                }
                 if(bar.getProgress() - getResources().getInteger(R.integer.radius_increment) >= getResources().getInteger(R.integer.radius_increment)){
                     bar.setProgress(bar.getProgress() - getResources().getInteger(R.integer.radius_increment));
                     fineIncrement();
@@ -228,6 +234,15 @@ public class HomeFragment extends Fragment {
             str.append(" m");
             txt.setText(str.toString());
         }
+    }
+
+    /**
+     *
+     */
+    private void adjustFine(){
+         if(bar.getProgress() >= M_TO_KM_DIVIDER){
+             bar.setProgress((int) (Math.floor(bar.getProgress()/M_TO_KM_DIVIDER) * M_TO_KM_DIVIDER));
+         }
     }
 
     /**
