@@ -27,6 +27,9 @@
             android:scaleY="1.1"
             android:src="@drawable/speriamo" />
 
+
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -52,8 +55,8 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/home"
             style="@style/FloatStyle"
-            android:src="@drawable/ic_add_location"
-            app:backgroundTint="#E91E63" />
+            android:src="@drawable/ic_home"
+            app:backgroundTint="#E99" />
 
     </LinearLayout>
 

@@ -77,13 +77,13 @@ public class HomeFragment extends Fragment {
         SharedPreferences shared = this.getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
         double homeLat = Double.parseDouble(shared.getString(HomeActivity.HOME_LAT, "0.0"));
         double homeLng = Double.parseDouble(shared.getString(HomeActivity.HOME_LNG, "0.0"));
-        //If user has no house set yet, I show a + button. A directions button is showed otherwise.
+        //If user has no home set yet, I show a home button. A directions button is showed otherwise.
         if(homeLat != 0 && homeLng != 0){
             //Directions button
             setDirectionsButton(home);
         }
         else{
-            //+ button
+            //Home button
             setHomeButton(home);
         }
 
@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment {
 
         /**
          * User can have one home at time set
-         *     +     button -> user click to set a home.
+         *   Home    button -> user click to set a home.
          * Direction button -> user click to view his home. (I'm in viewMode)
          * Direction button -> user long click to delete current home and reset + button.
          * {@link HomeActivity} for details
@@ -172,6 +172,12 @@ public class HomeFragment extends Fragment {
              */
             @Override
             public boolean onLongClick(View v) {
+                SharedPreferences preferences = getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.remove(HomeActivity.HOME_LAT);
+                editor.remove(HomeActivity.HOME_LNG);
+                editor.commit();
+                
                 setHomeButton(home);
                 return true;
             }
@@ -358,7 +364,7 @@ public class HomeFragment extends Fragment {
      * @param home the button
      */
     private void setHomeButton(FloatingActionButton home){
-        home.setImageResource(R.drawable.ic_add_location);
+        home.setImageResource(R.drawable.ic_home);
         isViewMode = false;
     }
 
