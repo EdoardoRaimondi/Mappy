@@ -11,9 +11,9 @@
         <clip android:clipOrientation="horizontal"
               android:gravity="left">
             <shape android:shape="rectangle">
-                <stroke android:color="#C24C47"
+                <stroke android:color="#8BC34A"
                         android:width="2dp" />
-                <solid android:color="#D83731"/>
+                <solid android:color="#4CAF50"/>
                 <corners android:radius="10dp"/>
             </shape>
         </clip>
