@@ -61,7 +61,7 @@
             android:id="@+id/home"
             style="@style/FloatStyle"
             android:src="@drawable/ic_home"
-            app:backgroundTint="#E99" />
+            app:backgroundTint="#00BCD4" />
 
     </LinearLayout>
 
