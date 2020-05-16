@@ -255,7 +255,7 @@ public class HomeFragment extends Fragment {
             radius = bar.getProgress();
         }
         else{
-            radius = (int) Math.ceil(bar.getProgress() / M_TO_KM_DIVIDER);
+            radius = (int) (Math.ceil(bar.getProgress() / M_TO_KM_DIVIDER) * M_TO_KM_DIVIDER);
         }
         if ((position >= FACTOR * 1) && (position < FACTOR * 3)) {
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.art_gallery, radius);
