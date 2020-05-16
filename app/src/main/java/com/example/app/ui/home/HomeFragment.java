@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,11 +24,17 @@ import com.example.app.HomeActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
 import com.example.app.finals.HomeMode;
+import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Random;
 
+/**
+ * App default fragment.
+ * It contains: wheel, radius selection bar and floating buttons.
+ * Floating buttons: setHome, viewHome, sos
+ */
 public class HomeFragment extends Fragment {
 
     private int degree = 0;
@@ -44,27 +52,44 @@ public class HomeFragment extends Fragment {
     private TextView txt;
     private ImageView wheel;
 
+    private boolean isViewMode = false;
     private Random random;
 
+    /**
+     * Callback when the fragment is visible
+     * @param inflater layout
+     * @param container root container
+     * @param savedInstanceState for eventual instance to restore
+     * @return the fragment view
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        //Get the widgets references
         wheel = root.findViewById(R.id.wheel);
         FloatingActionButton sos = root.findViewById(R.id.sos);
-        FloatingActionButton home = root.findViewById(R.id.home);
+        final FloatingActionButton home = root.findViewById(R.id.home);
 
-        SharedPreferences shared = this.getActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        //Get the eventual home coordinate set in a previous app usage
+        SharedPreferences shared = this.getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
         double homeLat = Double.parseDouble(shared.getString(HomeActivity.HOME_LAT, "0.0"));
         double homeLng = Double.parseDouble(shared.getString(HomeActivity.HOME_LNG, "0.0"));
+        //If user has no house set yet, I show a + button. A directions button is showed otherwise.
         if(homeLat != 0 && homeLng != 0){
-            home.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction));
+            //Directions button
+            setDirectionsButton(home);
         }
         else{
-            home.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_location));
+            //+ button
+            setHomeButton(home);
         }
+
+        //Get the radius bar
         bar = root.findViewById(R.id.seek);
+        //Restore the last radius research
         if(savedInstanceState != null){
             int savedRadius = savedInstanceState.getInt(BAR_KEY, getResources().getInteger(R.integer.default_radius));
             bar.setProgress(savedRadius);
@@ -72,10 +97,12 @@ public class HomeFragment extends Fragment {
         else{
             bar.setProgress(getResources().getInteger(R.integer.default_radius));
         }
+        //Get the text
         txt = root.findViewById(R.id.text);
 
         random = new Random();
 
+        //User click the wheel and it starts rotate
         wheel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -93,6 +120,10 @@ public class HomeFragment extends Fragment {
                     public void onAnimationStart(Animation animation) {
                     }
 
+                    /**
+                     * Send a request depending on its final position
+                     * @param animation the animation
+                     */
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         sendRequest(360 - (degree % 360));
@@ -106,21 +137,47 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        /**
+         * User can have one home at time set
+         *     +     button -> user click to set a home.
+         * Direction button -> user click to view his home. (I'm in viewMode)
+         * Direction button -> user long click to delete current home and reset + button.
+         * {@link HomeActivity} for details
+         */
         home.setOnClickListener(new View.OnClickListener(){
+            /**
+             * User can have one home at time set
+             *  !viewMode  -> user click to set a home.
+             *  viewMode -> user click to view his home.
+             * @param v the button
+             */
             @Override
             public void onClick(View v) {
-                Intent homeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.setMode);
-                startActivity(homeIntent);
+                if(isViewMode) { //if the button has direction image
+                    Intent viewHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.viewMode);
+                    startActivity(viewHomeIntent);
+                }
+                else{ //the button has + image
+                    Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.setMode);
+                    startActivity(setHomeIntent);
+                }
             }
         });
 
         home.setOnLongClickListener(new View.OnLongClickListener() {
+            /**
+             * Delete the old home and reset the button in !notViewMode (+ image)
+             * @param v the button
+             * @return true because no longer actions are excepted
+             */
             @Override
             public boolean onLongClick(View v) {
-                return false;
+                setHomeButton(home);
+                return true;
             }
         });
 
+        //User click to open the {@link HelpActivity}
         sos.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -216,7 +273,7 @@ public class HomeFragment extends Fragment {
     // UTILITY METHODS
 
     /**
-     * Procedure to ovveride bar onProgressChanged to
+     * Procedure to override bar onProgressChanged to
      * show fine increment on text view
      */
     private void fineIncrement(){
@@ -281,6 +338,28 @@ public class HomeFragment extends Fragment {
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.park, radius);
             startActivity(intent);
         }
+    }
+
+
+    // METHODS TO CHANGE BUTTON IMAGE AND MODE
+
+    /**
+     * Set the direction home button image
+     * @param home the button
+     */
+    private void setDirectionsButton(FloatingActionButton home){
+        home.setImageResource(R.drawable.ic_direction);
+        isViewMode = true;
+    }
+
+
+    /**
+     * Set the plus home button image
+     * @param home the button
+     */
+    private void setHomeButton(FloatingActionButton home){
+        home.setImageResource(R.drawable.ic_add_location);
+        isViewMode = false;
     }
 
 }

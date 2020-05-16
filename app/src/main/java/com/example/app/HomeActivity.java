@@ -36,6 +36,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+/**
+ * Maps where user can interact, set and view his home
+ */
 public class HomeActivity extends FragmentActivity implements
         OnMapReadyCallback, BasicDialog.BasicDialogListener {
 
@@ -52,15 +55,15 @@ public class HomeActivity extends FragmentActivity implements
 
     public static final String HOME_LAT = "home_lat";
     public static final String HOME_LNG = "home_long";
-    private static final String HOME = "Home sweet home";
+    private static final String HOME    = "Home sweet home";
 
     private double homeLat = 0.0;
     private double homeLng = 0.0;
 
     private static final String TAG = "HomeActivity";
 
-    private static final String HM_NULL = "hm_null";
-    private static final String HM_SET = "hm_set";
+    private static final String HM_NULL    = "hm_null";
+    private static final String HM_SET     = "hm_set";
     private static final String HM_NOT_SET = "hm_not_set";
 
     private OnHomeSetListener onHomeSetListener;
@@ -77,7 +80,7 @@ public class HomeActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, MODE_PRIVATE);
         homeLat = Double.parseDouble(preferences.getString(HOME_LAT, "0.0"));
         homeLng = Double.parseDouble(preferences.getString(HOME_LNG, "0.0"));
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -224,7 +227,7 @@ public class HomeActivity extends FragmentActivity implements
         super.onPause();
 
         if (homeLocation != null) {
-            SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             String homeLat = String.valueOf(homeLocation.getLatitude());
             String homeLng = String.valueOf(homeLocation.getLongitude());
@@ -243,7 +246,7 @@ public class HomeActivity extends FragmentActivity implements
      * @param homeLocation the location of the user
      */
     private void displayHome(Location homeLocation) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.HOME_ZOOM));
         mMap.addMarker(createHomeMarker(homeLocation.getLatitude(), homeLocation.getLongitude()));
     }
 
@@ -311,7 +314,7 @@ public class HomeActivity extends FragmentActivity implements
      */
     private MarkerOptions createHomeMarker(double lat, double lng){
         MarkerOptions marker = new MarkerOptions();
-        marker.title("HOME SWEET HOME");
+        marker.title(HOME);
         LatLng latLng = new LatLng(lat, lng);
         marker.position(latLng);
         return marker;

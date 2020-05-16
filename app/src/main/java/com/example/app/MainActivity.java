@@ -30,7 +30,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  */
 public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener{
 
-    // CONSTS
     // basic dialogs ids
     private static final String NO_CONN_ID = "no_conn_id";
     private static final String NO_GPS_ID = "no_gps_id";
