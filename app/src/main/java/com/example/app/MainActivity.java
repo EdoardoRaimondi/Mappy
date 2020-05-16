@@ -9,6 +9,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -137,4 +138,5 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 break;
         }
     }
+
 }

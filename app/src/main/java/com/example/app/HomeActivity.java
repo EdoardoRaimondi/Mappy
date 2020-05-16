@@ -50,8 +50,8 @@ public class HomeActivity extends FragmentActivity implements
 
     public static final String SET_KEY = "set_key";
 
-    private static final String HOME_LAT = "home_lat";
-    private static final String HOME_LNG = "home_long";
+    public static final String HOME_LAT = "home_lat";
+    public static final String HOME_LNG = "home_long";
     private static final String HOME = "Home sweet home";
 
     private double homeLat = 0.0;
