@@ -102,6 +102,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        home.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
+
         sos.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
