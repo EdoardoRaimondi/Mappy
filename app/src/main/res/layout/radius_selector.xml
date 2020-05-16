@@ -35,7 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:progressDrawable="@drawable/seek_drawable"
-                android:thumb="@drawable/seek_thumb" />
+                android:thumb="@drawable/seek_thumb"
+                android:max="@integer/max_radius"/>
         </LinearLayout>
         <Button
             android:id="@+id/more"
