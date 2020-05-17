@@ -2,6 +2,7 @@ package com.example.app.factories;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.example.app.HelpActivity;
 import com.example.app.HomeActivity;
@@ -9,6 +10,8 @@ import com.example.app.MainActivity;
 import com.example.app.MapsActivity;
 import com.example.app.finals.HomeMode;
 import com.example.app.finals.NearbyRequestType;
+import com.example.app.ui.saved.SavedFragment;
+import com.google.android.gms.maps.model.Marker;
 
 /**
  * Factory class containing a creator method for each type of intent you need
@@ -60,6 +63,15 @@ public class IntentFactory {
     public static Intent createHomeRequest(Context context, HomeMode mode){
         Intent intent = new Intent(context, HomeActivity.class);
         intent.putExtra(HomeActivity.SET_KEY, mode);
+        return intent;
+    }
+
+    public static Intent createPlaceToSave(Context context, Marker marker){
+        Intent intent = new Intent(context, SavedFragment.class);
+        String placeName = marker.getTitle();
+        intent.putExtra("NAME", placeName);
+        intent.putExtra("LAT", marker.getPosition().latitude);
+        intent.putExtra("LONG", marker.getPosition().longitude);
         return intent;
     }
 }

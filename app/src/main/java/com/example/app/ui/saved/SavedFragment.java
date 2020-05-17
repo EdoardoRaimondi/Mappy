@@ -24,5 +24,8 @@ public class SavedFragment extends Fragment {
                 ViewModelProviders.of(this).get(SavedViewModel.class);
         View root = inflater.inflate(R.layout.fragment_saved, container, false);
         return root;
+
+        
+
     }
 }
