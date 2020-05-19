@@ -1,5 +1,6 @@
 //
 // Created by Edoardo Raimondi on 20/04/2020.
+// Modified by Jacopo Pellizzari on 19/05/2020
 //
 
 #include <jni.h>
@@ -8,16 +9,22 @@
 extern "C" {
 
 JNIEXPORT jint
-JNICALL Java_com_example_app_MainActivity_parseRadius(JNIEnv * env, jobject obj, jstring radius){
+JNICALL Java_com_example_app_ui_utils_UtilsFragment_parseRadius(JNIEnv * env, jobject obj, jstring radius){
+    // constants
+    #define KM_SEPARATOR 'k'
+    #define KM_TO_M 1000
+    // local variables
     const char *nativeString = env->GetStringUTFChars(radius, 0);
-    char buffer[10]; //to contain the number
-    char flag = 'k'; //the radius is in the form 20km
-    int offset= 1000; //one km
+    int decodedRadius = 0;
+    char buffer[10]; // to contain the number
     int i;
-    for(i=0; nativeString[i]!=flag; i++) buffer[i] = nativeString[i];
+    // script
+    for(i=0; nativeString[i]!=KM_SEPARATOR; i++){
+        buffer[i] = nativeString[i];
+    }
     buffer[i] = 0;
-    int numericRadius = atoi(buffer);
-    return numericRadius * offset;
+    decodedRadius = atoi(buffer) * KM_TO_M;
+    return decodedRadius;
     }
 }
 

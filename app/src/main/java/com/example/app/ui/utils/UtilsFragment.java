@@ -302,7 +302,7 @@ public class UtilsFragment extends Fragment {
      */
     private void adjustFine(){
          if(bar.getProgress() >= M_TO_KM_DIVIDER){
-             bar.setProgress((int) (Math.floor(bar.getProgress()/M_TO_KM_DIVIDER) * M_TO_KM_DIVIDER));
+             bar.setProgress((int) (Math.ceil(bar.getProgress()/M_TO_KM_DIVIDER) * M_TO_KM_DIVIDER));
          }
     }
 
@@ -364,6 +364,19 @@ public class UtilsFragment extends Fragment {
     private void setHomeButton(FloatingActionButton home){
         home.setImageResource(R.drawable.ic_home);
         isViewMode = false;
+    }
+
+    // NATIVE METHODS
+
+    /**
+     * Parser for the radius long
+     * @param radius to parse
+     */
+    public native int parseRadius(String radius);
+
+    // loading the C++ library
+    static {
+        System.loadLibrary("libmain_native_lib");
     }
 
 }
