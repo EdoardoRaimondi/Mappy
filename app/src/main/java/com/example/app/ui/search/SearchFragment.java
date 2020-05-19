@@ -28,13 +28,13 @@ public class SearchFragment extends Fragment {
             ViewGroup container, Bundle savedInstanceState) {
         searchViewModel =
                 ViewModelProviders.of(this).get(SearchViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_saved, container, false);
+        View root = inflater.inflate(R.layout.fragment_search, container, false);
 
         //Fill the search list
         mPlaceList.addAll(SearchPlaces.getPlaceSearchList());
 
         // 1. get a reference to recyclerView
-        mRecyclerView = root.findViewById(R.id.recycler_view);
+        mRecyclerView = root.findViewById(R.id.recycler_view_search);
 
         // 2. set layoutManger
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
