@@ -33,7 +33,7 @@ import java.util.Random;
  * It contains: wheel, radius selection bar and floating buttons.
  * Floating buttons: setHome, viewHome, sos
  */
-public class HomeFragment extends Fragment {
+public class UtilsFragment extends Fragment {
 
     private int degree = 0;
     private boolean fineRadius = false;
