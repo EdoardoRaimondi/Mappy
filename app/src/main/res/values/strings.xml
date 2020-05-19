@@ -13,6 +13,10 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
 
+    <!-- Snackbar -->
+    <string name="no_gps">Your GPS sensor is turned off.\nWould you like to switch it on now?</string>
+    <string name="yes">YES</string>
+
     <!-- DIALOGS -->
     <!-- Radius dialog -->
     <string name="radius_title">Update Radius</string>
@@ -20,14 +24,20 @@
     <string name="radius_cancel_button">Cancel</string>
     <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
     <!-- Basic dialogs -->
+    <string name="to_clarify">To clarify</string>
+    <string name="rationale">
+    Our app requires access to the GPS sensor as, in order to identify the places nearby you,
+        it requires high accuracy in localization. In no case we will monitor your daily movements
+        for commercial or espionage purposes. Our prerogative is to provide you a clear, efficient
+        and transparent service; for this reason we would like to clarify that your position will be
+        securely stored only on your device. We wish you a fruitful use and thank you for choosing us.
+    </string>
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
     <string name="sorry">Sorry</string>
     <string name="sorry_message">It seems there have been too many requests on our service, try later in a bit.</string>
     <string name="ohno">Oh no</string>
     <string name="unknown_err">Something really strange happened. Try again please</string>
-    <string name="hey">Hey!</string>
-    <string name="no_gps">What did you expect, this is a navigator app. Turn GPS on?</string>
     <string name="no_conn">What did you expect, we need an Internet provider to search pleaces nearby you. Activate now?</string>
 
     <!-- Toasts -->

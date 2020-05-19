@@ -11,23 +11,23 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Main UI activity. Here the user can choose the main actions.
  */
 public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener{
 
-    // basic dialogs ids
-    private static final String NO_CONN_ID = "no_conn_id";
-    private static final String NO_GPS_ID = "no_gps_id";
+    // rationale id
+    private static final String RATIONALE_ID = "rationale_id";
     // tag for dialogs and logs
     private static final String TAG = "MainActivity";
     // type of location request
@@ -75,17 +75,23 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                     gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
                 }
                 else{
-                    // TODO: show reasonable
+                    BasicDialog.BasicDialogBuilder overQueryBuilder = new BasicDialog.BasicDialogBuilder(RATIONALE_ID);
+                    overQueryBuilder.setTitle(getString(R.string.to_clarify));
+                    overQueryBuilder.setText(getString(R.string.rationale));
+                    overQueryBuilder.setTextForOkButton(getString(R.string.ok_button));
+                    overQueryBuilder.build().show(getSupportFragmentManager(), TAG);
                 }
             }
             else {
                 if (!gpsManager.isGPSOn() || !gpsManager.isProviderEnabled()) {
-                    BasicDialog.BasicDialogBuilder noGpsBuilder = new BasicDialog.BasicDialogBuilder(NO_GPS_ID);
-                    noGpsBuilder.setTitle(getString(R.string.hey));
-                    noGpsBuilder.setText(getString(R.string.no_gps));
-                    noGpsBuilder.setTextForOkButton(getString(R.string.ok_button));
-                    noGpsBuilder.setTextForCancelButton(getString(R.string.cancel_button));
-                    noGpsBuilder.build().show(getSupportFragmentManager(), TAG);
+                    Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(R.string.yes), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        })
+                    .show();
                 }
             }
         }
@@ -102,10 +108,12 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_USER_LOCATION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, getString(R.string.thank_you), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.thank_you), Snackbar.LENGTH_SHORT)
+                        .show();
             }
             else {
-                Toast.makeText(this, getString(R.string.no_gps_permission), Toast.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps_permission), Snackbar.LENGTH_SHORT)
+                        .show();
             }
         }
     }
@@ -120,14 +128,9 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
      */
     public void onDialogResult(String id, boolean option){
         switch(id){
-            case NO_CONN_ID:
+            case RATIONALE_ID:
                 if(option){
-                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }
-                break;
-            case NO_GPS_ID:
-                if(option){
-                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    (new GPSManager(this)).requirePermissions(this, REQUEST_USER_LOCATION_CODE);
                 }
                 break;
         }
