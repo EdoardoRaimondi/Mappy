@@ -2,8 +2,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <stroke android:color="#dadbdc" android:width="2dp" />
-            <solid android:color="#b7b7b7"/>
+            <stroke android:color="@color/seek_background_back"
+                    android:width="2dp" />
+            <solid android:color="@color/seek_background_main"/>
             <corners android:radius="10dp"/>
         </shape>
     </item>
@@ -11,9 +12,9 @@
         <clip android:clipOrientation="horizontal"
               android:gravity="left">
             <shape android:shape="rectangle">
-                <stroke android:color="#8BC34A"
+                <stroke android:color="@color/seek_background_selected_back"
                         android:width="2dp" />
-                <solid android:color="#4CAF50"/>
+                <solid android:color="@color/seek_background_selected_main"/>
                 <corners android:radius="10dp"/>
             </shape>
         </clip>

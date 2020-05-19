@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Base application theme. -->
@@ -8,7 +9,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- Floating button style -->
+    <!-- Floating button-->
     <style name="FloatStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -23,7 +24,7 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <!-- Floating button container style -->
+    <!-- Floating button container-->
     <style name="FloatContainer">
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_marginRight">@dimen/float_container_margin_lateral</item>
@@ -32,7 +33,7 @@
         <item name="android:layout_marginBottom">@dimen/float_container_margin_lateral</item>
     </style>
 
-    <!-- Radius button style -->
+    <!-- Radius button-->
     <style name="RadiusButtonStyle">
         <item name="android:textColor">@color/absoluteWhite</item>
         <item name="elevation">@dimen/rad_btn_elevation</item>
@@ -42,6 +43,7 @@
         <item name="android:padding">@dimen/rad_btn_pading</item>
     </style>
 
+    <!-- List item -->
     <style name="word_title">
          <item name="android:layout_width">match_parent</item>
          <item name="android:layout_height">wrap_content</item>

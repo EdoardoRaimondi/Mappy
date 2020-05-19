@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- RADIUS SELECTOR COMPONENT -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:gravity="center_vertical">
+
+        <!-- MINUS BUTTON -->
         <Button
             android:id="@+id/less"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            app:backgroundTint="@color/radBtnColor"
-            style="@style/RadiusButtonStyle"
-            android:background="@drawable/plus_thumb"/>
+            android:layout_width="@dimen/handler_minimum_size"
+            android:layout_height="@dimen/handler_minimum_size"
+            android:text="@string/minus"
+            android:background="@drawable/plus_thumb"
+            app:backgroundTint="@color/radius_button_color"
+            style="@style/RadiusButtonStyle"/>
+
+        <!-- PROGRESS BAR AND RELATIVE LIVE VALUE -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,11 +45,15 @@
                 android:thumb="@drawable/seek_thumb"
                 android:max="@integer/max_radius"/>
         </LinearLayout>
+
+        <!-- PLUS BUTTON -->
         <Button
             android:id="@+id/more"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:backgroundTint="@color/radBtnColor"
+            android:layout_width="@dimen/handler_medium_size"
+            android:layout_height="@dimen/handler_medium_size"
+            android:text="@string/plus"
+            app:backgroundTint="@color/radius_button_color"
             android:background="@drawable/plus_thumb"
             style="@style/RadiusButtonStyle"/>
+
 </LinearLayout>

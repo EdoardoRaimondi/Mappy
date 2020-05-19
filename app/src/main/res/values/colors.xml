@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="absoluteWhite">#FFFFFF</color>
+    <!-- Default theme palette-->
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="absoluteWhite">#FFFFFF</color>
-    <color name="radBtnColor">#4CAF50</color>
+    <!-- Custom palette-->
+    <color name="radius_button_color">#9CF669</color>
     <color name="home_button_color">#00BCD4</color>
     <color name="sos_button_color">#E91E63</color>
+    <color name="seekbar_handler_main">#585eff</color>
+    <color name="seekbar_handler_back">#99c8f7</color>
+    <color name="seek_background_back">#dadbdc</color>
+    <color name="seek_background_main">#CFCECE</color>
+    <color name="seek_background_selected_main">#76ABE8</color>
+    <color name="seek_background_selected_back">#9FBAED</color>
 </resources>

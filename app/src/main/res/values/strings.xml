@@ -1,25 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">App</string>
 
-    <!-- TABS FOR MAIN ACTIVITY -->
-    <string name='title_home'>Home</string>
+    <!-- Tabs for main activity -->
     <string name="title_utils">Utils</string>
     <string name="title_dashboard">Saved</string>
     <string name="title_notifications">Search</string>
     <string name="title_activity_maps">Map</string>
 
-    <!-- RADIUS SELECTOR -->
+    <!-- Radius selector -->
     <string name="initial">1 km</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
 
     <!-- DIALOGS -->
-    <!-- radius dialog -->
+    <!-- Radius dialog -->
     <string name="radius_title">Update Radius</string>
     <string name="radius_ok_button">OK</string>
     <string name="radius_cancel_button">Cancel</string>
     <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
-    <!-- basic dialogs -->
+    <!-- Basic dialogs -->
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
     <string name="sorry">Sorry</string>
@@ -30,11 +30,11 @@
     <string name="no_gps">What did you expect, this is a navigator app. Turn GPS on?</string>
     <string name="no_conn">What did you expect, we need an Internet provider to search pleaces nearby you. Activate now?</string>
 
-    <!-- TOASTS -->
+    <!-- Toasts -->
     <string name="no_gps_permission">Well, no GPS means nothing to display</string>
     <string name="thank_you">Thank you!</string>
 
-    <!-- DESCRIPTIONS -->
+    <!-- Descriptions -->
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
     <string name="indicator_description">spinning wheel indicator</string>
 </resources>
