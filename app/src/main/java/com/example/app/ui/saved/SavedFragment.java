@@ -21,8 +21,9 @@ import java.util.LinkedList;
 
 public class SavedFragment extends Fragment {
 
+    public static LinkedList<String> mSavedList = new LinkedList<>();
+
     private SavedViewModel savedViewModel;
-    private LinkedList<String> mSavedList = new LinkedList<>();
     private RecyclerView mRecyclerView;
     private SavedListAdapter savedListAdapter;
 
