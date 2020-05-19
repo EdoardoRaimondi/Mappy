@@ -1,7 +1,7 @@
 package com.example.app;
 
 import com.example.app.finals.NearbyRequestType;
-import com.example.app.ui.saved.RequestPlaceAdapter;
+import com.example.app.ui.search.RequestPlaceAdapter;
 
 import org.junit.Test;
 

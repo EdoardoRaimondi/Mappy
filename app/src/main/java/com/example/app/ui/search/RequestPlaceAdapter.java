@@ -1,4 +1,4 @@
-package com.example.app.ui.saved;
+package com.example.app.ui.search;
 
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.SearchPlaces;

@@ -1,4 +1,4 @@
-package com.example.app.ui.saved;
+package com.example.app.ui.search;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
-import com.example.app.finals.NearbyRequestType;
 
 import java.util.LinkedList;
 

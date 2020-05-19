@@ -12,17 +12,17 @@ import java.util.Map;
  */
 public class SearchPlaces {
 
-    public static final String RESTAURANT = "RESTAURANT";
-    public static final String MOVIE_THEATER = "MOVIE THEATER";
-    public static final String ZOO = "ZOO";
-    public static final String MUSEUM = "MUSEUM";
-    public static final String ART_GALLERY = "ART GALLERY";
-    public static final String PARK = "PARK";
-    public static final String TOURIST_ATTRACTION = "LOCAL ATTRACTIONS";
-    public static final String SUPERMARKET = "SUPERMARKET";
-    public static final String PARKING = "PARKING";
-    public static final String GAS_STATION = "GAS STATION";
-    public static final String PHARMACY   = "PHARMACY";
+    private static final String RESTAURANT = "RESTAURANT";
+    private static final String MOVIE_THEATER = "MOVIE THEATER";
+    private static final String ZOO = "ZOO";
+    private static final String MUSEUM = "MUSEUM";
+    private static final String ART_GALLERY = "ART GALLERY";
+    private static final String PARK = "PARK";
+    private static final String TOURIST_ATTRACTION = "LOCAL ATTRACTIONS";
+    private static final String SUPERMARKET = "SUPERMARKET";
+    private static final String PARKING = "PARKING";
+    private static final String GAS_STATION = "GAS STATION";
+    private static final String PHARMACY   = "PHARMACY";
 
     /**
      * @return a collection of all the searchable places
