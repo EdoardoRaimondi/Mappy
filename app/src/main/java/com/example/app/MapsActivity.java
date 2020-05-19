@@ -25,6 +25,7 @@ import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnResultSetListener;
+import com.example.app.ui.saved.SavedFragment;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -461,7 +462,14 @@ public class MapsActivity
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        startActivity(IntentFactory.createPlaceToSave(getApplicationContext(), marker));
+                        //startActivity(IntentFactory.createPlaceToSave(getApplicationContext(), marker));
+                        Bundle bundle = new Bundle();
+                        bundle.putString("TITLE", marker.getTitle());
+                        bundle.putDouble("LAT", marker.getPosition().latitude);
+                        bundle.putDouble("LON", marker.getPosition().longitude);
+                        SavedFragment sFrag = new SavedFragment();
+                        sFrag.setArguments(bundle);
+
                     }
                 })
                 .setNegativeButton("NO", new DialogInterface.OnClickListener() {

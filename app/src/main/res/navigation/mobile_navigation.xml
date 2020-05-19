@@ -15,11 +15,12 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.app.ui.search.SearchFragment"
         android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.app.ui.saved.SavedFragment"
+        android:label="@string/title_notifications"
         tools:layout="@layout/fragment_saved" />
 
-    <activity
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.app.ui.saved.SavedPlacesActivity"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/activity_saved_places" />
 </navigation>
