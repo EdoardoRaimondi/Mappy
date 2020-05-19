@@ -14,5 +14,10 @@ public enum NearbyRequestType {
     art_gallery,
     park,
     movie_theater,
-    tourist_attraction
+    tourist_attraction,
+    supermarket,
+    pharmacy,
+    gas_station,
+    parking,
+
 }
