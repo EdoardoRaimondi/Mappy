@@ -270,15 +270,15 @@ public class HomeActivity extends FragmentActivity implements
     // DIALOGS LISTENERS
 
     /**
-     * BasicDialog common listener
-     *
+     * BasicDialog common listener.
+     * Manage user choice
      * @param id     the identifier of dialog that was dismissed
-     * @param positiveButton the option chosen by user
+     * @param positiveButton the option chosen by user ( OK or SET IT MANUALLY )
      */
     public void onDialogResult(String id, boolean positiveButton) {
         switch (id) {
-            case HM_SET:
-                if(positiveButton)
+            case HM_SET: //the dialog appeared after a home set
+                if(positiveButton) //if user click OK
                    startActivity(IntentFactory.createLobbyReturn(this));
                 else // user wants to set it manually. So let him do it, little piece of shit
                     mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -293,7 +293,7 @@ public class HomeActivity extends FragmentActivity implements
                         }
                     });
                 break;
-            case HM_NOT_SET:
+            case HM_NOT_SET: //dialog appeared after a home not set
                 if (!positiveButton) startActivity(IntentFactory.createLobbyReturn(this));
                 else {
                     //User click "Retry"

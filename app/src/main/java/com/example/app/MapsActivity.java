@@ -2,6 +2,8 @@ package com.example.app;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnResultSetListener;
+import com.example.app.ui.saved.SavedFragment;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -38,6 +41,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,7 +52,8 @@ import java.util.List;
 
 public class MapsActivity
         extends FragmentActivity
-        implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener {
+        implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener,
+        GoogleMap.OnInfoWindowLongClickListener{
 
     private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
     private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
@@ -190,6 +195,7 @@ public class MapsActivity
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.setOnInfoWindowLongClickListener(this);
 
         if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
             View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -434,11 +440,12 @@ public class MapsActivity
     /**
      * BasicDialog common listener
      * @param id the identifier of dialog that was dismissed
-     * @param option the option choosen by user
+     * @param positiveButton the option choosen by user
      */
-    public void onDialogResult(String id, boolean option){
+    public void onDialogResult(String id, boolean positiveButton) {
+        //just go back to the main activity
         startActivity(IntentFactory.createLobbyReturn(this));
-    }
+        }
 
     /**
      * RadiusDialog listener
@@ -447,4 +454,30 @@ public class MapsActivity
     public void onRadiusDialogResult(int radius){
         startActivity(IntentFactory.createNearbyRequestIntent(this, requestType, radius));
     }
+
+    /**
+     * Callback when the user perform a long click on a marker info window
+     * @param marker the marker selected by the user
+     */
+    @Override
+    public void onInfoWindowLongClick(final Marker marker) {
+        new AlertDialog.Builder(this)
+                .setTitle("Do you want to save " + marker.getTitle() + " ?")
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        SavedFragment.mSavedList.addLast(marker.getTitle());
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+
 }

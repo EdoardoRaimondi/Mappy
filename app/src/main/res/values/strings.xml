@@ -2,7 +2,8 @@
     <string name="app_name">App</string>
 
     <!-- TABS FOR MAIN ACTIVITY -->
-    <string name="title_home">Home</string>
+    <string name='title_home'>Home</string>
+    <string name="title_utils">Utils</string>
     <string name="title_dashboard">Saved</string>
     <string name="title_notifications">Search</string>
     <string name="title_activity_maps">Map</string>
