@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- RADIUS SELECTOR COMPONENT -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,7 +9,7 @@
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:gravity="center_vertical">
 
-        <!-- MINUS BUTTON -->
+        <!-- Minus button -->
         <Button
             android:id="@+id/less"
             android:layout_width="@dimen/handler_minimum_size"
@@ -20,7 +19,7 @@
             app:backgroundTint="@color/radius_button_color"
             style="@style/RadiusButtonStyle"/>
 
-        <!-- PROGRESS BAR AND RELATIVE LIVE VALUE -->
+        <!-- Progress bar & live value -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -46,7 +45,7 @@
                 android:max="@integer/max_radius"/>
         </LinearLayout>
 
-        <!-- PLUS BUTTON -->
+        <!-- Plus button -->
         <Button
             android:id="@+id/more"
             android:layout_width="@dimen/handler_medium_size"
