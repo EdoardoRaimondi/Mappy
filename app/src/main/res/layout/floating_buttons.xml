@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="20dp">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/sos"
+        style="@style/FloatStyle"
+        android:src="@drawable/ic_help"
+        app:backgroundTint="@color/sos_button_color" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/home"
+        style="@style/FloatStyle"
+        android:src="@drawable/ic_home"
+        app:backgroundTint="@color/home_button_color" />
+
+</LinearLayout>

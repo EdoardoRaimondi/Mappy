@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment"
     android:baselineAligned="false"
+    tools:context=".ui.home.HomeFragment"
     style="@style/MainStyle">
 
     <include layout="@layout/radius_selector"/>
@@ -24,7 +24,8 @@
             android:scaleX="1"
             android:scaleY="1"
             android:layout_marginBottom="7dp"
-            android:src="@drawable/indicator"/>
+            android:src="@drawable/indicator"
+            android:contentDescription="@string/indicator_description" />
         <ImageView
             android:id="@+id/wheel"
             android:layout_width="wrap_content"
@@ -37,32 +38,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="20dp">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/sos"
-            style="@style/FloatStyle"
-            android:src="@drawable/ic_help"
-            app:backgroundTint="#E91E63" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/home"
-            style="@style/FloatStyle"
-            android:src="@drawable/ic_home"
-            app:backgroundTint="#00BCD4" />
-
-    </LinearLayout>
+    <include layout="@layout/floating_buttons"/>
 
 </LinearLayout>

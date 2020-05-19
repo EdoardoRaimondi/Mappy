@@ -35,4 +35,5 @@
 
     <!-- DESCRIPTIONS -->
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
+    <string name="indicator_description">spinning wheel indicator</string>
 </resources>
