@@ -6,8 +6,8 @@
     app:startDestination="@+id/navigation_search">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.app.ui.home.UtilsFragment"
+        android:id="@+id/navigation_utils"
+        android:name="com.example.app.ui.utils.UtilsFragment"
         android:label="@string/title_utils"
         tools:layout="@layout/fragment_utils" />
 

@@ -1,4 +1,4 @@
-package com.example.app.ui.home;
+package com.example.app.ui.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -63,7 +63,7 @@ public class UtilsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        UtilsViewModel utilsViewModel = ViewModelProviders.of(this).get(UtilsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_utils, container, false);
 
         //Get the widgets references
