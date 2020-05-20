@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.finals.SearchPlaces;
 
@@ -45,6 +46,10 @@ public class SearchFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         // 5. set item animator to DefaultAnimator
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        // USE THIS TO GET RADIUS
+        MainActivity activity = (MainActivity) getActivity();
+        activity.getRadius();
 
         return root;
     }

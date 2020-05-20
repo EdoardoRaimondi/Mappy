@@ -18,6 +18,9 @@
     <string name="yes">YES</string>
 
     <!-- DIALOGS -->
+    <!-- Text dialog-->
+    <string name="text_title">Specific radius</string>
+    <string name="text_text">Write the radius you want in format xx km xxx m.</string>
     <!-- Radius dialog -->
     <string name="radius_title">Update Radius</string>
     <string name="radius_ok_button">OK</string>
