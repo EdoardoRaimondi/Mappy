@@ -1,6 +1,10 @@
 package com.example.app;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,6 +33,7 @@ import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.saved_place_database.SavedPlaceDao;
 import com.example.app.saved_place_database.SavedPlaceDatabase;
 import com.example.app.ui.saved.SavedFragment;
+import com.example.app.ui.saved.SavedViewModel;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -89,6 +94,8 @@ public class MapsActivity
     private NearbyRequestType requestType;
     private int radius; //max radius can be 50000m
 
+    private SavedViewModel mSavedViewModel;
+
     // instance restoring control variables
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers = new ArrayList<>();
@@ -135,11 +142,14 @@ public class MapsActivity
             }
         }
 
+        mSavedViewModel = new ViewModelProvider(this).get(SavedViewModel.class);
+
         // obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
     }
@@ -470,16 +480,13 @@ public class MapsActivity
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        //call db
-                        SavedPlaceDatabase db = SavedPlaceDatabase.getDatabase(getApplicationContext());
                         //create entity to add
                         SavedPlace place = new SavedPlace();
                         place.setLatitude(marker.getPosition().latitude);
                         place.setLongitude(marker.getPosition().longitude);
                         place.setPlaceName(marker.getTitle());
                         //add it using dao
-                        SavedPlaceDao dao = db.savedPlaceDao;
-                        dao.insertPlace(place);
+                        mSavedViewModel.insert(place);
                     }
                 })
                 .setNegativeButton("NO", new DialogInterface.OnClickListener() {

@@ -1,33 +1,33 @@
 package com.example.app.ui.saved;
 
 import android.app.Application;
-import android.media.AsyncPlayer;
+import android.util.Log;
 
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.app.saved_place_database.SavedPlace;
-import com.example.app.saved_place_database.SavedPlaceDatabase;
 import com.example.app.saved_place_database.SavedPlaceRepository;
 
 import java.util.List;
 
-public class SavedViewModel extends AndroidViewModel {
+public class SavedViewModel extends ViewModel {
 
     private SavedPlaceRepository mRepository;
     private LiveData<List<SavedPlace>> mAllSavedPlaces;
 
+    /**
+     * Saved View Model constructor. It access to repository
+     * @param application where is running
+     */
     public SavedViewModel(Application application) {
-        super(application);
         mRepository = new SavedPlaceRepository(application);
         mAllSavedPlaces = mRepository.getAllPLaces();
     }
 
     /**
      * Get all the saved places
-     * @return
+     * @return all the place as LiveData object
      */
     public LiveData<List<SavedPlace>> getAllPlaces() {
         return mAllSavedPlaces;

@@ -1,6 +1,7 @@
 package com.example.app.saved_place_database;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -18,16 +19,19 @@ public class SavedPlaceRepository {
 
 
     /**
-     * Constructor of the repository
+     * Constructor of the repository. It access to database
      * @param application where is running
      */
     public SavedPlaceRepository(Application application) {
         SavedPlaceDatabase db = SavedPlaceDatabase.getDatabase(application);
-        mSavedPlaceDao = db.savedPlaceDao;
+        mSavedPlaceDao = db.SavedPlaceDao();
         mAllPlaces = mSavedPlaceDao.getAll();
     }
 
 
+    /**
+     * @return return all places from the database as Live Data object
+     */
     public LiveData<List<SavedPlace>> getAllPLaces(){
         return mAllPlaces;
     }

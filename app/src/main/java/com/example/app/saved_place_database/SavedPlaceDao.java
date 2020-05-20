@@ -19,7 +19,7 @@ public interface SavedPlaceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPlace(SavedPlace place);
 
-    @Query("SELECT * FROM SavedPlace")
+    @Query("SELECT * from saved_place_table")
     LiveData<List<SavedPlace>> getAll();
 
     @Delete

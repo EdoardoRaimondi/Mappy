@@ -108,12 +108,16 @@ public class SavedListAdapter extends
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(SavedViewHolder holder,
-                                 int position) {
-        // Retrieve the data for that position.
-        SavedPlace mCurrent = savedPlacesList.get(position);
-        // Add the data to the view holder.
-        holder.savedItemView.setText(mCurrent.getPlaceName());
+    public void onBindViewHolder(SavedViewHolder holder, int position) {
+        if(savedPlacesList != null) {
+            // Retrieve the data for that position.
+            SavedPlace mCurrent = savedPlacesList.get(position);
+            // Add the data to the view holder.
+            holder.savedItemView.setText(mCurrent.getPlaceName());
+        }
+        else {
+            holder.savedItemView.setText("LONG PRESS A PLACE TO SAVE IT!");
+        }
     }
 
     /**
@@ -123,7 +127,9 @@ public class SavedListAdapter extends
      */
     @Override
     public int getItemCount() {
+        if (savedPlacesList != null)
             return savedPlacesList.size();
+        else return 0;
         }
 }
 

@@ -6,14 +6,16 @@ import androidx.room.Entity;
 /**
  * Represents a saved place entity in our database
  */
-@Entity(primaryKeys = {"latitude", "longitude"} )
+@Entity(primaryKeys = {"latitude", "longitude"}, tableName = "saved_place_table")
 public class SavedPlace {
 
+    @ColumnInfo (name = "latitude")
     private double latitude;
+    @ColumnInfo (name = "longitude")
     private double longitude;
-
     @ColumnInfo (name = "place_name")
     private String placeName;
+
 
     public void setLatitude(double lat){
         this.latitude = lat;
@@ -23,17 +25,11 @@ public class SavedPlace {
         this.longitude = lng;
     }
 
-    /**
-     * Set the name
-     * @param name of the place
-     */
     public void setPlaceName(String name){
         this.placeName = name;
     }
 
-    /**
-     * @return place name
-     */
+
     public String getPlaceName(){
         return this.placeName;
     }

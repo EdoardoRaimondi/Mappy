@@ -18,11 +18,11 @@ import java.util.concurrent.Executors;
 public abstract class SavedPlaceDatabase extends RoomDatabase {
 
     private static volatile SavedPlaceDatabase INSTANCE;
-    public SavedPlaceDao savedPlaceDao;
+    abstract SavedPlaceDao SavedPlaceDao();
 
     //Create a background activity
     private static final int NUMBER_OF_THREADS = 4;
-    static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     /**
      * The only way I can get a database following singleton design pattern
      */
@@ -39,17 +39,24 @@ public abstract class SavedPlaceDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    /**
+     * Callback when the database is created. Add a default place.
+     *
+     */
     private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
-            SavedPlace defaultPlace = new SavedPlace();
-            defaultPlace.setLatitude(41.9109);
-            defaultPlace.setLongitude(12.4818);
-            defaultPlace.setPlaceName("ROMA");
-            SavedPlaceDao dao = INSTANCE.savedPlaceDao;
-            dao.insertPlace(defaultPlace);
+            SavedPlaceDatabase.databaseWriteExecutor.execute(() -> {
+                SavedPlace defaultPlace = new SavedPlace();
+                defaultPlace.setLatitude(41.9109);
+                defaultPlace.setLongitude(12.4818);
+                defaultPlace.setPlaceName("ROMA");
+                SavedPlaceDao dao = INSTANCE.SavedPlaceDao();
+                dao.insertPlace(defaultPlace);
+            });
         }
     };
+
 
 }
