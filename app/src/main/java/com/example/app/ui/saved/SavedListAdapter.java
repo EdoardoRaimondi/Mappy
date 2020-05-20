@@ -9,30 +9,27 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
-import com.example.app.factories.IntentFactory;
-import com.example.app.ui.search.RequestPlaceAdapter;
+import com.example.app.saved_place_database.SavedPlace;
 
-import java.util.LinkedList;
-
+import java.util.List;
 
 
 public class SavedListAdapter extends
         RecyclerView.Adapter<SavedListAdapter.SavedViewHolder> {
 
-    private final LinkedList<String> savedPlacesList;
+    private List<SavedPlace> savedPlacesList;
     private final LayoutInflater mInflater;
     private Context context;
 
     /**
      * Adapter constructor
      * @param context the context of the caller
-     * @param wordList the list to adapt
      */
-    public SavedListAdapter(Context context, LinkedList<String> wordList) {
+    public SavedListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.savedPlacesList = wordList;
     }
+
 
     class SavedViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -57,9 +54,8 @@ public class SavedListAdapter extends
             // Get the position of the item that was clicked.
             int mPosition = getLayoutPosition();
             // Use that to access the affected item in mWordList.
-            String element = savedPlacesList.get(mPosition);
-            // Change the word in the mWordList
-            context.startActivity(IntentFactory.createNearbyRequestIntent(context, RequestPlaceAdapter.getAdaptedPlace(element), 1000));
+            SavedPlace selectedPlace = savedPlacesList.get(mPosition);
+            //TODO: show where selected place on the map
         }
     }
 
@@ -92,6 +88,16 @@ public class SavedListAdapter extends
     }
 
     /**
+     * Method called when the data are modified
+     * (user add/delete some places)
+     * @param placeList update list of place
+     */
+    public void setPlace(List<SavedPlace> placeList){
+        savedPlacesList = placeList;
+        notifyDataSetChanged();
+    }
+
+    /**
      * Called by RecyclerView to display the data at the specified position.
      * This method should update the contents of the ViewHolder.itemView to
      * reflect the item at the given position.
@@ -105,9 +111,9 @@ public class SavedListAdapter extends
     public void onBindViewHolder(SavedViewHolder holder,
                                  int position) {
         // Retrieve the data for that position.
-        String mCurrent = savedPlacesList.get(position);
+        SavedPlace mCurrent = savedPlacesList.get(position);
         // Add the data to the view holder.
-        // holder.wordItemView.setText(mCurrent);
+        holder.savedItemView.setText(mCurrent.getPlaceName());
     }
 
     /**

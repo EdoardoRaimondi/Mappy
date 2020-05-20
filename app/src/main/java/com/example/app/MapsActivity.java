@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
@@ -24,6 +25,9 @@ import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnResultSetListener;
+import com.example.app.saved_place_database.SavedPlace;
+import com.example.app.saved_place_database.SavedPlaceDao;
+import com.example.app.saved_place_database.SavedPlaceDatabase;
 import com.example.app.ui.saved.SavedFragment;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -466,7 +470,16 @@ public class MapsActivity
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        SavedFragment.mSavedList.addLast(marker.getTitle());
+                        //call db
+                        SavedPlaceDatabase db = SavedPlaceDatabase.getDatabase(getApplicationContext());
+                        //create entity to add
+                        SavedPlace place = new SavedPlace();
+                        place.setLatitude(marker.getPosition().latitude);
+                        place.setLongitude(marker.getPosition().longitude);
+                        place.setPlaceName(marker.getTitle());
+                        //add it using dao
+                        SavedPlaceDao dao = db.savedPlaceDao;
+                        dao.insertPlace(place);
                     }
                 })
                 .setNegativeButton("NO", new DialogInterface.OnClickListener() {

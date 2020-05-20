@@ -1,19 +1,43 @@
 package com.example.app.ui.saved;
 
+import android.app.Application;
+import android.media.AsyncPlayer;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class SavedViewModel extends ViewModel {
+import com.example.app.saved_place_database.SavedPlace;
+import com.example.app.saved_place_database.SavedPlaceDatabase;
+import com.example.app.saved_place_database.SavedPlaceRepository;
 
-    private MutableLiveData<String> mText;
+import java.util.List;
 
-    public SavedViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is search fragment");
+public class SavedViewModel extends AndroidViewModel {
+
+    private SavedPlaceRepository mRepository;
+    private LiveData<List<SavedPlace>> mAllSavedPlaces;
+
+    public SavedViewModel(Application application) {
+        super(application);
+        mRepository = new SavedPlaceRepository(application);
+        mAllSavedPlaces = mRepository.getAllPLaces();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    /**
+     * Get all the saved places
+     * @return
+     */
+    public LiveData<List<SavedPlace>> getAllPlaces() {
+        return mAllSavedPlaces;
+    }
+
+    /**
+     * Insert a new place to the database
+     * @param place to insert
+     */
+    public void insert(SavedPlace place){
+        mRepository.insert(place);
     }
 }
