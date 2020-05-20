@@ -40,16 +40,15 @@ public class SearchFragment extends Fragment {
         // 2. set layoutManger
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        MainActivity activity = (MainActivity) getActivity();
+        assert activity != null;
         // 3. create an adapter
-        mAdapter = new PlaceListAdapter(getContext(), mPlaceList);
+        mAdapter = new PlaceListAdapter(getContext(), mPlaceList, activity.getRadius());
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
         // 5. set item animator to DefaultAnimator
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // USE THIS TO GET RADIUS
-        MainActivity activity = (MainActivity) getActivity();
-        activity.getRadius();
 
         return root;
     }
