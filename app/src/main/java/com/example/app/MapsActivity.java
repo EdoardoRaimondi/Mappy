@@ -481,12 +481,15 @@ public class MapsActivity
         new AlertDialog.Builder(this)
                 .setTitle("Do you want to save " + marker.getTitle() + " ?")
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    /**
+                     * Save the place
+                     * @param dialog selected
+                     * @param id of the selection
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //create entity to add
-                        SavedPlace place = new SavedPlace();
-                        place.setLatitude(marker.getPosition().latitude);
-                        place.setLongitude(marker.getPosition().longitude);
+                        SavedPlace place = new SavedPlace(marker.getPosition().latitude, marker.getPosition().longitude);
                         place.setPlaceName(marker.getTitle());
                         //add it to the database
                         mSavedViewModel.insert(place);

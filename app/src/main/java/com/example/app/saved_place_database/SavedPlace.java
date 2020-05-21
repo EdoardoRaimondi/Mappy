@@ -16,13 +16,14 @@ public class SavedPlace {
     @ColumnInfo (name = "place_name")
     private String placeName;
 
-
-    public void setLatitude(double lat){
-        this.latitude = lat;
-    }
-
-    public void setLongitude(double lng){
-        this.longitude = lng;
+    /**
+     * Constructor
+     * @param latitude  key
+     * @param longitude key
+     */
+    public SavedPlace(double latitude, double longitude){
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void setPlaceName(String name){

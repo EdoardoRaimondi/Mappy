@@ -15,7 +15,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-
+/**
+ * Adapter of the {@link SavedFragment} recycler view
+ */
 public class SavedListAdapter extends
         RecyclerView.Adapter<SavedListAdapter.SavedViewHolder> {
 
@@ -33,6 +35,10 @@ public class SavedListAdapter extends
     }
 
 
+    /**
+     * View holder class.
+     * Coordinate all recycler view and items changes
+     */
     class SavedViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
         public final TextView savedItemView;
@@ -51,6 +57,11 @@ public class SavedListAdapter extends
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
         }
+
+        /**
+         * Callback when user click an item
+         * @param view
+         */
         @Override
         public void onClick(View view) {
 
@@ -143,8 +154,8 @@ public class SavedListAdapter extends
         }
 
         /**
-         * @return the saved place at
-         * @return position in the view
+         * @return the saved place at a determinate
+         * @param  position in the view
          */
     public SavedPlace getSavedPlaceAt(int position){
         return savedPlacesList.get(position);

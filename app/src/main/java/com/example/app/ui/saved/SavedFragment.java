@@ -57,11 +57,20 @@ public class SavedFragment extends Fragment {
         });
 
 
+        /**
+         * Manage user moves on the recycler view items
+         */
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
+
+            /**
+             * Delete the place
+             * @param viewHolder of the recycler view
+             * @param direction of the swipe
+             */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 savedViewModel.remove(savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()));
