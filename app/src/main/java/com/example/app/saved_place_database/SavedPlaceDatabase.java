@@ -31,7 +31,6 @@ public abstract class SavedPlaceDatabase extends RoomDatabase {
             synchronized (SavedPlaceDatabase.class) { //ensure nobody will create another instance before me
                 if(INSTANCE == null){
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(), SavedPlaceDatabase.class, "savedPlace_database")
-                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -39,24 +38,6 @@ public abstract class SavedPlaceDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    /**
-     * Callback when the database is created. Add a default place.
-     *
-     */
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onOpen(@NonNull SupportSQLiteDatabase db) {
-            super.onOpen(db);
-            SavedPlaceDatabase.databaseWriteExecutor.execute(() -> {
-                SavedPlace defaultPlace = new SavedPlace();
-                defaultPlace.setLatitude(41.9109);
-                defaultPlace.setLongitude(12.4818);
-                defaultPlace.setPlaceName("ROMA");
-                SavedPlaceDao dao = INSTANCE.SavedPlaceDao();
-                dao.insertPlace(defaultPlace);
-            });
-        }
-    };
 
 
 }

@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -34,6 +35,7 @@ import com.example.app.saved_place_database.SavedPlaceDao;
 import com.example.app.saved_place_database.SavedPlaceDatabase;
 import com.example.app.ui.saved.SavedFragment;
 import com.example.app.ui.saved.SavedViewModel;
+import com.example.app.ui.saved.ViewModelFactory;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -143,7 +145,7 @@ public class MapsActivity
             }
         }
 
-        mSavedViewModel = new ViewModelProvider(this).get(SavedViewModel.class);
+        mSavedViewModel =  ViewModelProviders.of(this, new ViewModelFactory(getApplication())).get(SavedViewModel.class);
 
         // obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
