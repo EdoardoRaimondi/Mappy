@@ -11,10 +11,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.example.app.dialogs.BasicDialog;
+import com.example.app.sensors.ConnectionManager;
 import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         }
         else{
             // checking GPS fine location permissions
-            GPSManager gpsManager = new GPSManager(getApplicationContext());
+            final GPSManager gpsManager = new GPSManager(getApplicationContext());
             if(!gpsManager.hasPermissions()){
                 // request for permissions
                 if(gpsManager.canRequestNow(this)) {
@@ -107,10 +109,24 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                         .setAction(getString(R.string.yes), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                             }
                         })
                     .show();
+                }
+                else{
+                    // checking Internet providers
+                    final ConnectionManager connectionManager = new ConnectionManager(getApplicationContext());
+                    if(!connectionManager.isNetworkAvailable()){
+                        Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
+                                .setAction(getString(R.string.yes), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                                    }
+                                })
+                                .show();
+                    }
                 }
             }
         }
