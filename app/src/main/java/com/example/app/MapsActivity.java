@@ -94,6 +94,7 @@ public class MapsActivity
     private NearbyRequestType requestType;
     private int radius; //max radius can be 50000m
 
+    //View model to database access
     private SavedViewModel mSavedViewModel;
 
     // instance restoring control variables
@@ -485,7 +486,7 @@ public class MapsActivity
                         place.setLatitude(marker.getPosition().latitude);
                         place.setLongitude(marker.getPosition().longitude);
                         place.setPlaceName(marker.getTitle());
-                        //add it using dao
+                        //add it to the database
                         mSavedViewModel.insert(place);
                     }
                 })

@@ -45,4 +45,14 @@ public class SavedPlaceRepository {
             mSavedPlaceDao.insertPlace(place);
         });
     }
+
+    /**
+     * Remove a place method execute on a non-UI separated thread
+     * @param place to remove
+     */
+    public void remove(SavedPlace place){
+        SavedPlaceDatabase.databaseWriteExecutor.execute(() -> {
+            mSavedPlaceDao.delete(place);
+        });
+    }
 }

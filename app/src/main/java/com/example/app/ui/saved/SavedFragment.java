@@ -1,6 +1,8 @@
 package com.example.app.ui.saved;
 
+import android.animation.LayoutTransition;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +14,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.saved_place_database.SavedPlaceDatabase;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -51,6 +55,19 @@ public class SavedFragment extends Fragment {
                 savedListAdapter.setPlace(savedPlaces);
             }
         });
+
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                savedViewModel.remove(savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()));
+                savedListAdapter.notifyDataSetChanged();
+            }
+        }).attachToRecyclerView(mRecyclerView);
 
         return root;
     }

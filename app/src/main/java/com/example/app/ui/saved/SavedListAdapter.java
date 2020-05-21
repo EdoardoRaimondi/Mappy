@@ -1,6 +1,7 @@
 package com.example.app.ui.saved;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
 import com.example.app.saved_place_database.SavedPlace;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class SavedListAdapter extends
 
 
     class SavedViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
+            implements View.OnClickListener{
         public final TextView savedItemView;
         final SavedListAdapter mAdapter;
         /**
@@ -51,11 +53,20 @@ public class SavedListAdapter extends
         }
         @Override
         public void onClick(View view) {
+
+            SavedPlace selectedPlace = getCLickedElement();
+            //TODO: show where selected place on the map
+        }
+
+        /**
+         * @return the list element clicked/long clicked by the user
+         */
+        private SavedPlace getCLickedElement(){
             // Get the position of the item that was clicked.
             int mPosition = getLayoutPosition();
             // Use that to access the affected item in mWordList.
-            SavedPlace selectedPlace = savedPlacesList.get(mPosition);
-            //TODO: show where selected place on the map
+            return savedPlacesList.get(mPosition);
+
         }
     }
 
@@ -82,8 +93,7 @@ public class SavedListAdapter extends
     @Override
     public SavedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflate an item view.
-        View mItemView = mInflater.inflate(
-                R.layout.placelist_item, parent, false);
+        View mItemView = mInflater.inflate(R.layout.placelist_item, parent, false);
         return new SavedViewHolder(mItemView, this);
     }
 
@@ -131,5 +141,13 @@ public class SavedListAdapter extends
             return savedPlacesList.size();
         else return 0;
         }
+
+        /**
+         * @return the saved place at
+         * @return position in the view
+         */
+    public SavedPlace getSavedPlaceAt(int position){
+        return savedPlacesList.get(position);
+    }
 }
 

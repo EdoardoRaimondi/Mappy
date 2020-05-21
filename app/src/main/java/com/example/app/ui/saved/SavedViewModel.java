@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.saved_place_database.SavedPlaceRepository;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -39,5 +40,12 @@ public class SavedViewModel extends ViewModel {
      */
     public void insert(SavedPlace place){
         mRepository.insert(place);
+    }
+
+    /**
+     * @param place to remove from the database
+     */
+    public void remove(SavedPlace place){
+        mRepository.remove(place);
     }
 }
