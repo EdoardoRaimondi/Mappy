@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.factories.IntentFactory;
+import com.example.app.factories.MarkerFactory;
 import com.example.app.finals.HomeMode;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
@@ -55,7 +56,6 @@ public class HomeActivity extends FragmentActivity implements
 
     public static final String HOME_LAT = "home_lat";
     public static final String HOME_LNG = "home_long";
-    private static final String HOME    = "Home sweet home";
 
     private double homeLat = 0.0;
     private double homeLng = 0.0;
@@ -214,7 +214,7 @@ public class HomeActivity extends FragmentActivity implements
         }
         else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLat, homeLng), MapsParameters.DEFAULT_ZOOM));
-            mMap.addMarker(createHomeMarker(homeLat, homeLng));
+            mMap.addMarker(MarkerFactory.createHomeMarker(homeLat, homeLng));
         }
     }
 
@@ -246,9 +246,10 @@ public class HomeActivity extends FragmentActivity implements
      * @param homeLocation the location of the user
      */
     private void displayHome(Location homeLocation) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.HOME_ZOOM));
-        mMap.addMarker(createHomeMarker(homeLocation.getLatitude(), homeLocation.getLongitude()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.SINGLE_PLACE_ZOOM));
+        mMap.addMarker(MarkerFactory.createHomeMarker(homeLocation.getLatitude(), homeLocation.getLongitude()));
     }
+
 
     /**
      * Trigger the listener when everything has been all right
@@ -288,7 +289,7 @@ public class HomeActivity extends FragmentActivity implements
                             //set the new home location
                             homeLocation.setLatitude(point.latitude);
                             homeLocation.setLongitude(point.longitude);
-                            mMap.addMarker(createHomeMarker(point.latitude, point.longitude));
+                            mMap.addMarker(MarkerFactory.createHomeMarker(point.latitude, point.longitude));
                             homeSet();
                         }
                     });
@@ -306,18 +307,5 @@ public class HomeActivity extends FragmentActivity implements
         }
     }
 
-    /**
-     * Method to create an home marker
-     * @param lat latitude
-     * @param lng longitude
-     * @return markerOption
-     */
-    private MarkerOptions createHomeMarker(double lat, double lng){
-        MarkerOptions marker = new MarkerOptions();
-        marker.title(HOME);
-        LatLng latLng = new LatLng(lat, lng);
-        marker.position(latLng);
-        return marker;
-    }
 }
 

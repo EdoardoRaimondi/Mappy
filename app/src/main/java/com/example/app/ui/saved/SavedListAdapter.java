@@ -1,6 +1,7 @@
 package com.example.app.ui.saved;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,10 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
+import com.example.app.factories.IntentFactory;
 import com.example.app.saved_place_database.SavedPlace;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
 
 import java.util.List;
 
@@ -60,13 +63,20 @@ public class SavedListAdapter extends
 
         /**
          * Callback when user click an item
-         * @param view
+         * Start {@link com.example.app.SavedPlaceActivity} and
+         * show selected place on them
+         * @param view the view
          */
         @Override
         public void onClick(View view) {
 
             SavedPlace selectedPlace = getCLickedElement();
-            //TODO: show where selected place on the map
+            Place place = Place.builder()
+                    .setName(selectedPlace.getPlaceName())
+                    .setLatLng(new LatLng(selectedPlace.getLatitude(), selectedPlace.getLongitude()))
+                    .build();
+            Intent intent = IntentFactory.createPlaceInfoIntent(context, place);
+            context.startActivity(intent);
         }
 
         /**

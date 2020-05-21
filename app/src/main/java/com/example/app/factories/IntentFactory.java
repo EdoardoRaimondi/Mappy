@@ -7,8 +7,10 @@ import com.example.app.HelpActivity;
 import com.example.app.HomeActivity;
 import com.example.app.MainActivity;
 import com.example.app.MapsActivity;
+import com.example.app.SavedPlaceActivity;
 import com.example.app.finals.HomeMode;
 import com.example.app.finals.NearbyRequestType;
+import com.google.android.libraries.places.api.model.Place;
 
 /**
  * Factory class containing a creator method for each type of intent you need
@@ -60,6 +62,19 @@ public class IntentFactory {
     public static Intent createHomeRequest(Context context, HomeMode mode){
         Intent intent = new Intent(context, HomeActivity.class);
         intent.putExtra(HomeActivity.SET_KEY, mode);
+        return intent;
+    }
+
+    /**
+     * Method to create a intent in order to
+     * send place information
+     * @param context of the activity
+     * @param place to display
+     * @return the intent
+     */
+    public static Intent createPlaceInfoIntent(Context context, Place place){
+        Intent intent = new Intent(context, SavedPlaceActivity.class);
+        intent.putExtra("place", place);
         return intent;
     }
 }

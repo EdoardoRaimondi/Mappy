@@ -1,11 +1,13 @@
 package com.example.app.finals;
 
+
 import com.google.android.gms.location.LocationRequest;
 
 /**
  * Class containing all the methods shared by the maps activity
  */
 public class MapsUtility {
+
 
     /**
      * Perform a location request
@@ -17,4 +19,5 @@ public class MapsUtility {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
     }
+
 }

@@ -1,9 +1,6 @@
 package com.example.app;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.annotation.SuppressLint;
@@ -18,7 +15,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
@@ -31,11 +27,8 @@ import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnResultSetListener;
 import com.example.app.saved_place_database.SavedPlace;
-import com.example.app.saved_place_database.SavedPlaceDao;
-import com.example.app.saved_place_database.SavedPlaceDatabase;
-import com.example.app.ui.saved.SavedFragment;
 import com.example.app.ui.saved.SavedViewModel;
-import com.example.app.ui.saved.ViewModelFactory;
+import com.example.app.factories.ViewModelFactory;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;

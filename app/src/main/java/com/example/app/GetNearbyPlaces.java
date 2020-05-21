@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 
+import com.example.app.factories.MarkerFactory;
+import com.example.app.finals.MapsUtility;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnResultSetListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -115,7 +117,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
                     LatLng latLng = googleNearbyLocalPlace.getLatLng();
                     builder.include(latLng);
 
-                    MarkerOptions markerOptions = createMarker(latLng, placeName);
+                    MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
                     //Add the marker in order to recreate the state
                     markerList.add(markerOptions);
 
@@ -131,19 +133,6 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
         loadResult();
     }
 
-    /**
-     *
-     * @param latLng     position
-     * @param placeName  title
-     * @return marker ready to be displayed
-     */
-    MarkerOptions createMarker(@NonNull LatLng latLng, @NonNull String placeName){
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.title(placeName);
-        markerOptions.position(latLng);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        return markerOptions;
-    }
 
     /**
      * @return current markerList
