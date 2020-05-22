@@ -15,4 +15,6 @@
     <color name="seek_background_main">#CFCECE</color>
     <color name="seek_background_selected_main">#76ABE8</color>
     <color name="seek_background_selected_back">#9FBAED</color>
+    <color name="add_location">#5F6A1D</color>
+
 </resources>

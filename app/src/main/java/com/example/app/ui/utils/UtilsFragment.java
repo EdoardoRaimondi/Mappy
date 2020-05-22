@@ -3,7 +3,9 @@ package com.example.app.ui.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +23,16 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.app.HomeActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
+import com.example.app.factories.ViewModelFactory;
 import com.example.app.finals.HomeMode;
+import com.example.app.finals.LocationFinder;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
+import com.example.app.listeners.OnLocationSetListener;
+import com.example.app.saved_place_database.SavedPlace;
+import com.example.app.ui.saved.SavedViewModel;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Random;
@@ -53,6 +62,9 @@ public class UtilsFragment extends Fragment {
     private boolean isViewMode = false;
     private Random random;
 
+    private LocationFinder locationFinder = new LocationFinder();
+    private SavedViewModel mSavedViewModel;
+
     /**
      * Callback when the fragment is visible
      * @param inflater layout
@@ -68,8 +80,12 @@ public class UtilsFragment extends Fragment {
 
         //Get the widgets references
         wheel = root.findViewById(R.id.wheel);
+        //floating buttons
         FloatingActionButton sos = root.findViewById(R.id.sos);
         final FloatingActionButton home = root.findViewById(R.id.home);
+        FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
+
+        mSavedViewModel = ViewModelProviders.of(this, new ViewModelFactory(getActivity().getApplication())).get(SavedViewModel.class);
 
         //Get the eventual home coordinate set in a previous app usage
         SharedPreferences shared = this.getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
@@ -164,7 +180,7 @@ public class UtilsFragment extends Fragment {
 
         home.setOnLongClickListener(new View.OnLongClickListener() {
             /**
-             * Delete the old home and reset the button in !notViewMode (+ image)
+             * Delete the old home and reset the button in !isViewMode
              * @param v the button
              * @return true because no longer actions are excepted
              */
@@ -174,7 +190,7 @@ public class UtilsFragment extends Fragment {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove(HomeActivity.HOME_LAT);
                 editor.remove(HomeActivity.HOME_LNG);
-                editor.commit();
+                editor.apply();
                 
                 setHomeButton(home);
                 return true;
@@ -187,6 +203,24 @@ public class UtilsFragment extends Fragment {
             public void onClick(View v) {
                 Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
                 startActivity(helpIntent);
+            }
+        });
+
+
+        //Set listener for save location button
+        saveLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationFinder.findCurrentLocation(getContext());
+                locationFinder.setOnLocationSetListener(new OnLocationSetListener() {
+                    @Override
+                    public void onLocationSet(Location location) {
+                        SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
+                        place.setPlaceName("PROVA");
+
+                        mSavedViewModel.insert(place);
+                    }
+                });
             }
         });
 

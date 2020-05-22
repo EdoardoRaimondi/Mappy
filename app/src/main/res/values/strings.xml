@@ -17,8 +17,8 @@
     <string name="no_gps">Your GPS sensor is turned off.\nWould you like to switch it on now?</string>
     <string name="yes">YES</string>
 
-    <string name="set_home_info">HOLD THE MAP AND SET A NEW HOME!</string>
-    <string name="want_button">I WANT THIS</string>
+    <string name="set_home_info">HOLD THE MAP TO SET A NEW HOME!</string>
+    <string name="want_button">I WANT THIS HOME</string>
 
 
     <!-- DIALOGS -->
