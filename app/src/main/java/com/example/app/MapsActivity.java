@@ -395,7 +395,7 @@ public class MapsActivity
                 case ResponseStatus.UNKNOWN_ERROR:
                 case ResponseStatus.REQUEST_DENIED:
                     BasicDialog.BasicDialogBuilder requestDeniedBuilder = new BasicDialog.BasicDialogBuilder(OQL_ID);
-                    requestDeniedBuilder.setTitle(getString(R.string.ohno));
+                    requestDeniedBuilder.setTitle(getString(R.string.oh_no));
                     requestDeniedBuilder.setText(getString(R.string.unknown_err));
                     requestDeniedBuilder.setTextForOkButton(getString(R.string.ok_button));
                     requestDeniedBuilder.setTextForCancelButton(getString(R.string.cancel_button));
