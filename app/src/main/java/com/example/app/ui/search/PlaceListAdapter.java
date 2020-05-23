@@ -21,16 +21,19 @@ public class PlaceListAdapter extends
     private RequestPlaceAdapter requestPlaceAdapter;
     private final LayoutInflater mInflater;
     private Context context;
+    private int radius;
 
     /**
      * Adapter constructor
      * @param context the context of the caller
      * @param wordList the list to adapt
+     * @param radius of research
      */
-    public PlaceListAdapter(Context context, LinkedList<String> wordList) {
+    public PlaceListAdapter(Context context, LinkedList<String> wordList, int radius) {
         mInflater = LayoutInflater.from(context);
         requestPlaceAdapter = new RequestPlaceAdapter();
         this.context = context;
+        this.radius = radius;
         this.savedPlacesList = wordList;
     }
 
@@ -62,7 +65,7 @@ public class PlaceListAdapter extends
             // Use that to access the affected item in mWordList.
             String element = savedPlacesList.get(mPosition);
             // Change the word in the mWordList
-            context.startActivity(IntentFactory.createNearbyRequestIntent(context, RequestPlaceAdapter.getAdaptedPlace(element), 1000));
+            context.startActivity(IntentFactory.createNearbyRequestIntent(context, RequestPlaceAdapter.getAdaptedPlace(element), radius));
         }
     }
 

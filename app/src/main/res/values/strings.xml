@@ -15,6 +15,7 @@
 
     <!-- Snack bar -->
     <string name="no_gps">Your GPS sensor is turned off.\nWould you like to switch it on now?</string>
+    <string name="no_internet">Your device is not connected to any Internet provider.\nWould you like to connect?</string>
     <string name="yes">YES</string>
 
     <string name="set_home_info">HOLD THE MAP TO SET A NEW HOME!</string>
@@ -22,6 +23,9 @@
 
 
     <!-- DIALOGS -->
+    <!-- Text dialog-->
+    <string name="text_title">Specific radius</string>
+    <string name="text_text">Write the radius you want in format xx km xxx m.</string>
     <!-- Radius dialog -->
     <string name="radius_title">Update Radius</string>
     <string name="radius_ok_button">OK</string>

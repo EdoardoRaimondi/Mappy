@@ -3,6 +3,7 @@ package com.example.app.sensors;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,7 +15,6 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import static android.content.Context.LOCATION_SERVICE;
 
 public class GPSManager implements LocationListener {
 
@@ -26,17 +26,11 @@ public class GPSManager implements LocationListener {
     }
 
     public boolean hasPermissions(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        }
-        return true;
+        return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public boolean canRequestNow(Activity activity){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        return false;
+        return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     public void requirePermissions(Activity activity, int reqCode){
@@ -49,7 +43,7 @@ public class GPSManager implements LocationListener {
         if(hasPermissions()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 try {
-                    LocationManager manager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+                    LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
                     if (manager != null) {
                         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     }
@@ -60,7 +54,6 @@ public class GPSManager implements LocationListener {
             }
             else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 int locationMode = 0;
-                String locationProviders;
                 try {
                     locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
                 }
@@ -110,29 +103,3 @@ public class GPSManager implements LocationListener {
     }
 
 }
-
-// DEPRECATED
-/*
-    public Location getLocation(){
-        if (ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("fist","error");
-            return null;
-        }
-        try {
-            LocationManager lm = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-            assert lm != null;
-            boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            if (isGPSEnabled){
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000,10,this);
-                return lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            }
-            else{
-                return null;
-            }
-        }
-        catch (Exception e){
-
-        }
-        return null;
-    }
-*/

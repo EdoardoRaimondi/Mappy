@@ -11,10 +11,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.example.app.dialogs.BasicDialog;
+import com.example.app.sensors.ConnectionManager;
 import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -26,12 +28,17 @@ import com.google.android.material.snackbar.Snackbar;
  */
 public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener{
 
-    // rationale id
+    // dialogs ids
     private static final String RATIONALE_ID = "rationale_id";
+    // instance state keys
+    private static final String RADIUS_KEY = "radius_k";
     // tag for dialogs and logs
     private static final String TAG = "MainActivity";
     // type of location request
     private static final int REQUEST_USER_LOCATION_CODE = 99;
+    // selected radius
+    private int radius;
+
 
     // BEGIN OF MAIN ACTIVITY'S LIFE CYCLE CALLBACKS
     /**
@@ -41,8 +48,18 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // if instance state was saved then backup
+        if(savedInstanceState != null){
+            radius = savedInstanceState.getInt(RADIUS_KEY, getResources().getInteger(R.integer.default_radius));
+        }
+        else{
+            radius = getResources().getInteger(R.integer.default_radius);
+        }
+        // setting main activity as full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // setting appropriate layout
         setContentView(R.layout.activity_main);
+        // initializing navigation controller
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // passing each menu id as a set of ids because each
         // menu should be considered as top level destinations.
@@ -64,13 +81,16 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         // checking Google Play services apk
         GoogleApiAvailability google = GoogleApiAvailability.getInstance();
         int result = google.isGooglePlayServicesAvailable(this);
+        // if Google Play Services is disabled or not present
         if(result != ConnectionResult.SUCCESS){
             Dialog dial = google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
             dial.show();
         }
         else{
-            GPSManager gpsManager = new GPSManager(getApplicationContext());
+            // checking GPS fine location permissions
+            final GPSManager gpsManager = new GPSManager(getApplicationContext());
             if(!gpsManager.hasPermissions()){
+                // request for permissions
                 if(gpsManager.canRequestNow(this)) {
                     gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
                 }
@@ -83,23 +103,48 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 }
             }
             else {
+                // checking if location provider is enabled
                 if (!gpsManager.isGPSOn() || !gpsManager.isProviderEnabled()) {
                     Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.yes), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                             }
                         })
                     .show();
+                }
+                else{
+                    // checking Internet providers
+                    final ConnectionManager connectionManager = new ConnectionManager(getApplicationContext());
+                    if(!connectionManager.isNetworkAvailable()){
+                        Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
+                                .setAction(getString(R.string.yes), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                                    }
+                                })
+                                .show();
+                    }
                 }
             }
         }
     }
 
+    /**
+     * Callback to save the state when necessary
+     * @param savedInstanceState Bundle where to save radius value
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt(RADIUS_KEY, radius);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     // PERMISSIONS
     /**
-     * Callback to check user permission
+     * Callback to check user permission results
      * @param requestCode   of the permission
      * @param permissions   of the request
      * @param grantResults  of the permission request
@@ -108,11 +153,11 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_USER_LOCATION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.thank_you), Snackbar.LENGTH_SHORT)
+                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.thank_you), Snackbar.LENGTH_LONG)
                         .show();
             }
             else {
-                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps_permission), Snackbar.LENGTH_SHORT)
+                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps_permission), Snackbar.LENGTH_LONG)
                         .show();
             }
         }
@@ -134,6 +179,23 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 }
                 break;
         }
+    }
+
+    // PUBLIC INTERFACE
+
+    /**
+     * Getter method of radius
+     */
+    public int getRadius(){
+        return this.radius;
+    }
+
+    /**
+     * Setter method of radius
+     * @param radius the radius to set
+     */
+    public void setRadius(int radius){
+        this.radius = radius;
     }
 
 }

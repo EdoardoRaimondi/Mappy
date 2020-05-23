@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.app.HomeActivity;
+import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.ViewModelFactory;
@@ -91,7 +92,7 @@ public class UtilsFragment extends Fragment {
         mSavedViewModel = ViewModelProviders.of(this, new ViewModelFactory(getActivity().getApplication())).get(SavedViewModel.class);
 
         //Get the eventual home coordinate set in a previous app usage
-        SharedPreferences shared = this.getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences shared = getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
         double homeLat = Double.parseDouble(shared.getString(HomeActivity.HOME_LAT, "0.0"));
         double homeLng = Double.parseDouble(shared.getString(HomeActivity.HOME_LNG, "0.0"));
         //If user has no home set yet, I show a home button. A directions button is showed otherwise.
@@ -107,16 +108,11 @@ public class UtilsFragment extends Fragment {
         //Get the radius bar
         bar = root.findViewById(R.id.seek);
         //Restore the last radius research
-        if(savedInstanceState != null){
-            int savedRadius = savedInstanceState.getInt(BAR_KEY, getResources().getInteger(R.integer.default_radius));
-            bar.setProgress(savedRadius);
-        }
-        else{
-            bar.setProgress(getResources().getInteger(R.integer.default_radius));
-        }
+        MainActivity activity = (MainActivity) getActivity();
+        bar.setProgress(activity.getRadius());
         //Get the text
         txt = root.findViewById(R.id.text);
-
+        fineIncrement();
         random = new Random();
 
         //User click the wheel and it starts rotate
@@ -174,7 +170,7 @@ public class UtilsFragment extends Fragment {
                     Intent viewHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.viewMode);
                     startActivity(viewHomeIntent);
                 }
-                else{ //the button has + image
+                else{ //the button has home image
                     Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.setMode);
                     startActivity(setHomeIntent);
                 }
@@ -259,6 +255,7 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                settingRadius();
             }
         });
 
@@ -275,6 +272,7 @@ public class UtilsFragment extends Fragment {
                 else{
                     bar.setProgress(getResources().getInteger(R.integer.max_radius));
                 }
+                settingRadius();
             }
         });
 
@@ -291,6 +289,7 @@ public class UtilsFragment extends Fragment {
                 else{
                     bar.setProgress(getResources().getInteger(R.integer.radius_increment));
                 }
+                settingRadius();
             }
         });
         return root;
@@ -310,6 +309,14 @@ public class UtilsFragment extends Fragment {
     // END OF HOME FRAGMENT LIFE CYCLE
 
     // UTILITY METHODS
+
+    /**
+     * Callback to save radius in main activity
+     */
+    private void settingRadius(){
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setRadius(bar.getProgress());
+    }
 
     /**
      * Procedure to override bar onProgressChanged to

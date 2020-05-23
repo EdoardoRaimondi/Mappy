@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.finals.SearchPlaces;
 
@@ -39,12 +40,15 @@ public class SearchFragment extends Fragment {
         // 2. set layoutManger
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        MainActivity activity = (MainActivity) getActivity();
+        assert activity != null;
         // 3. create an adapter
-        mAdapter = new PlaceListAdapter(getContext(), mPlaceList);
+        mAdapter = new PlaceListAdapter(getContext(), mPlaceList, activity.getRadius());
         // 4. set adapter
         mRecyclerView.setAdapter(mAdapter);
         // 5. set item animator to DefaultAnimator
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
 
         return root;
     }

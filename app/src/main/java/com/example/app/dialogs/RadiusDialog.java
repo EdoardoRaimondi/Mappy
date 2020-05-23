@@ -42,7 +42,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         @SuppressLint("InflateParams")
