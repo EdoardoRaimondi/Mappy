@@ -1,6 +1,8 @@
 package com.example.app.ui.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -216,9 +219,7 @@ public class UtilsFragment extends Fragment {
                     @Override
                     public void onLocationSet(Location location) {
                         SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
-                        place.setPlaceName("PROVA");
-
-                        mSavedViewModel.insert(place);
+                        setEditablePlaceName(place, mSavedViewModel);
                     }
                 });
             }
@@ -376,6 +377,35 @@ public class UtilsFragment extends Fragment {
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.park, radius);
             startActivity(intent);
         }
+    }
+
+    /**
+     * Open a dialog to let user choose a name for that saved name
+     * @param place     that user saved
+     * @param viewModel to save it into the database
+     */
+    private void setEditablePlaceName(SavedPlace place, SavedViewModel viewModel){
+        EditText inputEditText = new EditText(getContext());
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("PLACE NAME")
+                .setMessage("Insert the name of this place")
+                .setView(inputEditText)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        place.setPlaceName(inputEditText.getText().toString());
+                        viewModel.insert(place);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //like never happened
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        dialog.show();
     }
 
 
