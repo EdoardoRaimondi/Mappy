@@ -168,7 +168,7 @@ public class UtilsFragment extends Fragment {
             public void onClick(View v) {
                 if(isViewMode) { //if the button has direction image
                     //Launch google maps app
-                    Uri gmmIntentUri = UrlFactory.createDirectionsUrl(homeLat, homeLng);
+                    Uri gmmIntentUri = UrlFactory.createDirectionsUrl(pos.latitude, pos.longitude);
                     startActivity(IntentFactory.createGoogleMapsDirectionsIntent(getContext(), gmmIntentUri));
                 }
                 else{ //the button has home image
@@ -420,6 +420,10 @@ public class UtilsFragment extends Fragment {
 
     // SHARED PREFERENCE METHODS
 
+    /**
+     * @return current home coordinates
+     * 0.0 if not valid
+     */
     private LatLng getHomeLocation(){
         // getting eventual home coordinate set in a previous app usage
         SharedPreferences shared = activity.getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
