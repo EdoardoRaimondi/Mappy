@@ -29,7 +29,7 @@ import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.factories.ViewModelFactory;
 import com.example.app.finals.HomeMode;
-import com.example.app.finals.LocationFinder;
+import com.example.app.sensors.LocationFinder;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.saved_place_database.SavedPlace;

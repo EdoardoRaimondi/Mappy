@@ -1,4 +1,4 @@
-package com.example.app.finals;
+package com.example.app.sensors;
 
 import android.content.Context;
 import android.location.Location;
@@ -59,6 +59,10 @@ public class LocationFinder {
     }
 
 
+    /**
+     * Method that trigger the listener
+     * @param location set
+     */
     private void locationSet(Location location){
         if(onLocationSetListener != null){
             onLocationSetListener.onLocationSet(location);
