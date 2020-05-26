@@ -2,6 +2,7 @@ package com.example.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -164,6 +165,10 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     }
 
     // END OF MAIN ACTIVITY'S LIFE CYCLE CALLBACKS
+
+    public final CoordinatorLayout getCoord(){
+        return findViewById(R.id.coordinator);
+    }
 
     // DIALOGS RESULT LISTENER
     /**

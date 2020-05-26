@@ -21,6 +21,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -85,9 +86,9 @@ public class UtilsFragment extends Fragment {
         //Get the widgets references
         wheel = root.findViewById(R.id.wheel);
         //floating buttons
-        FloatingActionButton sos = root.findViewById(R.id.sos);
+        final FloatingActionButton sos = root.findViewById(R.id.sos);
         final FloatingActionButton home = root.findViewById(R.id.home);
-        FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
+        final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
 
         mSavedViewModel = ViewModelProviders.of(this, new ViewModelFactory(getActivity().getApplication())).get(SavedViewModel.class);
 
@@ -202,7 +203,7 @@ public class UtilsFragment extends Fragment {
                 editor.remove(HomeActivity.HOME_LNG);
                 editor.apply();
                 setHomeButton(home);
-                Snackbar.make(root.findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
+                Snackbar.make(((MainActivity) getActivity()).getCoord(), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
                         .setAction(getString(R.string.undo), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
