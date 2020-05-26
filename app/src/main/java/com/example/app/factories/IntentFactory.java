@@ -2,6 +2,7 @@ package com.example.app.factories;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.example.app.HelpActivity;
 import com.example.app.HomeActivity;
@@ -15,7 +16,7 @@ import com.google.android.libraries.places.api.model.Place;
 /**
  * Factory class containing a creator method for each type of intent you need
  */
-public class IntentFactory {
+public abstract class IntentFactory {
 
     /**
      * Method to create a nearby request Intent
@@ -76,5 +77,18 @@ public class IntentFactory {
         Intent intent = new Intent(context, SavedPlaceActivity.class);
         intent.putExtra("place", place);
         return intent;
+    }
+
+    /**
+     * Method to create an intent in order to
+     * open google maps and show a place directions
+     * @param context of the activity
+     * @param uri for google maps
+     * @return the intent
+     */
+    public static Intent createGoogleMapsDirectionsIntent(Context context, Uri uri){
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        return mapIntent;
     }
 }

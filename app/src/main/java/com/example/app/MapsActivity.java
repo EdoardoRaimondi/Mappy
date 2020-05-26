@@ -296,7 +296,7 @@ public class MapsActivity
         String[] label = {"location", "radius", "type", "sensor", "key"};
         String location = "" + latitude + "," + longitude;
         String[] value = {location, Integer.toString(radius), nearbyPlace, "true", GOOGLE_KEY};
-        String url = UrlFactory.getUrl(NEARBY_URL_DOMAIN, label, value);
+        String url = UrlFactory.createNearbyUrl(NEARBY_URL_DOMAIN, label, value);
         // TODO: remove following line on production
         Log.d("GoogleMapsActivity", "url = " + url);
         return url;

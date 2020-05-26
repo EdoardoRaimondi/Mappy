@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MarkerFactory {
+public abstract class MarkerFactory {
 
     private static final String HOME    = "Home sweet home";
 

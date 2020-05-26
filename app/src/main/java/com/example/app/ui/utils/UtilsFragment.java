@@ -26,9 +26,10 @@ import com.example.app.HomeActivity;
 import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
+import com.example.app.factories.UrlFactory;
 import com.example.app.factories.ViewModelFactory;
 import com.example.app.finals.HomeMode;
-import com.example.app.finals.LocationFinder;
+import com.example.app.sensors.LocationFinder;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.saved_place_database.SavedPlace;
@@ -166,13 +167,9 @@ public class UtilsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isViewMode) { //if the button has direction image
-                    // obtain home coordinates
-                    LatLng pos = getHomeLocation();
-                    // launch google maps app
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + pos.latitude + "," + pos.longitude);
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    startActivity(mapIntent);
+                    //Launch google maps app
+                    Uri gmmIntentUri = UrlFactory.createDirectionsUrl(pos.latitude, pos.longitude);
+                    startActivity(IntentFactory.createGoogleMapsDirectionsIntent(getContext(), gmmIntentUri));
                 }
                 else{ //the button has home image
                     Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.setMode);
@@ -189,21 +186,13 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public boolean onLongClick(View v) {
-                SharedPreferences preferences =
-                        activity.getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
-                double homeLat = Double.parseDouble(preferences.getString(HomeActivity.HOME_LAT, "0.0"));
-                double homeLng = Double.parseDouble(preferences.getString(HomeActivity.HOME_LNG, "0.0"));
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.remove(HomeActivity.HOME_LAT);
-                editor.remove(HomeActivity.HOME_LNG);
-                editor.apply();
                 setHomeButton(home);
-                Snackbar.make(((MainActivity) activity).getCoord(), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.undo), v1 -> {
-                            editor.putString(HomeActivity.HOME_LAT, String.valueOf(homeLat));
-                            editor.putString(HomeActivity.HOME_LNG, String.valueOf(homeLng));
-                            editor.apply();
-                            home.setImageResource(R.drawable.ic_direction);
+                Snackbar.make(getActivity().findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.undo), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setDirectionsButton(home);
+                            }
                         })
                         .show();
                 return true;
@@ -431,6 +420,10 @@ public class UtilsFragment extends Fragment {
 
     // SHARED PREFERENCE METHODS
 
+    /**
+     * @return current home coordinates
+     * 0.0 if not valid
+     */
     private LatLng getHomeLocation(){
         // getting eventual home coordinate set in a previous app usage
         SharedPreferences shared = activity.getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
