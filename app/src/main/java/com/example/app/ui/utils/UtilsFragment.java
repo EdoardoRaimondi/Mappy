@@ -1,14 +1,12 @@
 package com.example.app.ui.utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -34,16 +31,16 @@ import com.example.app.finals.HomeMode;
 import com.example.app.finals.LocationFinder;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
-import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Random;
 
 /**
- * App utility  fragment
+ * App utility fragment
  * It contains: wheel, radius selection bar and floating buttons.
  * Floating buttons: setHome, viewHome, sos, saveLocation
  */
@@ -51,6 +48,7 @@ public class UtilsFragment extends Fragment {
 
     private int degree = 0;
     private boolean fineRadius = false;
+    private boolean isViewMode = false;
 
     private static final String BAR_KEY = "bar_k";
 
@@ -59,16 +57,17 @@ public class UtilsFragment extends Fragment {
     // I start from an half of one. I got 360 / 6 / 2.
     // (so 1 section will be 2 FACTOR large)
     private static final float FACTOR = 30f;
+
     // view components
     private SeekBar bar;
     private TextView txt;
     private ImageView wheel;
+    private SavedViewModel mSavedViewModel;
+    private Activity activity;
 
-    private boolean isViewMode = false;
     private Random random;
 
     private LocationFinder locationFinder = new LocationFinder();
-    private SavedViewModel mSavedViewModel;
 
     /**
      * Callback when the fragment is visible
@@ -80,8 +79,12 @@ public class UtilsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        UtilsViewModel utilsViewModel = ViewModelProviders.of(this).get(UtilsViewModel.class);
+        ViewModelProviders.of(this).get(UtilsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_utils, container, false);
+
+        if(getActivity() != null){
+            this.activity = getActivity();
+        }
 
         //Get the widgets references
         wheel = root.findViewById(R.id.wheel);
@@ -90,18 +93,17 @@ public class UtilsFragment extends Fragment {
         final FloatingActionButton home = root.findViewById(R.id.home);
         final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
 
-        mSavedViewModel = ViewModelProviders.of(this, new ViewModelFactory(getActivity().getApplication())).get(SavedViewModel.class);
+        mSavedViewModel = ViewModelProviders.of(
+                this,
+                new ViewModelFactory(activity.getApplication())
+        ).get(SavedViewModel.class);
 
-        //Get the eventual home coordinate set in a previous app usage
-        SharedPreferences shared = getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
-        double homeLat = Double.parseDouble(shared.getString(HomeActivity.HOME_LAT, "0.0"));
-        double homeLng = Double.parseDouble(shared.getString(HomeActivity.HOME_LNG, "0.0"));
+        LatLng pos = getHomeLocation();
         //If user has no home set yet, I show a home button. A directions button is showed otherwise.
-        if(homeLat != 0 && homeLng != 0){
+        if (pos.latitude != 0 && pos.longitude != 0) {
             //Directions button
             setDirectionsButton(home);
-        }
-        else{
+        } else {
             //Home button
             setHomeButton(home);
         }
@@ -109,46 +111,42 @@ public class UtilsFragment extends Fragment {
         //Get the radius bar
         bar = root.findViewById(R.id.seek);
         //Restore the last radius research
-        MainActivity activity = (MainActivity) getActivity();
-        bar.setProgress(activity.getRadius());
+        bar.setProgress(((MainActivity) activity).getRadius());
         //Get the text
         txt = root.findViewById(R.id.text);
         fineIncrement();
         random = new Random();
 
         //User click the wheel and it starts rotate
-        wheel.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                int oldDegree = degree % 360;
-                degree = random.nextInt(360) + 720;
-                RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
-                        RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                        RotateAnimation.RELATIVE_TO_SELF, 0.5f
-                );
-                rotate.setDuration(3600);
-                rotate.setFillAfter(true);
-                rotate.setInterpolator(new DecelerateInterpolator());
-                rotate.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+        wheel.setOnClickListener(v -> {
+            int oldDegree = degree % 360;
+            degree = random.nextInt(360) + 720;
+            RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
+                    RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                    RotateAnimation.RELATIVE_TO_SELF, 0.5f
+            );
+            rotate.setDuration(3600);
+            rotate.setFillAfter(true);
+            rotate.setInterpolator(new DecelerateInterpolator());
+            rotate.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
 
-                    /**
-                     * Send a request depending on its final position
-                     * @param animation the animation
-                     */
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        sendRequest(360 - (degree % 360));
-                    }
+                /**
+                 * Send a request depending on its final position
+                 * @param animation the animation
+                 */
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    sendRequest(360 - (degree % 360));
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-                wheel.startAnimation(rotate);
-            }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            wheel.startAnimation(rotate);
         });
 
         /**
@@ -169,12 +167,9 @@ public class UtilsFragment extends Fragment {
             public void onClick(View v) {
                 if(isViewMode) { //if the button has direction image
                     // obtain home coordinates
-                    SharedPreferences preferences =
-                            getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
-                    double homeLat = Double.parseDouble(preferences.getString(HomeActivity.HOME_LAT, "0.0"));
-                    double homeLng = Double.parseDouble(preferences.getString(HomeActivity.HOME_LNG, "0.0"));
+                    LatLng pos = getHomeLocation();
                     // launch google maps app
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + homeLat + "," + homeLng);
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + pos.latitude + "," + pos.longitude);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
@@ -195,7 +190,7 @@ public class UtilsFragment extends Fragment {
             @Override
             public boolean onLongClick(View v) {
                 SharedPreferences preferences =
-                        getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+                        activity.getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
                 double homeLat = Double.parseDouble(preferences.getString(HomeActivity.HOME_LAT, "0.0"));
                 double homeLng = Double.parseDouble(preferences.getString(HomeActivity.HOME_LNG, "0.0"));
                 SharedPreferences.Editor editor = preferences.edit();
@@ -203,15 +198,12 @@ public class UtilsFragment extends Fragment {
                 editor.remove(HomeActivity.HOME_LNG);
                 editor.apply();
                 setHomeButton(home);
-                Snackbar.make(((MainActivity) getActivity()).getCoord(), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.undo), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                editor.putString(HomeActivity.HOME_LAT, String.valueOf(homeLat));
-                                editor.putString(HomeActivity.HOME_LNG, String.valueOf(homeLng));
-                                editor.apply();
-                                home.setImageResource(R.drawable.ic_direction);
-                            }
+                Snackbar.make(((MainActivity) activity).getCoord(), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.undo), v1 -> {
+                            editor.putString(HomeActivity.HOME_LAT, String.valueOf(homeLat));
+                            editor.putString(HomeActivity.HOME_LNG, String.valueOf(homeLng));
+                            editor.apply();
+                            home.setImageResource(R.drawable.ic_direction);
                         })
                         .show();
                 return true;
@@ -219,28 +211,19 @@ public class UtilsFragment extends Fragment {
         });
 
         //User click to open the {@link HelpActivity}
-        sos.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
-                startActivity(helpIntent);
-            }
+        sos.setOnClickListener(v -> {
+            Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
+            startActivity(helpIntent);
         });
 
 
         //Set listener for save location button
-        saveLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                locationFinder.findCurrentLocation(getContext());
-                locationFinder.setOnLocationSetListener(new OnLocationSetListener() {
-                    @Override
-                    public void onLocationSet(Location location) {
-                        SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
-                        setEditablePlaceName(place, mSavedViewModel);
-                    }
-                });
-            }
+        saveLocation.setOnClickListener(v -> {
+            locationFinder.findCurrentLocation(getContext());
+            locationFinder.setOnLocationSetListener(location -> {
+                SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
+                setEditablePlaceName(place, mSavedViewModel);
+            });
         });
 
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -281,38 +264,32 @@ public class UtilsFragment extends Fragment {
             }
         });
 
-        root.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!fineRadius){
-                    adjustFine();
-                }
-                if(bar.getProgress() + getResources().getInteger(R.integer.radius_increment) <= getResources().getInteger(R.integer.max_radius)){
-                    bar.setProgress(bar.getProgress() + getResources().getInteger(R.integer.radius_increment));
-                    fineIncrement();
-                }
-                else{
-                    bar.setProgress(getResources().getInteger(R.integer.max_radius));
-                }
-                settingRadius();
+        root.findViewById(R.id.more).setOnClickListener(v -> {
+            if(!fineRadius){
+                adjustFine();
             }
+            if(bar.getProgress() + getResources().getInteger(R.integer.radius_increment) <= getResources().getInteger(R.integer.max_radius)){
+                bar.setProgress(bar.getProgress() + getResources().getInteger(R.integer.radius_increment));
+                fineIncrement();
+            }
+            else{
+                bar.setProgress(getResources().getInteger(R.integer.max_radius));
+            }
+            settingRadius();
         });
 
-        root.findViewById(R.id.less).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!fineRadius){
-                    adjustFine();
-                }
-                if(bar.getProgress() - getResources().getInteger(R.integer.radius_increment) >= getResources().getInteger(R.integer.radius_increment)){
-                    bar.setProgress(bar.getProgress() - getResources().getInteger(R.integer.radius_increment));
-                    fineIncrement();
-                }
-                else{
-                    bar.setProgress(getResources().getInteger(R.integer.radius_increment));
-                }
-                settingRadius();
+        root.findViewById(R.id.less).setOnClickListener(v -> {
+            if(!fineRadius){
+                adjustFine();
             }
+            if(bar.getProgress() - getResources().getInteger(R.integer.radius_increment) >= getResources().getInteger(R.integer.radius_increment)){
+                bar.setProgress(bar.getProgress() - getResources().getInteger(R.integer.radius_increment));
+                fineIncrement();
+            }
+            else{
+                bar.setProgress(getResources().getInteger(R.integer.radius_increment));
+            }
+            settingRadius();
         });
         return root;
 
@@ -323,9 +300,9 @@ public class UtilsFragment extends Fragment {
      * @param savedInstanceState Bundle where to save places information
      */
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt(BAR_KEY, bar.getProgress());
+            savedInstanceState.putInt(BAR_KEY, bar.getProgress());
     }
 
     // END OF HOME FRAGMENT LIFE CYCLE
@@ -336,8 +313,7 @@ public class UtilsFragment extends Fragment {
      * Callback to save radius in main activity
      */
     private void settingRadius(){
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setRadius(bar.getProgress());
+        ((MainActivity) activity).setRadius(bar.getProgress());
     }
 
     /**
@@ -419,19 +395,13 @@ public class UtilsFragment extends Fragment {
                 .setTitle("PLACE NAME")
                 .setMessage("Insert the name of this place")
                 .setView(inputEditText)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        place.setPlaceName(inputEditText.getText().toString());
-                        viewModel.insert(place);
-                    }
+                .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
+                    place.setPlaceName(inputEditText.getText().toString());
+                    viewModel.insert(place);
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //like never happened
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel_button), (dialog1, which) -> {
+                    //like never happened
+                    dialog1.dismiss();
                 })
                 .create();
         dialog.show();
@@ -459,17 +429,14 @@ public class UtilsFragment extends Fragment {
         isViewMode = false;
     }
 
-    // NATIVE METHODS
+    // SHARED PREFERENCE METHODS
 
-    /**
-     * Parser for the radius long
-     * @param radius to parse
-     */
-    public native int parseRadius(String radius);
-
-    // loading the C++ library
-    static {
-        System.loadLibrary("libmain_native_lib");
+    private LatLng getHomeLocation(){
+        // getting eventual home coordinate set in a previous app usage
+        SharedPreferences shared = activity.getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+        double homeLat = Double.parseDouble(shared.getString(HomeActivity.HOME_LAT, "0.0"));
+        double homeLng = Double.parseDouble(shared.getString(HomeActivity.HOME_LNG, "0.0"));
+        return new LatLng(homeLat,homeLng);
     }
 
 }

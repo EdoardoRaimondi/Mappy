@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.example.app.dialogs.BasicDialog;
@@ -29,7 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
  */
 public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener{
 
-    // dialogs ids
+    // dialogs' ids
     private static final String RATIONALE_ID = "rationale_id";
     // instance state keys
     private static final String RADIUS_KEY = "radius_k";
@@ -107,12 +106,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 // checking if location provider is enabled
                 if (!gpsManager.isGPSOn() || !gpsManager.isProviderEnabled()) {
                     Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
-                        .setAction(getString(R.string.yes), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                            }
-                        })
+                        .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
                     .show();
                 }
                 else{
@@ -120,12 +114,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                     final ConnectionManager connectionManager = new ConnectionManager(getApplicationContext());
                     if(!connectionManager.isNetworkAvailable()){
                         Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
-                                .setAction(getString(R.string.yes), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                                    }
-                                })
+                                .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)))
                                 .show();
                     }
                 }
@@ -166,26 +155,6 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
 
     // END OF MAIN ACTIVITY'S LIFE CYCLE CALLBACKS
 
-    public final CoordinatorLayout getCoord(){
-        return findViewById(R.id.coordinator);
-    }
-
-    // DIALOGS RESULT LISTENER
-    /**
-     * BasicDialog common listener
-     * @param id the identifyer of dialog that was dismissed
-     * @param option the option choosen by user
-     */
-    public void onDialogResult(String id, boolean option){
-        switch(id){
-            case RATIONALE_ID:
-                if(option){
-                    (new GPSManager(this)).requirePermissions(this, REQUEST_USER_LOCATION_CODE);
-                }
-                break;
-        }
-    }
-
     // PUBLIC INTERFACE
 
     /**
@@ -201,6 +170,27 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
      */
     public void setRadius(int radius){
         this.radius = radius;
+    }
+
+    /**
+     * Getter method of common Coordinator box
+     */
+    public final CoordinatorLayout getCoord(){
+        return findViewById(R.id.coordinator);
+    }
+
+    // DIALOGS RESULT LISTENER
+    /**
+     * BasicDialog common listener
+     * @param id the identifyer of dialog that was dismissed
+     * @param option the option choosen by user
+     */
+    public void onDialogResult(String id, boolean option){
+        if(id.equals(RATIONALE_ID)) {
+            if (option) {
+                (new GPSManager(this)).requirePermissions(this, REQUEST_USER_LOCATION_CODE);
+            }
+        }
     }
 
 }
