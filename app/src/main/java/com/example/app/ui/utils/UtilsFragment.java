@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,16 +35,14 @@ import com.example.app.finals.NearbyRequestType;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Random;
 
 /**
- * App default fragment.
+ * App utility  fragment
  * It contains: wheel, radius selection bar and floating buttons.
- * Floating buttons: setHome, viewHome, sos
+ * Floating buttons: setHome, viewHome, sos, saveLocation
  */
 public class UtilsFragment extends Fragment {
 
@@ -167,8 +165,16 @@ public class UtilsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isViewMode) { //if the button has direction image
-                    Intent viewHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.viewMode);
-                    startActivity(viewHomeIntent);
+                    // obtain home coordinates
+                    SharedPreferences preferences =
+                            getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+                    double homeLat = Double.parseDouble(preferences.getString(HomeActivity.HOME_LAT, "0.0"));
+                    double homeLng = Double.parseDouble(preferences.getString(HomeActivity.HOME_LNG, "0.0"));
+                    // launch google maps app
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + homeLat + "," + homeLng);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
                 }
                 else{ //the button has home image
                     Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.setMode);
