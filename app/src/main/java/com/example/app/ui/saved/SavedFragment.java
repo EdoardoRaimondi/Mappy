@@ -1,11 +1,17 @@
 package com.example.app.ui.saved;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,6 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.factories.ViewModelFactory;
 import com.example.app.saved_place_database.SavedPlace;
@@ -58,6 +65,45 @@ public class SavedFragment extends Fragment {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
+            }
+
+
+            @Override
+            public void onChildDraw (@NonNull Canvas c,
+                                     @NonNull RecyclerView recyclerView,
+                                     @NonNull RecyclerView.ViewHolder viewHolder,
+                                     float dX,
+                                     float dY,
+                                     int actionState,
+                                     boolean isCurrentlyActive){
+                int itemHeight = viewHolder.itemView.getBottom() - viewHolder.itemView.getTop();
+
+                // Draw the red delete background
+                final ColorDrawable background = new ColorDrawable(Color.RED);
+                background.setBounds(
+                        (int)(viewHolder.itemView.getRight() + dX),
+                        viewHolder.itemView.getTop(),
+                        viewHolder.itemView.getRight(),
+                        viewHolder.itemView.getBottom()
+                );
+                background.draw(c);
+
+                Drawable icon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete);
+                int intrinsicHeight = icon.getIntrinsicHeight();
+                int intrinsicWidth = icon.getIntrinsicWidth();
+
+                // Calculate position of delete icon
+                int iconTop = viewHolder.itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                int iconMargin = (itemHeight - intrinsicHeight) / 2;
+                int iconLeft = viewHolder.itemView.getRight() - iconMargin - intrinsicWidth;
+                int iconRight = viewHolder.itemView.getRight() - iconMargin;
+                int iconBottom = iconTop + intrinsicHeight;
+
+                // Draw the delete icon
+                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                // compute top and left margin to the view bounds
+                icon.draw(c);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
             /**
