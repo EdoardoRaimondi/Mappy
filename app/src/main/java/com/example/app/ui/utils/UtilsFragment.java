@@ -28,6 +28,7 @@ import com.example.app.HomeActivity;
 import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
+import com.example.app.factories.UrlFactory;
 import com.example.app.factories.ViewModelFactory;
 import com.example.app.finals.HomeMode;
 import com.example.app.finals.LocationFinder;
@@ -36,6 +37,7 @@ import com.example.app.finals.NearbyRequestType;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -167,16 +169,9 @@ public class UtilsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isViewMode) { //if the button has direction image
-                    // obtain home coordinates
-                    SharedPreferences preferences =
-                            getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
-                    double homeLat = Double.parseDouble(preferences.getString(HomeActivity.HOME_LAT, "0.0"));
-                    double homeLng = Double.parseDouble(preferences.getString(HomeActivity.HOME_LNG, "0.0"));
-                    // launch google maps app
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + homeLat + "," + homeLng);
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    startActivity(mapIntent);
+                    //Launch google maps app
+                    Uri gmmIntentUri = UrlFactory.createDirectionsUrl(homeLat, homeLng);
+                    startActivity(IntentFactory.createGoogleMapsDirectionsIntent(getContext(), gmmIntentUri));
                 }
                 else{ //the button has home image
                     Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.setMode);
@@ -193,23 +188,12 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public boolean onLongClick(View v) {
-                SharedPreferences preferences =
-                        getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
-                double homeLat = Double.parseDouble(preferences.getString(HomeActivity.HOME_LAT, "0.0"));
-                double homeLng = Double.parseDouble(preferences.getString(HomeActivity.HOME_LNG, "0.0"));
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.remove(HomeActivity.HOME_LAT);
-                editor.remove(HomeActivity.HOME_LNG);
-                editor.apply();
                 setHomeButton(home);
-                Snackbar.make(root.findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
+                Snackbar.make(getActivity().findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
                         .setAction(getString(R.string.undo), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                editor.putString(HomeActivity.HOME_LAT, String.valueOf(homeLat));
-                                editor.putString(HomeActivity.HOME_LNG, String.valueOf(homeLng));
-                                editor.apply();
-                                home.setImageResource(R.drawable.ic_direction);
+                                setDirectionsButton(home);
                             }
                         })
                         .show();
