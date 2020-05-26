@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Random;
 
@@ -191,13 +193,26 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public boolean onLongClick(View v) {
-                SharedPreferences preferences = getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+                SharedPreferences preferences =
+                        getActivity().getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+                double homeLat = Double.parseDouble(preferences.getString(HomeActivity.HOME_LAT, "0.0"));
+                double homeLng = Double.parseDouble(preferences.getString(HomeActivity.HOME_LNG, "0.0"));
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.remove(HomeActivity.HOME_LAT);
                 editor.remove(HomeActivity.HOME_LNG);
                 editor.apply();
-                
                 setHomeButton(home);
+                Snackbar.make(root.findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.undo), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                editor.putString(HomeActivity.HOME_LAT, String.valueOf(homeLat));
+                                editor.putString(HomeActivity.HOME_LNG, String.valueOf(homeLng));
+                                editor.apply();
+                                home.setImageResource(R.drawable.ic_direction);
+                            }
+                        })
+                        .show();
                 return true;
             }
         });
