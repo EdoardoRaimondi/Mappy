@@ -24,7 +24,7 @@ import java.util.LinkedList;
  */
 public class SearchFragment extends Fragment {
 
-    private final LinkedList<String> mPlaceList = new LinkedList<>();
+    private final LinkedList<ItemAdapter> mPlaceList = new LinkedList<>();
 
     /**
      * Callback when the fragment is visible

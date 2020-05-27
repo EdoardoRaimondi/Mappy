@@ -3,9 +3,11 @@ package com.example.app.ui.search;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.app.R;
@@ -17,8 +19,7 @@ import java.util.LinkedList;
 public class PlaceListAdapter extends
         RecyclerView.Adapter<PlaceListAdapter.WordViewHolder> {
 
-    private final LinkedList<String> savedPlacesList;
-    private RequestPlaceAdapter requestPlaceAdapter;
+    private final LinkedList<ItemAdapter> savedPlacesList;
     private final LayoutInflater mInflater;
     private Context context;
     private int radius;
@@ -26,20 +27,19 @@ public class PlaceListAdapter extends
     /**
      * Adapter constructor
      * @param context the context of the caller
-     * @param wordList the list to adapt
+     * @param itemList the list to adapt
      * @param radius of research
      */
-    public PlaceListAdapter(Context context, LinkedList<String> wordList, int radius) {
+    public PlaceListAdapter(Context context, LinkedList<ItemAdapter> itemList, int radius) {
         mInflater = LayoutInflater.from(context);
-        requestPlaceAdapter = new RequestPlaceAdapter();
         this.context = context;
         this.radius = radius;
-        this.savedPlacesList = wordList;
+        this.savedPlacesList = itemList;
     }
 
-    class WordViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
-        public final TextView wordItemView;
+    class WordViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final TextView wordItemView;
+        final ImageView imageItemView;
         final PlaceListAdapter mAdapter;
 
         /**
@@ -53,6 +53,7 @@ public class PlaceListAdapter extends
         public WordViewHolder(View itemView, PlaceListAdapter adapter) {
             super(itemView);
             wordItemView = itemView.findViewById(R.id.place);
+            imageItemView = itemView.findViewById(R.id.img_item);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
         }
@@ -63,7 +64,7 @@ public class PlaceListAdapter extends
             int mPosition = getLayoutPosition();
 
             // Use that to access the affected item in mWordList.
-            String element = savedPlacesList.get(mPosition);
+            String element = savedPlacesList.get(mPosition).getText();
             // Change the word in the mWordList
             context.startActivity(IntentFactory.createNearbyRequestIntent(context, RequestPlaceAdapter.getAdaptedPlace(element), radius));
         }
@@ -112,9 +113,11 @@ public class PlaceListAdapter extends
     public void onBindViewHolder(PlaceListAdapter.WordViewHolder holder,
                                  int position) {
         // Retrieve the data for that position.
-        String mCurrent = savedPlacesList.get(position);
+        String currentName = savedPlacesList.get(position).getText();
+        int currentImage   = savedPlacesList.get(position).getImage();
         // Add the data to the view holder.
-        holder.wordItemView.setText(mCurrent);
+        holder.wordItemView.setText(currentName);
+        holder.imageItemView.setImageResource(currentImage);
     }
 
     /**

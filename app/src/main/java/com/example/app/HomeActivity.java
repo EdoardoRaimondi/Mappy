@@ -159,6 +159,7 @@ public class HomeActivity extends FragmentActivity implements
              */
             @Override
             public void onHomeSet() {
+                displayHome(homeLocation);
                 Snackbar.make(findViewById(android.R.id.content), getString(R.string.set_home_info), Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.want_button), new View.OnClickListener() {
                             @Override
@@ -181,8 +182,6 @@ public class HomeActivity extends FragmentActivity implements
             @Override
             public void onLocationSet(Location location) {
                 homeLocation = location;
-                Log.d("LOCATION", location.toString());
-                displayHome(homeLocation);
                 homeSet();
             }
         });

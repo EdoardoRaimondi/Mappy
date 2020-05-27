@@ -1,5 +1,8 @@
 package com.example.app.finals;
 
+import com.example.app.R;
+import com.example.app.ui.search.ItemAdapter;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,21 +28,54 @@ public class SearchPlaces {
     private static final String PHARMACY   = "PHARMACY";
 
     /**
-     * @return a collection of all the searchable places
+     * @return a collection of all the searchable places item
      */
-    public static Collection<String> getPlaceSearchList(){
-        Collection<String> mPlaceList = new LinkedList<>();
-        mPlaceList.add(RESTAURANT);
-        mPlaceList.add(PHARMACY);
-        mPlaceList.add(PARKING);
-        mPlaceList.add(GAS_STATION);
-        mPlaceList.add(TOURIST_ATTRACTION);
-        mPlaceList.add(MUSEUM);
-        mPlaceList.add(MOVIE_THEATER);
-        mPlaceList.add(PARK);
-        mPlaceList.add(SUPERMARKET);
-        mPlaceList.add(ZOO);
-        mPlaceList.add(ART_GALLERY);
+    public static Collection<ItemAdapter> getPlaceSearchList(){
+        Collection<ItemAdapter> mPlaceList = new LinkedList<>();
+        ItemAdapter itemR = new ItemAdapter();
+        itemR.setText(RESTAURANT);
+        itemR.setImage(R.drawable.restaurant);
+        mPlaceList.add(itemR);
+        ItemAdapter itemPh = new ItemAdapter();
+        itemPh.setText(PHARMACY);
+        itemPh.setImage(R.drawable.pharmacy);
+        mPlaceList.add(itemPh);
+        ItemAdapter itemPa = new ItemAdapter();
+        itemPa.setText(PARKING);
+        itemPa.setImage(R.drawable.parking);
+        mPlaceList.add(itemPa);
+        ItemAdapter itemG = new ItemAdapter();
+        itemG.setText(GAS_STATION);
+        itemG.setImage(R.drawable.gas_station);
+        mPlaceList.add(itemG);
+        ItemAdapter itemT = new ItemAdapter();
+        itemT.setText(TOURIST_ATTRACTION);
+        itemT.setImage(R.drawable.tourist_attraction);
+        mPlaceList.add(itemT);
+        ItemAdapter itemM = new ItemAdapter();
+        itemM.setText(MUSEUM);
+        itemM.setImage(R.drawable.museum);
+        mPlaceList.add(itemM);
+        ItemAdapter itemMo = new ItemAdapter();
+        itemMo.setText(MOVIE_THEATER);
+        itemMo.setImage(R.drawable.movie);
+        mPlaceList.add(itemMo);
+        ItemAdapter itemK = new ItemAdapter();
+        itemK.setText(PARK);
+        itemK.setImage(R.drawable.park);
+        mPlaceList.add(itemK);
+        ItemAdapter itemS = new ItemAdapter();
+        itemS.setText(SUPERMARKET);
+        itemS.setImage(R.drawable.supermarket);
+        mPlaceList.add(itemS);
+        ItemAdapter itemZ = new ItemAdapter();
+        itemZ.setText(ZOO);
+        itemZ.setImage(R.drawable.zoo);
+        mPlaceList.add(itemZ);
+        ItemAdapter itemA = new ItemAdapter();
+        itemA.setText(ART_GALLERY);
+        itemA.setImage(R.drawable.art_gallery);
+        mPlaceList.add(itemA);
         return mPlaceList;
     }
 

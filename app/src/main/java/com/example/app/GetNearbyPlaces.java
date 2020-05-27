@@ -34,7 +34,7 @@ public class GetNearbyPlaces extends AsyncTask<Object, String, String>{
     private String result;
     private GoogleMap mMap;
 
-    private OnResultSetListener         onResultSetListener;
+    private OnResultSetListener onResultSetListener;
 
     static List<MarkerOptions> markerList = new ArrayList<>(); //to save the state
 
