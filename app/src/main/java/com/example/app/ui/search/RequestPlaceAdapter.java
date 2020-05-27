@@ -30,7 +30,7 @@ public class RequestPlaceAdapter {
      * @return NearbyRequestType ready to be used in a url request
      * @throws NullPointerException if place isn't in {@link SearchPlaces}
      */
-    public static NearbyRequestType getAdaptedPlace(String place){
+    public NearbyRequestType getAdaptedPlace(String place){
         return adapter.get(place);
     }
 

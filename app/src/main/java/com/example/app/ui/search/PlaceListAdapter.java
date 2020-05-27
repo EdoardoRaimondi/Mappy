@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,11 +63,12 @@ public class PlaceListAdapter extends
         public void onClick(View view) {
             // Get the position of the item that was clicked.
             int mPosition = getLayoutPosition();
+            RequestPlaceAdapter requestPlaceAdapter = new RequestPlaceAdapter();
 
-            // Use that to access the affected item in mWordList.
+            //take the recycler view text
             String element = savedPlacesList.get(mPosition).getText();
-            // Change the word in the mWordList
-            context.startActivity(IntentFactory.createNearbyRequestIntent(context, RequestPlaceAdapter.getAdaptedPlace(element), radius));
+            //nearby searching
+            context.startActivity(IntentFactory.createNearbyRequestIntent(context, requestPlaceAdapter.getAdaptedPlace(element), radius));
         }
     }
 
