@@ -186,15 +186,18 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public boolean onLongClick(View v) {
+                final boolean[] hasUndo = {false};
                 setHomeButton(home);
                 Snackbar.make(getActivity().findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
                         .setAction(getString(R.string.undo), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 setDirectionsButton(home);
+                                hasUndo[0] = true;
                             }
                         })
                         .show();
+                if(!hasUndo[0]) deleteHomeLocation();
                 return true;
             }
         });
@@ -430,6 +433,17 @@ public class UtilsFragment extends Fragment {
         double homeLat = Double.parseDouble(shared.getString(HomeActivity.HOME_LAT, "0.0"));
         double homeLng = Double.parseDouble(shared.getString(HomeActivity.HOME_LNG, "0.0"));
         return new LatLng(homeLat,homeLng);
+    }
+
+    /**
+     * Delete home location
+     */
+    private void deleteHomeLocation(){
+        SharedPreferences shared = activity.getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove(HomeActivity.HOME_LAT);
+        editor.remove(HomeActivity.HOME_LNG);
+        editor.apply();
     }
 
 }
