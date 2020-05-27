@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -18,6 +19,8 @@ import com.example.app.finals.HomeMode;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.example.app.listeners.OnHomeSetListener;
+import com.example.app.listeners.OnLocationSetListener;
+import com.example.app.sensors.LocationFinder;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -44,20 +47,20 @@ import com.google.android.material.snackbar.Snackbar;
 public class HomeActivity extends FragmentActivity implements
         OnMapReadyCallback, BasicDialog.BasicDialogListener {
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private GoogleMap mMap;
     private MapView mapView;
 
     private static HomeMode mode;
 
     public Location homeLocation;
-    private LocationCallback locationCallback;
 
     public static final String SET_KEY = "set_key";
 
+    //Shared preference keys
     public static final String HOME_LAT = "home_lat";
     public static final String HOME_LNG = "home_long";
 
+    //Shared preference values
     private double homeLat = 0.0;
     private double homeLng = 0.0;
 
@@ -67,6 +70,7 @@ public class HomeActivity extends FragmentActivity implements
     private static final String HM_NOT_SET = "hm_not_set";
 
     private OnHomeSetListener onHomeSetListener;
+    private LocationFinder locationFinder = new LocationFinder();
 
     private void setOnHomeSetListener(OnHomeSetListener listener) {
         this.onHomeSetListener = listener;
@@ -90,8 +94,6 @@ public class HomeActivity extends FragmentActivity implements
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(HomeActivity.this);
     }
 
     /**
@@ -123,7 +125,8 @@ public class HomeActivity extends FragmentActivity implements
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 Intent intentInfo = getIntent();
-                mode = (HomeMode) intentInfo.getSerializableExtra(SET_KEY);
+                //Analyze the request mode type
+                HomeMode mode = (HomeMode) intentInfo.getSerializableExtra(SET_KEY);
                 if (mode != null) {
                     switch (mode) {
                         case setMode: //User want to set home
@@ -165,19 +168,6 @@ public class HomeActivity extends FragmentActivity implements
                         })
                         .show();
             }
-
-            /**
-             * Callback when home setting goes wrong
-             */
-            @Override
-            public void onHomeSetFailed() {
-                BasicDialog.BasicDialogBuilder homeSetFailedBuilder = new BasicDialog.BasicDialogBuilder(HM_NOT_SET);
-                homeSetFailedBuilder.setTitle(getString(R.string.oh_no));
-                homeSetFailedBuilder.setText(getString(R.string.unknown_err));
-                homeSetFailedBuilder.setTextForOkButton(getString(R.string.retry));
-                homeSetFailedBuilder.setTextForCancelButton(getString(R.string.cancel_button));
-                homeSetFailedBuilder.build().show(getSupportFragmentManager(), TAG);
-            }
         });
     }
 
@@ -187,38 +177,16 @@ public class HomeActivity extends FragmentActivity implements
      * If called twice, the home will be override
      */
     private void setHome() {
-        fusedLocationProviderClient.getLastLocation()
-                .addOnCompleteListener(new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
-                            homeLocation = task.getResult();
-                            if (homeLocation != null) {
-                                displayHome(homeLocation);
-                                //I advice the listener the home has been set correctly
-                                homeSet();
-                            } else {
-                                final LocationRequest locationRequest = MapsUtility.createLocationRequest();
-                                locationCallback = new LocationCallback() {
-                                    @Override
-                                    public void onLocationResult(LocationResult locationResult) {
-                                        super.onLocationResult(locationResult);
-                                        if (locationResult == null) {
-                                            return;
-                                        }
-                                        homeLocation = locationResult.getLastLocation();
-                                        displayHome(homeLocation);
-                                        homeSet();
-                                        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-                                    }
-                                };
-                                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                            }
-                        } else {
-                            homeSetFailed();
-                        }
-                    }
-                });
+        locationFinder.setOnLocationSetListener(new OnLocationSetListener() {
+            @Override
+            public void onLocationSet(Location location) {
+                homeLocation = location;
+                Log.d("LOCATION", location.toString());
+                displayHome(homeLocation);
+                homeSet();
+            }
+        });
+        locationFinder.findCurrentLocation(this);
     }
 
     /**
@@ -280,14 +248,6 @@ public class HomeActivity extends FragmentActivity implements
         if (onHomeSetListener != null) {
             onHomeSetListener.onHomeSet();
         }
-    }
-
-    /**
-     * Trigger the listener when something goes wrong
-     */
-    private void homeSetFailed() {
-        if (onHomeSetListener != null)
-            onHomeSetListener.onHomeSetFailed();
     }
 
     // DIALOGS LISTENERS

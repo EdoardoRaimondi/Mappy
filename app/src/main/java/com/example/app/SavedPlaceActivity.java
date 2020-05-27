@@ -32,6 +32,9 @@ import com.google.android.libraries.places.api.model.Place;
 
 import java.util.Objects;
 
+/**
+ * Map where a single saved place it is showed when clicked
+ */
 public class SavedPlaceActivity extends FragmentActivity implements
         OnMapReadyCallback {
 

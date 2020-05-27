@@ -211,11 +211,11 @@ public class UtilsFragment extends Fragment {
 
         //Set listener for save location button
         saveLocation.setOnClickListener(v -> {
-            locationFinder.findCurrentLocation(getContext());
             locationFinder.setOnLocationSetListener(location -> {
                 SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
                 setEditablePlaceName(place, mSavedViewModel);
             });
+            locationFinder.findCurrentLocation(getContext());
         });
 
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
