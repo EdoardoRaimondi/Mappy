@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
+import com.example.app.finals.SearchablePlace;
 
 import java.util.LinkedList;
 
@@ -66,9 +67,9 @@ public class PlaceListAdapter extends
             RequestPlaceAdapter requestPlaceAdapter = new RequestPlaceAdapter();
 
             //take the recycler view text
-            String element = savedPlacesList.get(mPosition).getText();
+            SearchablePlace placeType = savedPlacesList.get(mPosition).getType();
             //nearby searching
-            context.startActivity(IntentFactory.createNearbyRequestIntent(context, requestPlaceAdapter.getAdaptedPlace(element), radius));
+            context.startActivity(IntentFactory.createNearbyRequestIntent(context, requestPlaceAdapter.getAdaptedPlace(placeType), radius));
         }
     }
 
@@ -115,7 +116,7 @@ public class PlaceListAdapter extends
     public void onBindViewHolder(PlaceListAdapter.WordViewHolder holder,
                                  int position) {
         // Retrieve the data for that position.
-        String currentName = savedPlacesList.get(position).getText();
+        String currentName = savedPlacesList.get(position).getType().toString();
         int currentImage   = savedPlacesList.get(position).getImage();
         // Add the data to the view holder.
         holder.wordItemView.setText(currentName);

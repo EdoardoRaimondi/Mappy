@@ -3,7 +3,6 @@ package com.example.app.ui.search;
 import com.example.app.R;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.SearchablePlace;
-import com.example.app.ui.search.ItemAdapter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -62,10 +61,10 @@ public class SearchPlaces {
      * Build an itemAdapter for our recycler view
      * @return item build
      */
-    private static ItemAdapter buildAdapter(SearchablePlace place, int imageResource){
+    private static ItemAdapter buildAdapter(SearchablePlace type, int imageResource){
         ItemAdapter item = new ItemAdapter();
         item.setImage(imageResource);
-        item.setText(place.toString());
+        item.setType(type);
         return item;
     }
 }

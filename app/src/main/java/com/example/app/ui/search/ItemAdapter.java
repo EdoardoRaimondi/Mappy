@@ -1,23 +1,26 @@
 package com.example.app.ui.search;
 
+import com.example.app.finals.SearchablePlace;
+
 /**
  * Search recycler view element
  * Place name + icon
  */
 public class ItemAdapter {
     private int image;
-    private String text;
+    private SearchablePlace type;
 
     public void setImage(int image) {
         this.image = image;
     }
-    public void setText(String text) {
-        this.text = text;
+    public void setType(SearchablePlace type) {
+        this.type = type;
+
     }
     public int getImage() {
         return image;
     }
-    public String getText() {
-        return text;
+    public SearchablePlace getType() {
+        return type;
     }
 }
