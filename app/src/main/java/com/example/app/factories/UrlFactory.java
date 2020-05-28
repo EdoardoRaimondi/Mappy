@@ -2,8 +2,6 @@ package com.example.app.factories;
 
 import android.net.Uri;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
  * Factory to create all the necessary url and uri
  */

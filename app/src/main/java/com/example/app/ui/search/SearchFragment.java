@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.MainActivity;
 import com.example.app.R;
-import com.example.app.finals.SearchPlaces;
 
 import java.util.LinkedList;
 

@@ -1,7 +1,7 @@
 package com.example.app.ui.search;
 
 import com.example.app.finals.NearbyRequestType;
-import com.example.app.finals.SearchPlaces;
+import com.example.app.finals.SearchablePlace;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 public class RequestPlaceAdapter {
 
-    private static HashMap<String, NearbyRequestType> adapter = new HashMap<>();
+    private static HashMap<SearchablePlace, NearbyRequestType> adapter = new HashMap<>();
 
     /**
      * Adapter constructor.
