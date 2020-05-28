@@ -1,30 +1,21 @@
 package com.example.app;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.app.dialogs.BasicDialog;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.MarkerFactory;
-import com.example.app.finals.HomeMode;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.example.app.listeners.OnHomeSetListener;
-import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.sensors.LocationFinder;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
@@ -35,22 +26,16 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Maps where user can interact, set and view his home
  */
-public class HomeActivity extends FragmentActivity implements
-        OnMapReadyCallback, BasicDialog.BasicDialogListener {
+public class HomeActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     private MapView mapView;
-
-    private static HomeMode mode;
 
     public Location homeLocation;
 
@@ -59,15 +44,6 @@ public class HomeActivity extends FragmentActivity implements
     //Shared preference keys
     public static final String HOME_LAT = "home_lat";
     public static final String HOME_LNG = "home_long";
-
-    //Shared preference values
-    private double homeLat = 0.0;
-    private double homeLng = 0.0;
-
-    private static final String TAG = "HomeActivity";
-
-    private static final String HM_NULL    = "hm_null";
-    private static final String HM_NOT_SET = "hm_not_set";
 
     private OnHomeSetListener onHomeSetListener;
     private LocationFinder locationFinder = new LocationFinder();
@@ -84,9 +60,7 @@ public class HomeActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        SharedPreferences preferences = getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, MODE_PRIVATE);
-        homeLat = Double.parseDouble(preferences.getString(HOME_LAT, "0.0"));
-        homeLng = Double.parseDouble(preferences.getString(HOME_LNG, "0.0"));
+        // setting full screen activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -121,37 +95,23 @@ public class HomeActivity extends FragmentActivity implements
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                Intent intentInfo = getIntent();
-                //Analyze the request mode type
-                HomeMode mode = (HomeMode) intentInfo.getSerializableExtra(SET_KEY);
-                if (mode != null) {
-                    switch (mode) {
-                        case setMode: //User want to set home
-                            setHome();
-                            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                                /**
-                                 * Listener all session open in order to let the user set
-                                 * a home manually
-                                 * @param latLng of the user click
-                                 */
-                                @Override
-                                public void onMapLongClick(LatLng latLng) {
-                                    mMap.clear();
-                                    homeLocation.setLatitude(latLng.latitude);
-                                    homeLocation.setLongitude(latLng.longitude);
-                                    mMap.addMarker(MarkerFactory.createHomeMarker(latLng.latitude, latLng.longitude));
-                                }
-                            });
-                            break;
-                        case viewMode: //User want to view his last home
-                            viewHome();
-                            break;
-                    }
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            setHome();
+            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                /**
+                 * Listener all session open in order to let the user set
+                 * a home manually
+                 *
+                 * @param latLng of the user click
+                 */
+                @Override
+                public void onMapLongClick(LatLng latLng) {
+                    mMap.clear();
+                    homeLocation.setLatitude(latLng.latitude);
+                    homeLocation.setLongitude(latLng.longitude);
+                    mMap.addMarker(MarkerFactory.createHomeMarker(latLng.latitude, latLng.longitude));
                 }
-            }
+            });
         });
         setOnHomeSetListener(new OnHomeSetListener() {
             /**
@@ -161,12 +121,7 @@ public class HomeActivity extends FragmentActivity implements
             public void onHomeSet() {
                 displayHome(homeLocation);
                 Snackbar.make(findViewById(android.R.id.content), getString(R.string.set_home_info), Snackbar.LENGTH_INDEFINITE)
-                        .setAction(getString(R.string.want_button), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(IntentFactory.createLobbyReturn(getApplicationContext()));
-                            }
-                        })
+                        .setAction(getString(R.string.want_button), v -> startActivity(IntentFactory.createLobbyReturn(getApplicationContext())))
                         .show();
             }
         });
@@ -178,33 +133,11 @@ public class HomeActivity extends FragmentActivity implements
      * If called twice, the home will be override
      */
     private void setHome() {
-        locationFinder.setOnLocationSetListener(new OnLocationSetListener() {
-            @Override
-            public void onLocationSet(Location location) {
-                homeLocation = location;
-                homeSet();
-            }
+        locationFinder.setOnLocationSetListener(location -> {
+            homeLocation = location;
+            homeSet();
         });
         locationFinder.findCurrentLocation(this);
-    }
-
-    /**
-     * Method to see the last home set on the map.
-     * If user call this, before a home to be set,
-     * nothing is showed
-     */
-    private void viewHome() {
-        if (homeLat == 0.0 && homeLng == 0.0) {
-            BasicDialog.BasicDialogBuilder homeSetBuilder = new BasicDialog.BasicDialogBuilder(HM_NULL);
-            homeSetBuilder.setTitle("ARE YOU A HOMELESS?");
-            homeSetBuilder.setText("You need to set a home before, we don't make miracle");
-            homeSetBuilder.setTextForOkButton("SET HOME");
-            homeSetBuilder.build().show(getSupportFragmentManager(), TAG);
-        }
-        else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLat, homeLng), MapsParameters.DEFAULT_ZOOM));
-            mMap.addMarker(MarkerFactory.createHomeMarker(homeLat, homeLng));
-        }
     }
 
     /**
@@ -246,29 +179,6 @@ public class HomeActivity extends FragmentActivity implements
     private void homeSet() {
         if (onHomeSetListener != null) {
             onHomeSetListener.onHomeSet();
-        }
-    }
-
-    // DIALOGS LISTENERS
-
-    /**
-     * BasicDialog common listener.
-     * Manage user choice
-     * @param id     the identifier of dialog that was dismissed
-     * @param positiveButton the option chosen by user ( OK or SET IT MANUALLY )
-     */
-    public void onDialogResult(String id, boolean positiveButton) {
-        switch (id) {
-            case HM_NOT_SET: //dialog appeared after a home not set
-                if (!positiveButton) startActivity(IntentFactory.createLobbyReturn(this));
-                else {
-                    //User click "Retry"
-                    setHome();
-                }
-                break;
-            case HM_NULL:
-                setHome();
-                break;
         }
     }
 
