@@ -28,7 +28,6 @@ import com.example.app.R;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.factories.ViewModelFactory;
-import com.example.app.finals.HomeMode;
 import com.example.app.sensors.LocationFinder;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
@@ -50,6 +49,7 @@ public class UtilsFragment extends Fragment {
     private int degree = 0;
     private boolean fineRadius = false;
     private boolean isViewMode = false;
+    private boolean isSpinning = false;
 
     private static final String BAR_KEY = "bar_k";
 
@@ -120,34 +120,39 @@ public class UtilsFragment extends Fragment {
 
         //User click the wheel and it starts rotate
         wheel.setOnClickListener(v -> {
-            int oldDegree = degree % 360;
-            degree = random.nextInt(360) + 720;
-            RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
-                    RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                    RotateAnimation.RELATIVE_TO_SELF, 0.5f
-            );
-            rotate.setDuration(3600);
-            rotate.setFillAfter(true);
-            rotate.setInterpolator(new DecelerateInterpolator());
-            rotate.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
+            if(!isSpinning) {
+                isSpinning = true;
+                int oldDegree = degree % 360;
+                degree = random.nextInt(360) + 720;
+                RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
+                        RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                        RotateAnimation.RELATIVE_TO_SELF, 0.5f
+                );
+                rotate.setDuration(3600);
+                rotate.setFillAfter(true);
+                rotate.setInterpolator(new DecelerateInterpolator());
+                rotate.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
 
-                /**
-                 * Send a request depending on its final position
-                 * @param animation the animation
-                 */
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    sendRequest(360 - (degree % 360));
-                }
+                    /**
+                     * Send a request depending on its final position
+                     *
+                     * @param animation the animation
+                     */
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        sendRequest(360 - (degree % 360));
+                        isSpinning = false;
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            wheel.startAnimation(rotate);
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+                wheel.startAnimation(rotate);
+            }
         });
 
         /**
@@ -172,7 +177,7 @@ public class UtilsFragment extends Fragment {
                     startActivity(IntentFactory.createGoogleMapsDirectionsIntent(getContext(), gmmIntentUri));
                 }
                 else{ //the button has home image
-                    Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity(), HomeMode.setMode);
+                    Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity());
                     startActivity(setHomeIntent);
                 }
             }
@@ -188,15 +193,14 @@ public class UtilsFragment extends Fragment {
             public boolean onLongClick(View v) {
                 final boolean[] hasUndo = {false};
                 setHomeButton(home);
-                Snackbar.make(getActivity().findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.undo), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                if(getActivity() != null) {
+                    Snackbar.make(getActivity().findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
+                            .setAction(getString(R.string.undo), v1 -> {
                                 setDirectionsButton(home);
                                 hasUndo[0] = true;
-                            }
-                        })
-                        .show();
+                            })
+                            .show();
+                }
                 if(!hasUndo[0]) deleteHomeLocation();
                 return true;
             }

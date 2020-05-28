@@ -1,16 +1,13 @@
 package com.example.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.app.factories.MarkerFactory;
-import com.example.app.finals.HomeMode;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -24,7 +21,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

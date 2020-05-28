@@ -9,7 +9,6 @@ import com.example.app.HomeActivity;
 import com.example.app.MainActivity;
 import com.example.app.MapsActivity;
 import com.example.app.SavedPlaceActivity;
-import com.example.app.finals.HomeMode;
 import com.example.app.finals.NearbyRequestType;
 import com.google.android.libraries.places.api.model.Place;
 
@@ -57,13 +56,10 @@ public abstract class IntentFactory {
      * Method to create a intent in order to set
      * a marker in the current user position
      * @param context of the activity
-     * @param mode of the command (view or set)
      * @return the intent
      */
-    public static Intent createHomeRequest(Context context, HomeMode mode){
-        Intent intent = new Intent(context, HomeActivity.class);
-        intent.putExtra(HomeActivity.SET_KEY, mode);
-        return intent;
+    public static Intent createHomeRequest(Context context){
+        return new Intent(context, HomeActivity.class);
     }
 
     /**
