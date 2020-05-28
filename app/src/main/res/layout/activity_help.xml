@@ -37,10 +37,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="0"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="showNearbyPharmacy"
                 android:src="@drawable/pharmacy" />
@@ -56,57 +58,63 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="1"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="showNearbyPharmacy"
-                android:src="@drawable/pharmacy" />
+                android:onClick="showNearbyHospital"
+                android:src="@drawable/hospital" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="@string/pharmacy"
+                android:text="@string/hospital"
                 />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="showNearbyPharmacy"
-                android:src="@drawable/pharmacy" />
+                android:onClick="showNearbyPolice"
+                android:src="@drawable/police" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="@string/pharmacy"
+                android:text="@string/police"
                 />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="showNearbyPharmacy"
-                android:src="@drawable/pharmacy" />
+                android:onClick="showNearbyTaxi"
+                android:src="@drawable/taxi" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="@string/pharmacy"
+                android:text="@string/taxi"
                 />
         </LinearLayout>
 
