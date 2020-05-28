@@ -23,7 +23,7 @@ import java.util.LinkedList;
  */
 public class SearchFragment extends Fragment {
 
-    private final LinkedList<ItemAdapter> mPlaceList = new LinkedList<>();
+    private final LinkedList<SearchItem> mPlaceList = new LinkedList<>();
 
     /**
      * Callback when the fragment is visible
@@ -38,7 +38,7 @@ public class SearchFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_search, container, false);
 
         //Fill the search list
-        mPlaceList.addAll(SearchPlaces.getPlaceSearchList());
+        mPlaceList.addAll(SearchPlacesData.getPlaceSearchList());
 
         // 1. get a reference to recyclerView
         RecyclerView mRecyclerView = root.findViewById(R.id.recycler_view_search);

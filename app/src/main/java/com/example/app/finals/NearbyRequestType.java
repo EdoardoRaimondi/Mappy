@@ -1,7 +1,7 @@
 package com.example.app.finals;
 
 /**
- * Describe the type of nearby request. In order to distinguish them.
+ * Describe the type of nearby google request. In order to distinguish them.
  */
 public enum NearbyRequestType {
     night_club,

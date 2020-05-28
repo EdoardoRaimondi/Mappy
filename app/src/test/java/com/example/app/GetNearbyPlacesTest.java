@@ -77,7 +77,6 @@ public class GetNearbyPlacesTest {
 
         //Mock
         Mockito.doNothing().when(dummyGetNearbyPlaces).animateCamera(Mockito.any(LatLngBounds.Builder.class));
-        Mockito.doReturn(marker).when(dummyGetNearbyPlaces).createMarker(Mockito.any(LatLng.class), Mockito.anyString());
     }
 
 

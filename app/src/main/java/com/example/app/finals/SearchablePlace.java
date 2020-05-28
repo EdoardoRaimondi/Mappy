@@ -11,6 +11,6 @@ public enum SearchablePlace {
     SUPERMARKET,
     PARKING,
     GAS_STATION,
-    PHARMACY
-
+    PHARMACY,
+    NIGHT_CLUB
 }

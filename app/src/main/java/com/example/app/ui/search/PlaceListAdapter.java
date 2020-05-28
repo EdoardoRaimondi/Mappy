@@ -3,8 +3,6 @@ package com.example.app.ui.search;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,7 @@ import java.util.LinkedList;
 public class PlaceListAdapter extends
         RecyclerView.Adapter<PlaceListAdapter.WordViewHolder> {
 
-    private final LinkedList<ItemAdapter> savedPlacesList;
+    private final LinkedList<SearchItem> savedPlacesList;
     private final LayoutInflater mInflater;
     private Context context;
     private int radius;
@@ -32,7 +30,7 @@ public class PlaceListAdapter extends
      * @param itemList the list to adapt
      * @param radius of research
      */
-    public PlaceListAdapter(Context context, LinkedList<ItemAdapter> itemList, int radius) {
+    public PlaceListAdapter(Context context, LinkedList<SearchItem> itemList, int radius) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
         this.radius = radius;
@@ -64,7 +62,7 @@ public class PlaceListAdapter extends
         public void onClick(View view) {
             // Get the position of the item that was clicked.
             int mPosition = getLayoutPosition();
-            RequestPlaceAdapter requestPlaceAdapter = new RequestPlaceAdapter();
+            RequestAdapter requestPlaceAdapter = new RequestAdapter();
 
             //take the recycler view text
             SearchablePlace placeType = savedPlacesList.get(mPosition).getType();

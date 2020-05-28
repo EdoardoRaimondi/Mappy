@@ -1,27 +1,23 @@
 package com.example.app;
 
 import com.example.app.finals.NearbyRequestType;
-import com.example.app.ui.search.RequestPlaceAdapter;
+import com.example.app.finals.SearchablePlace;
+import com.example.app.ui.search.RequestAdapter;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class RequestPlaceAdapterTest {
 
-    private final static String RESTAURANT = "RESTAURANT";
-    private final static String NOT_EXIST  = "FLEX";
+
+    private RequestAdapter requestAdapter = new RequestAdapter();
 
     @Test
     public void getRestaurant(){
-        NearbyRequestType actual = RequestPlaceAdapter.getAdaptedPlace(RESTAURANT);
+        NearbyRequestType actual = requestAdapter.getAdaptedPlace(SearchablePlace.RESTAURANT);
         String expect = NearbyRequestType.restaurant.toString();
         assertEquals(actual.toString(), expect);
     }
-
-    @Test (expected = NullPointerException.class)
-    public void getPlace_notExist(){
-        RequestPlaceAdapter.getAdaptedPlace(NOT_EXIST);
-    }
-
 }
