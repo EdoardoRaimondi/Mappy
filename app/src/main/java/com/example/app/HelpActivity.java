@@ -46,4 +46,13 @@ public class HelpActivity extends AppCompatActivity {
         Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, 1000);
         startActivity(intent);
     }
+
+    /**
+     * Method to show the nearby taxi stations
+     * @param view button {@id taxi}
+     */
+    public void showNearbyPharmacy(View view){
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.pharmacy, 1000);
+        startActivity(intent);
+    }
 }

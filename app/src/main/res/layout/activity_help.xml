@@ -5,10 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/default_padding"
     tools:context=".HelpActivity">
 
     <TextView
-        android:id="@+id/welcomeLobby"
+        android:id="@+id/help_lobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/helper"
@@ -17,43 +18,98 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rapid_actions"
         />
 
-    <Button
-        android:id="@+id/hospital"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="HOSPITAL"
-        android:onClick="showNearbyHospital"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+    <GridLayout
+        android:id="@+id/rapid_actions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeLobby" />
+        app:layout_constraintTop_toBottomOf="@id/help_lobby"
+        android:columnCount="2"
+        android:rowCount="2">
 
-    <Button
-        android:id="@+id/police"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="POLICE"
-        android:onClick="showNearbyPolice"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/hospital"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeLobby" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/taxi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TAXI"
-        android:onClick="showNearbyTaxi"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeLobby" />
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="showNearbyPharmacy"
+                android:src="@drawable/pharmacy" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/pharmacy"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="showNearbyPharmacy"
+                android:src="@drawable/pharmacy" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/pharmacy"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="showNearbyPharmacy"
+                android:src="@drawable/pharmacy" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/pharmacy"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="showNearbyPharmacy"
+                android:src="@drawable/pharmacy" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/pharmacy"
+                />
+        </LinearLayout>
+
+    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
