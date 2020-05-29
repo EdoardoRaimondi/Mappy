@@ -24,14 +24,13 @@
     <GridLayout
         android:id="@+id/rapid_actions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/default_padding"
-        android:rowCount="2"
+        android:rowCount="3"
         android:columnCount="3"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sos_call"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/help_lobby">
 
@@ -50,12 +49,9 @@
                 app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/pharmacy"
-                android:textColor="@color/absoluteBlack"
-                android:textStyle="bold"
-                android:textAlignment="center" />
+                style="@style/Label"
+                />
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -72,12 +68,9 @@
                 app:backgroundTint="@color/colorPrimaryLight" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/hospital"
-                android:textColor="@color/absoluteBlack"
-                android:textStyle="bold"
-                android:textAlignment="center" />
+                style="@style/Label"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -95,12 +88,9 @@
                 app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/police"
-                android:textColor="@color/absoluteBlack"
-                android:textStyle="bold"
-                android:textAlignment="center" />
+                style="@style/Label"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -111,21 +101,35 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:onClick="showNearbyTaxi"
                 android:src="@drawable/taxi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/taxi"
-                android:textColor="@color/absoluteBlack"
-                android:textStyle="bold"
-                android:textAlignment="center" />
+                style="@style/Label"
+                />
         </LinearLayout>
 
     </GridLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/sos_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/default_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rapid_actions">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@drawable/ic_call"
+            style="@style/FloatStyle"
+            app:backgroundTint="@color/green_call"
+            android:layout_gravity="end"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
