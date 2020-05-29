@@ -17,7 +17,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +25,8 @@
             android:scaleY="1"
             android:layout_marginBottom="7dp"
             android:src="@drawable/indicator"
-            android:contentDescription="@string/indicator_description" />
+            android:contentDescription="@string/indicator_description"
+            />
         <ImageView
             android:id="@+id/wheel"
             android:layout_width="wrap_content"

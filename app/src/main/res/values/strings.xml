@@ -64,4 +64,6 @@
     <string name="hospital">HOSPITAL</string>
     <string name="police">POLICE</string>
     <string name="taxi">TAXI</string>
+    <string name="fine">fine</string>
+    <string name="scale">scale</string>
 </resources>
