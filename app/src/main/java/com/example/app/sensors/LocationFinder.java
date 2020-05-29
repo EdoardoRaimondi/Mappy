@@ -19,7 +19,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 /**
- * Provide an agile (less controlled) location finder
+ * Provide an agile (less controlled) location finder.
+ * If you need to get user location, just implement a {@link OnLocationSetListener}
+ * in your class. We will give it to you only when ready.
  */
 public class LocationFinder {
 

@@ -1,5 +1,9 @@
 package com.example.app.listeners;
 
+import com.google.android.libraries.places.api.model.Place;
+
+import java.util.List;
+
 /**
  * Query result listener interface
  */
@@ -7,7 +11,7 @@ public interface OnResultSetListener {
 
     /**
      * Callback when the result is loaded
-     * @param result to get
+     * @param nearbyPlaceList to get
      */
-    void onResultSet(String result);
+    void onResultSet(List<Place> nearbyPlaceList);
 }

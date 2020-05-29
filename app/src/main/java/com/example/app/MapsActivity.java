@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.IntentFactory;
+import com.example.app.factories.MarkerFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
@@ -38,6 +39,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -45,11 +47,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +98,7 @@ public class MapsActivity
     // instance restoring control variables
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers = new ArrayList<>();
+    private List<MarkerOptions> markerList = new ArrayList<>();
 
     private OnLocationSetListener onLocationSetListener;
 
@@ -157,8 +163,6 @@ public class MapsActivity
         // calling super class method
         super.onSaveInstanceState(savedInstanceState);
         // getting the list of found nearby places
-        List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        // only the array list titles will tell how many places by its size
         if(markerList.size() > 0) {
             String[] title = new String[markerList.size()];
             double[] lat = new double[markerList.size()];
@@ -302,30 +306,26 @@ public class MapsActivity
      * @param radius the radius to search
      * @param type the type of place to display
      */
-     private void showPlaces(final int radius, final NearbyRequestType type){
+     private void showPlaces(final int radius, final NearbyRequestType type) {
          setOnLocationSetListener(new OnLocationSetListener() {
              /**
               * Callback when the position is ready
+              *
               * @param location the centre of the research
               */
              @Override
              public void onLocationSet(Location location) {
                  //create the request
                  String url = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), type.toString(), radius);
-                 Object[] transferData = new Object[2];
-                 transferData[0] = mMap;
-                 transferData[1] = url;
+                 String[] transferData = new String[1];
+                 transferData[0] = url;
                  //the request will be downloaded and displayed
                  GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                  getNearbyPlaces.execute(transferData);
                  getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
-                     /**
-                      * Callback when the response result is ready
-                      * @param result to get
-                      */
                      @Override
-                     public void onResultSet(String result) {
-                         showResponseInfo(result);
+                     public void onResultSet(List<Place> nearbyPlaceList) {
+                         displayPlaces(nearbyPlaceList);
                      }
                  });
              }
@@ -488,5 +488,40 @@ public class MapsActivity
                 .show();
     }
 
+    /**
+     * Method to animate the camera
+     */
+    void animateCamera(LatLngBounds.Builder builder){
+        LatLngBounds bounds = builder.build();
+        int padding = 0; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+        mMap.animateCamera(cu);
+    }
+
+    /**
+     * Display nearby places
+     * @param nearbyPlaceList list of places to display
+     */
+    private void displayPlaces(List<Place> nearbyPlaceList){
+        if(nearbyPlaceList != null && !nearbyPlaceList.isEmpty()) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (int i = 0; i < nearbyPlaceList.size(); i++) {
+                //Extract the data
+                Place googleNearbyLocalPlace = nearbyPlaceList.get(i);
+                String placeName = googleNearbyLocalPlace.getName();
+                LatLng latLng = googleNearbyLocalPlace.getLatLng();
+                builder.include(latLng);
+
+                MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
+
+                markerList.add(markerOptions);
+                mMap.addMarker(markerOptions);
+
+            }
+            animateCamera(builder);
+            showResponseInfo(DataParser.STATUS);
+        }
+    }
 
 }

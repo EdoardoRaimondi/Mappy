@@ -29,13 +29,14 @@ public class DataParser implements MapJSonDataParser {
     private Place getSingleNearbyPlace(JSONObject googlePlaceJSON) {
         Place place = null;
         String placeName = "-NA-";
-        String vicinity = "-NA-";
+        String id = "-NA-";
         double latitude;
         double longitude;
         int priceLevel;
 
         try {
             placeName = googlePlaceJSON.getString("name");
+            id = googlePlaceJSON.getString("place_id");
             latitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat"));
             longitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng"));
             //reference = googlePlaceJSON.getString("reference");
@@ -45,12 +46,14 @@ public class DataParser implements MapJSonDataParser {
                         .setLatLng(new LatLng(latitude, longitude))
                         .setName(placeName)
                         .setPriceLevel(priceLevel)
+                        .setId(id)
                         .build();
             }
             else {
                 place = Place.builder()
                         .setLatLng(new LatLng(latitude, longitude))
                         .setName(placeName)
+                        .setId(id)
                         .build();
             }
         }

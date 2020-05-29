@@ -128,6 +128,7 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:src="@drawable/ic_call"
             style="@style/FloatStyle"
+            android:onClick="callPolice"
             app:backgroundTint="@color/green_call"
             android:layout_gravity="end"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
