@@ -54,13 +54,27 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/scale_radius"
+                    android:layout_marginEnd="@dimen/default_padding"
+                    android:textColor="@color/absoluteBlack"/>
 
                 <Switch
                     android:id="@+id/switcher"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:textOff="@string/scale_radius"
+                    android:textOn="@string/fine_radius"
+                    android:theme="@style/switchStyle"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="@string/fine_radius"
-                    />
+                    android:layout_marginStart="@dimen/default_padding"
+                    android:textColor="@color/absoluteBlack"/>
 
             </LinearLayout>
         </LinearLayout>

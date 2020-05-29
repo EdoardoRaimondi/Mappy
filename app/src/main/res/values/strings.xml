@@ -2,8 +2,17 @@
 <resources>
     <string name="app_name">App</string>
 
+    <!-- Fragments and activity -->
     <string name="help">Help</string>
     <string name="helper">How can we help you?</string>
+    <string name="pharmacy">PHARMACY</string>
+    <string name="hospital">HOSPITAL</string>
+    <string name="police">POLICE</string>
+    <string name="taxi">TAXI</string>
+    <string name="fine_radius">FINE</string>
+    <string name="scale_radius">SCALE</string>
+    <string name="new_place">New Place</string>
+    <string name="new_place_label">Insert new place name</string>
 
     <!-- Tabs for main activity -->
     <string name="title_utils">Utils</string>
@@ -61,9 +70,4 @@
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
     <string name="indicator_description">spinning wheel indicator</string>
 
-    <string name="pharmacy">PHARMACY</string>
-    <string name="hospital">HOSPITAL</string>
-    <string name="police">POLICE</string>
-    <string name="taxi">TAXI</string>
-    <string name="fine_radius">Fine</string>
 </resources>

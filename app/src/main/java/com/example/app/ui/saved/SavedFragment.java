@@ -1,5 +1,6 @@
 package com.example.app.ui.saved;
 
+import android.app.AlertDialog;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,11 +9,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,23 +22,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.app.R;
 import com.example.app.factories.ViewModelFactory;
 import com.example.app.saved_place_database.SavedPlace;
-
-import java.util.List;
+import com.example.app.sensors.LocationFinder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class SavedFragment extends Fragment {
 
     private SavedViewModel savedViewModel;
-    private RecyclerView mRecyclerView;
     private SavedListAdapter savedListAdapter;
 
+    private LocationFinder locationFinder = new LocationFinder();
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        
-        savedViewModel = ViewModelProviders.of(this, new ViewModelFactory(getActivity().getApplication())).get(SavedViewModel.class);
+
+        if(getActivity() != null) {
+            savedViewModel = ViewModelProviders.of(this,
+                    new ViewModelFactory(
+                            getActivity().getApplication())
+            ).get(SavedViewModel.class);
+        }
 
         View root = inflater.inflate(R.layout.fragment_saved, container, false);
 
+        final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
+        //Set listener for save location button
+        saveLocation.setOnClickListener(v -> {
+            locationFinder.setOnLocationSetListener(location -> {
+                SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
+                setEditablePlaceName(place, savedViewModel);
+            });
+            locationFinder.findCurrentLocation(getContext());
+        });
         // 1. get a reference to recyclerView
-        mRecyclerView = root.findViewById(R.id.recycler_view_saved);
+        RecyclerView mRecyclerView = root.findViewById(R.id.recycler_view_saved);
 
         // 2. set layoutManger
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -48,12 +64,7 @@ public class SavedFragment extends Fragment {
         mRecyclerView.setAdapter(savedListAdapter);
 
         //observe the change of the live data
-        savedViewModel.getAllPlaces().observe(getActivity(), new Observer<List<SavedPlace>>() {
-            @Override
-            public void onChanged(List<SavedPlace> savedPlaces) {
-                savedListAdapter.setPlace(savedPlaces);
-            }
-        });
+        savedViewModel.getAllPlaces().observe(getActivity(), savedPlaces -> savedListAdapter.setPlace(savedPlaces));
 
 
         /**
@@ -116,5 +127,28 @@ public class SavedFragment extends Fragment {
         }).attachToRecyclerView(mRecyclerView);
 
         return root;
+    }
+
+    /**
+     * Open a dialog to let user choose a name for that saved name
+     * @param place     that user saved
+     * @param viewModel to save it into the database
+     */
+    private void setEditablePlaceName(SavedPlace place, SavedViewModel viewModel){
+        EditText inputEditText = new EditText(getContext());
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle(getString(R.string.new_place))
+                .setMessage(getString(R.string.new_place_label))
+                .setView(inputEditText)
+                .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
+                    place.setPlaceName(inputEditText.getText().toString());
+                    viewModel.insert(place);
+                })
+                .setNegativeButton(getString(R.string.cancel_button), (dialog1, which) -> {
+                    //like never happened
+                    dialog1.dismiss();
+                })
+                .create();
+        dialog.show();
     }
 }
