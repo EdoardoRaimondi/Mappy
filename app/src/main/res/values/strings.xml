@@ -60,10 +60,10 @@
     <!-- Descriptions -->
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
     <string name="indicator_description">spinning wheel indicator</string>
+
     <string name="pharmacy">PHARMACY</string>
     <string name="hospital">HOSPITAL</string>
     <string name="police">POLICE</string>
     <string name="taxi">TAXI</string>
-    <string name="fine">fine</string>
-    <string name="scale">scale</string>
+    <string name="fine_radius">Fine</string>
 </resources>

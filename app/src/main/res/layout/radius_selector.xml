@@ -36,6 +36,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/initial"
                 android:textSize="@dimen/radius_text_size"
+                android:textColor="@color/absoluteBlack"
                 />
 
             <SeekBar
@@ -52,25 +53,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/scale"
-                    android:gravity="center_vertical"
-                    android:layout_marginEnd="@dimen/default_padding"
-                    />
+
 
                 <Switch
+                    android:id="@+id/switcher"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:text="@string/fine_radius"
                     />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/default_padding"
-                    android:text="@string/fine"
-                    android:gravity="center_vertical"/>
             </LinearLayout>
         </LinearLayout>
 

@@ -16,6 +16,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -92,8 +93,8 @@ public class UtilsFragment extends Fragment {
         //floating buttons
         final FloatingActionButton sos = root.findViewById(R.id.sos);
         final FloatingActionButton home = root.findViewById(R.id.home);
-        final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
-
+        //final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
+        final Switch switcher = root.findViewById(R.id.switcher);
         mSavedViewModel = ViewModelProviders.of(
                 this,
                 new ViewModelFactory(activity.getApplication())
@@ -117,6 +118,16 @@ public class UtilsFragment extends Fragment {
         txt = root.findViewById(R.id.text);
         fineIncrement();
         random = new Random();
+        switcher.setOnClickListener(v -> {
+            if(switcher.isChecked()){
+                root.findViewById(R.id.more).setVisibility(View.VISIBLE);
+                root.findViewById(R.id.less).setVisibility(View.VISIBLE);
+            }
+            else{
+                root.findViewById(R.id.more).setVisibility(View.INVISIBLE);
+                root.findViewById(R.id.less).setVisibility(View.INVISIBLE);
+            }
+        });
 
         //User click the wheel and it starts rotate
         wheel.setOnClickListener(v -> {
@@ -213,14 +224,14 @@ public class UtilsFragment extends Fragment {
         });
 
 
-        //Set listener for save location button
+        /*//Set listener for save location button
         saveLocation.setOnClickListener(v -> {
             locationFinder.setOnLocationSetListener(location -> {
                 SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
                 setEditablePlaceName(place, mSavedViewModel);
             });
             locationFinder.findCurrentLocation(getContext());
-        });
+        });*/
 
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             /**
