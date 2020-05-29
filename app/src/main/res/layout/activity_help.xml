@@ -27,12 +27,13 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="@dimen/default_padding"
+        android:rowCount="2"
+        android:columnCount="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/help_lobby"
-        android:columnCount="2"
-        android:rowCount="2">
+        app:layout_constraintTop_toBottomOf="@id/help_lobby">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -45,35 +46,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="showNearbyPharmacy"
-                android:src="@drawable/pharmacy" />
+                android:src="@drawable/pharmacy"
+                app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:text="@string/pharmacy"
-                />
+                android:textColor="@color/absoluteBlack"
+                android:textStyle="bold"
+                android:textAlignment="center" />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_row="0"
-            android:layout_column="1"
+            android:layout_column="2"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="showNearbyHospital"
-                android:src="@drawable/hospital" />
+                android:src="@drawable/hospital"
+                app:backgroundTint="@color/colorPrimaryLight" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:text="@string/hospital"
-                />
+                android:textColor="@color/absoluteBlack"
+                android:textStyle="bold"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,35 +91,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="showNearbyPolice"
-                android:src="@drawable/police" />
+                android:src="@drawable/police"
+                app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:text="@string/police"
-                />
+                android:textColor="@color/absoluteBlack"
+                android:textStyle="bold"
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_row="1"
-            android:layout_column="1"
+            android:layout_column="2"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="showNearbyTaxi"
-                android:src="@drawable/taxi" />
+                android:src="@drawable/taxi"
+                app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:text="@string/taxi"
-                />
+                android:textColor="@color/absoluteBlack"
+                android:textStyle="bold"
+                android:textAlignment="center" />
         </LinearLayout>
 
     </GridLayout>
