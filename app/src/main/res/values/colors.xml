@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="absoluteWhite">#FFFFFF</color>
+    <color name="absoluteBlack">#000000</color>
     <!-- Default theme palette-->
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryLight">#463700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <!-- Custom palette-->
     <color name="radius_button_color">#9CF669</color>
@@ -16,5 +18,6 @@
     <color name="seek_background_selected_main">#76ABE8</color>
     <color name="seek_background_selected_back">#9FBAED</color>
     <color name="add_location">#5F6A1D</color>
+    <color name="green_call">#30CD0C</color>
 
 </resources>

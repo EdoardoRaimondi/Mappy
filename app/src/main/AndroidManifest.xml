@@ -18,7 +18,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HelpActivity"></activity>
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/help"></activity>
         <activity android:name=".HomeActivity"></activity>
         <activity android:name=".SavedPlaceActivity"></activity>
         <!--

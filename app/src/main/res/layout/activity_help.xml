@@ -1,71 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/default_padding"
     tools:context=".HelpActivity">
 
     <TextView
-        android:id="@+id/welcomeLobby"
+        android:id="@+id/help_lobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="178dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="175dp"
-        android:layout_marginBottom="677dp"
-        android:text="How can we help you?"
+        android:text="@string/helper"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rapid_actions"
+        />
+
+    <GridLayout
+        android:id="@+id/rapid_actions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_padding"
+        android:rowCount="3"
+        android:columnCount="3"
+        app:layout_constraintBottom_toTopOf="@id/sos_call"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/help_lobby">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="showNearbyPharmacy"
+                android:src="@drawable/pharmacy"
+                app:backgroundTint="@color/colorPrimaryLight"/>
+
+            <TextView
+                android:text="@string/pharmacy"
+                style="@style/Label"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="showNearbyHospital"
+                android:src="@drawable/hospital"
+                app:backgroundTint="@color/colorPrimaryLight" />
+
+            <TextView
+                android:text="@string/hospital"
+                style="@style/Label"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="showNearbyPolice"
+                android:src="@drawable/police"
+                app:backgroundTint="@color/colorPrimaryLight"/>
+
+            <TextView
+                android:text="@string/police"
+                style="@style/Label"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="2"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:onClick="showNearbyTaxi"
+                android:src="@drawable/taxi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/colorPrimaryLight"/>
+
+            <TextView
+                android:text="@string/taxi"
+                style="@style/Label"
+                />
+        </LinearLayout>
+
+    </GridLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/sos_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/default_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/rapid_actions">
 
-    <Button
-        android:id="@+id/hospital"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="147dp"
-        android:layout_marginEnd="265dp"
-        android:layout_marginBottom="476dp"
-        android:text="HOSPITAL"
-        android:onClick="showNearbyHospital"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeLobby" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@drawable/ic_call"
+            style="@style/FloatStyle"
+            app:backgroundTint="@color/green_call"
+            android:layout_gravity="end"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <Button
-        android:id="@+id/police"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="147dp"
-        android:layout_marginEnd="69dp"
-        android:layout_marginBottom="476dp"
-        android:text="POLICE"
-        android:onClick="showNearbyPolice"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/hospital"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeLobby" />
-
-    <Button
-        android:id="@+id/taxi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="177dp"
-        android:layout_marginTop="351dp"
-        android:layout_marginEnd="168dp"
-        android:layout_marginBottom="272dp"
-        android:text="TAXI"
-        android:onClick="showNearbyTaxi"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeLobby" />
 </androidx.constraintlayout.widget.ConstraintLayout>

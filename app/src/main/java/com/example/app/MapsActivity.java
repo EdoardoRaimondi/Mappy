@@ -60,7 +60,6 @@ public class MapsActivity
         GoogleMap.OnInfoWindowLongClickListener{
 
     private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
-    private static final String GOOGLE_KEY         = "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
 
     private static final String TAG = "MapsActivity";
 
@@ -77,7 +76,6 @@ public class MapsActivity
 
     // basic dialogs ids
     private static final String OQL_ID = "oql_id";
-    private static final String UNK_ERR = "unk_err_id";
 
     private GoogleMap mMap;
     private LocationCallback locationCallback;
@@ -155,7 +153,7 @@ public class MapsActivity
      * @param savedInstanceState Bundle where to save places information
      */
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         // calling super class method
         super.onSaveInstanceState(savedInstanceState);
         // getting the list of found nearby places
@@ -221,24 +219,21 @@ public class MapsActivity
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                setDeviceLocation();
-                //Get button pressed information
-                Intent requestInfo = getIntent();
-                requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
-                radius = requestInfo.getIntExtra(RADIUS, 1000);
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            setDeviceLocation();
+            //Get button pressed information
+            Intent requestInfo = getIntent();
+            requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
+            radius = requestInfo.getIntExtra(RADIUS, 1000);
 
-                if(canRestore){
-                    mMap.clear();
-                    displayMarkers(restoreMarkers);
-                    restoreMarkers.clear();
-                    animateProgress(20,100,1000);
-                }
-                else {
-                    showPlaces(radius, requestType);
-                }
+            if(canRestore){
+                mMap.clear();
+                displayMarkers(restoreMarkers);
+                restoreMarkers.clear();
+                animateProgress(20,100,1000);
+            }
+            else {
+                showPlaces(radius, requestType);
             }
         });
     }
@@ -295,8 +290,8 @@ public class MapsActivity
     private String getUrl(double latitude, double longitude, String nearbyPlace, int radius) {
         String[] label = {"location", "radius", "type", "sensor", "key"};
         String location = "" + latitude + "," + longitude;
-        String[] value = {location, Integer.toString(radius), nearbyPlace, "true", GOOGLE_KEY};
-        String url = UrlFactory.createNearbyUrl(NEARBY_URL_DOMAIN, label, value);
+        String[] value = {location, Integer.toString(radius), nearbyPlace, "true", getResources().getString(R.string.google_maps_key)};
+        String url = UrlFactory.getRequest(NEARBY_URL_DOMAIN, label, value);
         // TODO: remove following line on production
         Log.d("GoogleMapsActivity", "url = " + url);
         return url;
@@ -473,7 +468,7 @@ public class MapsActivity
     public void onInfoWindowLongClick(final Marker marker) {
         new AlertDialog.Builder(this)
                 .setTitle("Do you want to save " + marker.getTitle() + " ?")
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     /**
                      * Save the place
                      * @param dialog selected
@@ -488,12 +483,7 @@ public class MapsActivity
                         mSavedViewModel.insert(place);
                     }
                 })
-                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
+                .setNegativeButton(getString(R.string.no), (dialog, id) -> dialog.cancel())
                 .create()
                 .show();
     }

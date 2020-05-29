@@ -65,7 +65,6 @@ public class SavedFragment extends Fragment {
                 return false;
             }
 
-
             @Override
             public void onChildDraw (@NonNull Canvas c,
                                      @NonNull RecyclerView recyclerView,

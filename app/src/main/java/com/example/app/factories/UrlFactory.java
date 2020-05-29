@@ -14,7 +14,7 @@ public abstract class UrlFactory {
      * @param value value to append
      * @return the string representing the url request
      */
-   public static String createNearbyUrl(String domain, String[] label, String[] value) {
+   public static String getRequest(String domain, String[] label, String[] value) {
         StringBuilder url = new StringBuilder(domain);
         url.append('?');
         for(int i = 0; i < label.length; i++){

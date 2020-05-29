@@ -2,7 +2,6 @@ package com.example.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -170,13 +169,6 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
      */
     public void setRadius(int radius){
         this.radius = radius;
-    }
-
-    /**
-     * Getter method of common Coordinator box
-     */
-    public final CoordinatorLayout getCoord(){
-        return findViewById(R.id.coordinator);
     }
 
     // DIALOGS RESULT LISTENER

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.example.app.factories.IntentFactory;
 import com.example.app.finals.NearbyRequestType;
@@ -14,6 +15,8 @@ public class HelpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // setting main activity as full screen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_help);
     }
 
@@ -41,6 +44,15 @@ public class HelpActivity extends AppCompatActivity {
      */
     public void showNearbyTaxi(View view){
         Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, 1000);
+        startActivity(intent);
+    }
+
+    /**
+     * Method to show the nearby taxi stations
+     * @param view button {@id taxi}
+     */
+    public void showNearbyPharmacy(View view){
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.pharmacy, 1000);
         startActivity(intent);
     }
 }
