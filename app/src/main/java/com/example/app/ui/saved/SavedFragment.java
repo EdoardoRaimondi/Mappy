@@ -2,15 +2,15 @@ package com.example.app.ui.saved;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -74,7 +74,7 @@ public class SavedFragment extends Fragment {
         savedViewModel.getAllPlaces().observe(getActivity(), savedPlaces -> savedListAdapter.setPlace(savedPlaces));
 
 
-        /**
+        /*
          * Manage user moves on the recycler view items
          */
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -103,21 +103,25 @@ public class SavedFragment extends Fragment {
                 );
                 background.draw(c);
 
-                Drawable icon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete);
-                int intrinsicHeight = icon.getIntrinsicHeight();
-                int intrinsicWidth = icon.getIntrinsicWidth();
+                if(getActivity() != null) {
+                    Drawable icon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete);
+                    if(icon != null) {
+                        int intrinsicHeight = icon.getIntrinsicHeight();
+                        int intrinsicWidth = icon.getIntrinsicWidth();
 
-                // Calculate position of delete icon
-                int iconTop = viewHolder.itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                int iconMargin = (itemHeight - intrinsicHeight) / 2;
-                int iconLeft = viewHolder.itemView.getRight() - iconMargin - intrinsicWidth;
-                int iconRight = viewHolder.itemView.getRight() - iconMargin;
-                int iconBottom = iconTop + intrinsicHeight;
+                        // Calculate position of delete icon
+                        int iconTop = viewHolder.itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                        int iconMargin = (itemHeight - intrinsicHeight) / 2;
+                        int iconLeft = viewHolder.itemView.getRight() - iconMargin - intrinsicWidth;
+                        int iconRight = viewHolder.itemView.getRight() - iconMargin;
+                        int iconBottom = iconTop + intrinsicHeight;
 
-                // Draw the delete icon
-                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
-                // compute top and left margin to the view bounds
-                icon.draw(c);
+                        // Draw the delete icon
+                        icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                        // compute top and left margin to the view bounds
+                        icon.draw(c);
+                    }
+                }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
@@ -142,12 +146,15 @@ public class SavedFragment extends Fragment {
      * @param viewModel to save it into the database
      */
     private void setEditablePlaceName(SavedPlace place, SavedViewModel viewModel){
-        EditText inputEditText = new EditText(getContext());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        @SuppressLint("InflateParams")
+        View view = inflater.inflate(R.layout.text_dialog, null);
+        EditText inputEditText = view.findViewById(R.id.input_text);
 
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle(getString(R.string.new_place))
                 .setMessage(getString(R.string.new_place_label))
-                .setView(inputEditText)
+                .setView(view)
                 .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
                     place.setPlaceName(capitalizeFirstChars(inputEditText.getText().toString()));
                     Date today = Calendar.getInstance().getTime();
@@ -169,7 +176,7 @@ public class SavedFragment extends Fragment {
      */
     public native String capitalizeFirstChars(String str);
 
-    /**
+    /*
      * Library loading
      */
     static {
