@@ -1,14 +1,12 @@
 package com.example.app.ui.saved;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.saved_place_database.SavedPlaceRepository;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 

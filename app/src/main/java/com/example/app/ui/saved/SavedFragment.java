@@ -25,6 +25,9 @@ import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.sensors.LocationFinder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class SavedFragment extends Fragment {
 
     private SavedViewModel savedViewModel;
@@ -143,6 +146,8 @@ public class SavedFragment extends Fragment {
                 .setView(inputEditText)
                 .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
                     place.setPlaceName(inputEditText.getText().toString());
+                    Date today = Calendar.getInstance().getTime();
+                    place.setDateSaved(today.toString());
                     viewModel.insert(place);
                 })
                 .setNegativeButton(getString(R.string.cancel_button), (dialog1, which) -> {

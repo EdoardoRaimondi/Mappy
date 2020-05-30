@@ -4,7 +4,8 @@
     android:layout_height="?attr/listPreferredItemHeight"
     android:layout_margin="4dp"
     android:weightSum="100"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/box">
 
     <ImageView
         android:id="@+id/img_item"

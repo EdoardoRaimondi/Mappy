@@ -4,13 +4,30 @@
     android:layout_height="?attr/listPreferredItemHeight"
     android:layout_margin="4dp"
     android:weightSum="100"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/box">
 
     <TextView
-       android:id="@+id/place"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
+        android:id="@+id/place"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="80"
-       android:textColor="@color/absoluteBlack"
-       android:textSize="22sp" />
+        android:gravity="start|center_vertical"
+        android:textStyle="bold"
+        android:textColor="@color/absoluteBlack"
+        android:textSize="22sp"
+        android:paddingStart="@dimen/default_padding"
+        android:paddingEnd="0dp"/>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="80"
+        android:gravity="end|center_vertical"
+        android:textStyle="bold"
+        android:textColor="@color/absoluteBlack"
+        android:textSize="15sp"
+        android:paddingEnd="@dimen/default_padding"
+        android:paddingStart="0dp"/>
 </LinearLayout>

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.7"
-        android:gravity="center"
+        android:gravity="center|center_vertical"
         android:orientation="vertical">
 
         <ImageView
@@ -23,7 +23,6 @@
             android:scaleType="fitXY"
             android:scaleX="1"
             android:scaleY="1"
-            android:layout_marginBottom="7dp"
             android:src="@drawable/indicator"
             android:contentDescription="@string/indicator_description"
             />
@@ -33,8 +32,8 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/wheel_descr"
             android:scaleType="fitXY"
-            android:scaleX="1.1"
-            android:scaleY="1.1"
+            android:scaleX="1"
+            android:scaleY="1"
             android:src="@drawable/speriamo" />
 
     </LinearLayout>

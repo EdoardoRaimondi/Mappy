@@ -37,7 +37,7 @@
             style="@style/FloatStyle"
             android:src="@drawable/ic_add_location"
             app:backgroundTint="@color/add_location"
-            android:layout_gravity="end"
+            android:layout_gravity="center_horizontal"
             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
