@@ -1,5 +1,6 @@
 package com.example.app.ui.saved;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -143,6 +144,7 @@ public class SavedFragment extends Fragment {
      */
     private void setEditablePlaceName(SavedPlace place, SavedViewModel viewModel){
         EditText inputEditText = new EditText(getContext());
+
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle(getString(R.string.new_place))
                 .setMessage(getString(R.string.new_place_label))
