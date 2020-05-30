@@ -51,7 +51,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MapsActivity
@@ -467,7 +471,7 @@ public class MapsActivity
     @Override
     public void onInfoWindowLongClick(final Marker marker) {
         new AlertDialog.Builder(this)
-                .setTitle("Do you want to save " + marker.getTitle() + " ?")
+                .setTitle(getString(R.string.save_place) + marker.getTitle() + " ?")
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     /**
                      * Save the place
@@ -478,6 +482,9 @@ public class MapsActivity
                     public void onClick(DialogInterface dialog, int id) {
                         //create entity to add
                         SavedPlace place = new SavedPlace(marker.getPosition().latitude, marker.getPosition().longitude);
+                        Date today = Calendar.getInstance().getTime();
+                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        place.setDateSaved(formatter.format(today));
                         place.setPlaceName(marker.getTitle());
                         //add it to the database
                         mSavedViewModel.insert(place);

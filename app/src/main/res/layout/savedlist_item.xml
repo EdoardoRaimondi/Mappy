@@ -14,8 +14,8 @@
         android:layout_weight="80"
         android:gravity="start|center_vertical"
         android:textStyle="bold"
-        android:textColor="@color/absoluteBlack"
-        android:textSize="22sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
         android:paddingStart="@dimen/default_padding"
         android:paddingEnd="0dp"/>
 
@@ -26,7 +26,7 @@
         android:layout_weight="80"
         android:gravity="end|center_vertical"
         android:textStyle="bold"
-        android:textColor="@color/absoluteBlack"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="15sp"
         android:paddingEnd="@dimen/default_padding"
         android:paddingStart="0dp"/>

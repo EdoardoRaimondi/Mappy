@@ -61,6 +61,7 @@
     <string name="unknown_err">Something really strange happened. Try again please</string>
     <string name="no_conn">What did you expect, we need an Internet provider to search places nearby you. Activate now?</string>
     <string name="retry">RETRY</string>
+    <string name="save_place">Do you want to save </string>
 
     <!-- Toasts -->
     <string name="no_gps_permission">Well, no GPS means nothing to display</string>

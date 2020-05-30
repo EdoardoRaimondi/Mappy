@@ -20,4 +20,6 @@
     <color name="add_location">#5F6A1D</color>
     <color name="green_call">#30CD0C</color>
 
+    <color name="warningColor">#E91E63</color>
+
 </resources>

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,9 @@ import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.sensors.LocationFinder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SavedFragment extends Fragment {
@@ -91,7 +94,7 @@ public class SavedFragment extends Fragment {
                 int itemHeight = viewHolder.itemView.getBottom() - viewHolder.itemView.getTop();
 
                 // Draw the red delete background
-                final ColorDrawable background = new ColorDrawable(Color.RED);
+                final ColorDrawable background = new ColorDrawable(getResources().getColor(R.color.warningColor));
                 background.setBounds(
                         (int)(viewHolder.itemView.getRight() + dX),
                         viewHolder.itemView.getTop(),
@@ -147,7 +150,8 @@ public class SavedFragment extends Fragment {
                 .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
                     place.setPlaceName(inputEditText.getText().toString());
                     Date today = Calendar.getInstance().getTime();
-                    place.setDateSaved(today.toString());
+                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    place.setDateSaved(formatter.format(today));
                     viewModel.insert(place);
                 })
                 .setNegativeButton(getString(R.string.cancel_button), (dialog1, which) -> {
