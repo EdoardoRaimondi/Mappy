@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.iterators;
 
 import com.example.app.interfaces.StoppableListIterator;
 import com.google.android.libraries.places.api.model.Place;

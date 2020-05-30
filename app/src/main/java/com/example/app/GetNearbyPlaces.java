@@ -1,10 +1,9 @@
 package com.example.app;
 
-import android.location.Location;
 import android.os.AsyncTask;
 
-import com.example.app.factories.UrlFactory;
 import com.example.app.finals.ResponseStatus;
+import com.example.app.iterators.StoppablePlaceIterator;
 import com.example.app.listeners.OnResultSetListener;
 import com.google.android.libraries.places.api.model.Place;
 
@@ -14,7 +13,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.ListIterator;
 
 
 /**

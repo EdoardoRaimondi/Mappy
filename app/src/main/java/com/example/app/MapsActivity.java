@@ -24,6 +24,7 @@ import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
+import com.example.app.iterators.StoppablePlaceIterator;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnResultSetListener;
 import com.example.app.saved_place_database.SavedPlace;
@@ -50,9 +51,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 
 import java.text.DateFormat;
@@ -61,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 public class MapsActivity
         extends FragmentActivity

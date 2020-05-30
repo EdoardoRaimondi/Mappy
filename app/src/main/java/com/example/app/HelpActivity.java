@@ -1,6 +1,5 @@
 package com.example.app;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -8,10 +7,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -19,6 +15,7 @@ import android.widget.Toast;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.NearbyRequestType;
+import com.example.app.iterators.StoppablePlaceIterator;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnPhoneNumberGetListener;
 import com.example.app.listeners.OnResultSetListener;
@@ -30,7 +27,6 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 
 public class HelpActivity extends AppCompatActivity {
 

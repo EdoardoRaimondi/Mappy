@@ -1,9 +1,6 @@
 package com.example.app.listeners;
 
-import com.example.app.StoppablePlaceIterator;
-import com.google.android.libraries.places.api.model.Place;
-
-import java.util.ListIterator;
+import com.example.app.iterators.StoppablePlaceIterator;
 
 /**
  * Query result listener interface
