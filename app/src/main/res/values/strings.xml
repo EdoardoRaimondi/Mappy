@@ -27,7 +27,7 @@
 
     <!-- Snack bar -->
     <string name="no_gps">Your GPS sensor is turned off.\nWould you like to switch it on now?</string>
-    <string name="no_internet">Your device is not connected to any Internet provider.\nWould you like to connect?</string>
+    <string name="no_internet">Your device is not connected.\nConnect now?</string>
     <string name="yes">YES</string>
     <string name="home_delete">Home coordinates deleted.</string>
     <string name="undo">UNDO</string>

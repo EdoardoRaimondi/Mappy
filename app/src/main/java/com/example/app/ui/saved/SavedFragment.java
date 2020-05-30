@@ -52,6 +52,7 @@ public class SavedFragment extends Fragment {
             });
             locationFinder.findCurrentLocation(getContext());
         });
+
         // 1. get a reference to recyclerView
         RecyclerView mRecyclerView = root.findViewById(R.id.recycler_view_saved);
 
