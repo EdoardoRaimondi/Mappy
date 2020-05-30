@@ -40,7 +40,6 @@ public class SavedFragment extends Fragment {
     private LocationFinder locationFinder = new LocationFinder();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         if(getActivity() != null) {
             savedViewModel = ViewModelProviders.of(this,
                     new ViewModelFactory(
@@ -150,7 +149,7 @@ public class SavedFragment extends Fragment {
                 .setMessage(getString(R.string.new_place_label))
                 .setView(inputEditText)
                 .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
-                    place.setPlaceName(inputEditText.getText().toString());
+                    place.setPlaceName(capitalizeFirstChars(inputEditText.getText().toString()));
                     Date today = Calendar.getInstance().getTime();
                     DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                     place.setDateSaved(formatter.format(today));
@@ -162,5 +161,18 @@ public class SavedFragment extends Fragment {
                 })
                 .create();
         dialog.show();
+    }
+
+    /**
+     * Capitalizer for string, put every first char as capital
+     * @param str to parse
+     */
+    public native String capitalizeFirstChars(String str);
+
+    /**
+     * Library loading
+     */
+    static {
+        System.loadLibrary("libmain_native_lib");
     }
 }

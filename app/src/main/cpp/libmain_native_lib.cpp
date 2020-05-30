@@ -3,42 +3,33 @@
 
 extern "C" {
 
-JNIEXPORT jint
-JNICALL Java_com_example_app_ui_utils_UtilsFragment_parseRadius(JNIEnv * env, jobject obj, jstring radius){
-    // constants
-    #define KM_SEPARATOR 'k'
-    #define KM_TO_M 1000
-    // local variables
-    const char *nativeString = env->GetStringUTFChars(radius, 0);
-    int decodedRadius = 0;
-    char buffer[10]; // to contain the number
-    int i;
-    // script
-    for(i=0; nativeString[i]!=KM_SEPARATOR; i++){
-        buffer[i] = nativeString[i];
-    }
-    buffer[i] = 0;
-    decodedRadius = atoi(buffer) * KM_TO_M;
-    return decodedRadius;
-    }
-
     JNIEXPORT jstring
     JNICALL Java_com_example_app_ui_saved_SavedFragment_capitalizeFirstChars(JNIEnv *env, jobject obj, jstring str){
         // local variables
-        const char *nativeString = env->GetStringUTFChars(str, 0);
-        unsigned int length = 0;
-        for(length; nativeString[length]; length++){
+        const char *nativeString = env -> GetStringUTFChars(str, NULL);
+        unsigned int length;
+        unsigned int i;
+        // getting string length
+        for(length = 0; nativeString[length]; length++){
         }
+        // copying str in string
         char string[length];
-        for(length; nativeString[length]; length++){
-            string[length] = nativeString[length];
+        for(i = 0; nativeString[i]; i++){
+            string[i] = nativeString[i];
         }
-        for(length; string[length]; length++){
-            if(string[length] == ' ' && length > 0 && (string[length-1] >= 'a' && string[length-1] <= 'z')){
-                string[length-1] = (string[length-1] - 'a') + 'A';
+        string[i] = '\0';
+        // free memory space for str
+        env -> ReleaseStringUTFChars(str, nativeString);
+        // script
+        if(length > 0 && string[0] >= 'a' && string[0] <= 'z'){
+            string[0] = (string[0] - 'a') + 'A';
+        }
+        for(i = 1; string[i]; i++){
+            if(string[i] == ' ' && i < length && (string[i+1] >= 'a' && string[i+1] <= 'z')){
+                string[i+1] = (string[i+1] - 'a') + 'A';
             }
         }
-        return env->NewStringUTF(string);
+        return env -> NewStringUTF(string);
     }
-}
 
+}

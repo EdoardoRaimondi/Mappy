@@ -495,5 +495,4 @@ public class MapsActivity
                 .show();
     }
 
-
 }
