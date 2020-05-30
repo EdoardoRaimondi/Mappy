@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.iterators.StoppablePlaceIterator;
 import com.example.app.listeners.OnResultSetListener;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.Place;
 
 
@@ -12,6 +14,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,6 +26,8 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
     private String googlePlaceData, url;
 
     private OnResultSetListener onResultSetListener;
+
+    public static List<MarkerOptions> markerList = new ArrayList<>();
 
     /**
      * Constructor in order to set null the listener

@@ -11,7 +11,9 @@ import java.util.ListIterator;
  */
 public class StoppablePlaceIterator implements StoppableListIterator {
 
-    ListIterator<Place> iterator;
+    private ListIterator<Place> iterator;
+    private boolean hasBeenStopped = false;
+
 
     public StoppablePlaceIterator(List<Place> list){
         iterator = list.listIterator();
@@ -22,10 +24,12 @@ public class StoppablePlaceIterator implements StoppableListIterator {
      */
     @Override
     public void stopIteration() {
-        //terrible but I really don't know what else do
-        while(iterator.hasNext()){
-            iterator.next();
-        }
+        hasBeenStopped = true;
+    }
+
+    @Override
+    public boolean hasBeenStopped() {
+        return hasBeenStopped;
     }
 
     @Override

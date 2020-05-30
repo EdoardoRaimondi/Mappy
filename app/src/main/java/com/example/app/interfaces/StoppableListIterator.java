@@ -5,7 +5,12 @@ import java.util.Iterator;
 public interface StoppableListIterator<T> extends Iterator<T> {
 
     /**
-     * Stop the iteration in a while
+     * Stop the iterator
      */
     void stopIteration();
+
+    /**
+     * @return true if it has been stopped
+     */
+    boolean hasBeenStopped();
 }

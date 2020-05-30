@@ -143,7 +143,7 @@ public class HelpActivity extends AppCompatActivity {
                     @Override
                     public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
                         if(!nearbyPlaceListIterator.hasNext()) phoneNumberSearchFailed();
-                        while (nearbyPlaceListIterator.hasNext()) {
+                        while (nearbyPlaceListIterator.hasNext() && !nearbyPlaceListIterator.hasBeenStopped()) {
                             Place currentPlace = nearbyPlaceListIterator.next();
                             PlacesClient placesClient = Places.createClient(getApplicationContext());
                             String placeId = currentPlace.getId();

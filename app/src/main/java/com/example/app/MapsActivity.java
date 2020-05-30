@@ -66,8 +66,6 @@ public class MapsActivity
         implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener,
         GoogleMap.OnInfoWindowLongClickListener{
 
-    private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
-
     private static final String TAG = "MapsActivity";
 
     // activity connectors
@@ -99,8 +97,7 @@ public class MapsActivity
 
     // instance restoring control variables
     private boolean canRestore = false;
-    private List<MarkerOptions> restoreMarkers = new ArrayList<>();
-    private List<MarkerOptions> markerList = new ArrayList<>();
+    private List<MarkerOptions> restoreMarkers;
 
     private OnLocationSetListener onLocationSetListener;
 
@@ -165,7 +162,8 @@ public class MapsActivity
         // calling super class method
         super.onSaveInstanceState(savedInstanceState);
         // getting the list of found nearby places
-        if(markerList.size() > 0) {
+        List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
+        if (markerList.size() > 0) {
             String[] title = new String[markerList.size()];
             double[] lat = new double[markerList.size()];
             double[] lng = new double[markerList.size()];
@@ -499,7 +497,7 @@ public class MapsActivity
                 builder.include(latLng);
 
                 MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
-                markerList.add(markerOptions);
+                GetNearbyPlaces.markerList.add(markerOptions);
                 mMap.addMarker(markerOptions);
             }
             animateCamera(builder);
