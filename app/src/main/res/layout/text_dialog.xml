@@ -13,10 +13,11 @@
     <EditText
         android:id="@+id/input_text"
         android:layout_width="0dp"
-        android:layout_weight="60"
+        android:layout_weight="70"
         android:layout_height="wrap_content"
         android:autofillHints="place name"
-        android:inputType="textCapSentences"/>
+        android:inputType="textCapSentences"
+        android:hint="@string/hint"/>
 
     <Space
         android:layout_width="0dp"

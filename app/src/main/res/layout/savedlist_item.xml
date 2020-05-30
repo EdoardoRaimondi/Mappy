@@ -16,7 +16,9 @@
         android:gravity="start|center_vertical"
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
+        android:textSize="17sp"
+        android:maxLines="4"
+        android:singleLine="false"
         android:paddingStart="@dimen/default_padding"
         android:paddingEnd="0dp"/>
 
@@ -28,7 +30,7 @@
         android:gravity="end|center_vertical"
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="15sp"
+        android:textSize="12sp"
         android:paddingStart="0dp"
         android:paddingEnd="@dimen/default_padding"/>
 </LinearLayout>

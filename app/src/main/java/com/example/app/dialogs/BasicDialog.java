@@ -3,7 +3,6 @@ package com.example.app.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.app.R;
-
-import java.util.Objects;
 
 public class BasicDialog extends AppCompatDialogFragment {
 
@@ -31,10 +28,11 @@ public class BasicDialog extends AppCompatDialogFragment {
      * Callback to get the basic dialog instance
      * @param savedInstanceState the Bundle of any previous basic dialog if any
      */
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.basic_dialog, null);
 
@@ -43,19 +41,13 @@ public class BasicDialog extends AppCompatDialogFragment {
 
         builder.setView(view)
                 .setTitle(this.title)
-                .setNegativeButton(this.textForCancelButton, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        listener.onDialogResult(id, false);
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(this.textForCancelButton, (dialog, i) -> {
+                    listener.onDialogResult(id, false);
+                    dialog.dismiss();
                 })
-                .setPositiveButton(this.textForOkButton, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        listener.onDialogResult(id, true);
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(this.textForOkButton, (dialog, i) -> {
+                    listener.onDialogResult(id, true);
+                    dialog.dismiss();
                 });
 
         return builder.create();

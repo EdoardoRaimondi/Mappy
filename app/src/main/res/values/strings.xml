@@ -31,6 +31,7 @@
     <string name="yes">YES</string>
     <string name="home_delete">Home coordinates deleted.</string>
     <string name="undo">UNDO</string>
+    <string name="place_delete">Place deleted.</string>
 
     <string name="set_home_info">Hold the map to set a new home!</string>
     <string name="want_button">I WANT THIS HOME</string>
@@ -70,5 +71,6 @@
     <!-- Descriptions -->
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
     <string name="indicator_description">spinning wheel indicator</string>
+    <string name="hint">place name</string>
 
 </resources>

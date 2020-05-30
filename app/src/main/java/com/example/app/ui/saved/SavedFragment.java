@@ -1,8 +1,8 @@
 package com.example.app.ui.saved;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
+import androidx.annotation.NonNull;
+
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,10 +10,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -22,10 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
+import android.app.AlertDialog;
 import com.example.app.factories.ViewModelFactory;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.sensors.GoogleLocationFinder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -132,8 +132,22 @@ public class SavedFragment extends Fragment {
              */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // getting data of deleted object
+                final String name = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getPlaceName();
+                final String date = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getDateSaved();
+                final double lat = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getLatitude();
+                final double lng = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getLongitude();
                 savedViewModel.remove(savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()));
                 savedListAdapter.notifyDataSetChanged();
+                Snackbar.make(root.findViewById(R.id.delete_box), getString(R.string.place_delete), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.undo), v1 -> {
+                            final SavedPlace place = new SavedPlace(lat, lng);
+                            place.setPlaceName(name);
+                            place.setDateSaved(date);
+                            savedViewModel.insert(place);
+                            savedListAdapter.notifyDataSetChanged();
+                        })
+                        .show();
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -146,7 +160,7 @@ public class SavedFragment extends Fragment {
      * @param viewModel to save it into the database
      */
     private void setEditablePlaceName(SavedPlace place, SavedViewModel viewModel){
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.text_dialog, null);
         EditText inputEditText = view.findViewById(R.id.input_text);
@@ -158,9 +172,11 @@ public class SavedFragment extends Fragment {
                 .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
                     place.setPlaceName(capitalizeFirstChars(inputEditText.getText().toString()));
                     Date today = Calendar.getInstance().getTime();
+                    @SuppressLint("SimpleDateFormat")
                     DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                     place.setDateSaved(formatter.format(today));
                     viewModel.insert(place);
+                    savedListAdapter.notifyDataSetChanged();
                 })
                 .setNegativeButton(getString(R.string.cancel_button), (dialog1, which) -> {
                     //like never happened
