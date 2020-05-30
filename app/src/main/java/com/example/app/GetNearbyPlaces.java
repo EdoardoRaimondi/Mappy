@@ -1,10 +1,11 @@
 package com.example.app;
 
+import android.location.Location;
 import android.os.AsyncTask;
 
+import com.example.app.factories.UrlFactory;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.listeners.OnResultSetListener;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.Place;
 
 
@@ -37,6 +38,15 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
      */
     public void setOnResultSetListener(OnResultSetListener listener){
         onResultSetListener = listener;
+    }
+
+    /**
+     * @return a string[] containing valid data for this task
+     */
+    public String[] createTransferData(String string){
+        String[] transferData = new String[1];
+        transferData[0] = string;
+        return transferData;
     }
 
     /**

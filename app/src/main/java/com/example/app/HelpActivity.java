@@ -20,8 +20,7 @@ import com.example.app.finals.NearbyRequestType;
 import com.example.app.listeners.OnLocationSetListener;
 import com.example.app.listeners.OnPhoneNumberGetListener;
 import com.example.app.listeners.OnResultSetListener;
-import com.example.app.sensors.LocationFinder;
-import com.google.android.gms.common.api.ApiException;
+import com.example.app.sensors.GoogleLocationFinder;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
@@ -29,11 +28,8 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class HelpActivity extends AppCompatActivity {
-
-    private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 
     private OnPhoneNumberGetListener onPhoneNumberGetListener;
 
@@ -42,14 +38,13 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(HelpActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
-            // here to request the missing permissions, and then overriding
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
         }
-        // setting main activity as full screen
+        if(!Places.isInitialized())
+            Places.initialize(getApplicationContext(), "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s");
+        // setting help activity as full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_help);
+
     }
 
     /**
@@ -104,87 +99,71 @@ public class HelpActivity extends AppCompatActivity {
         setOnPhoneNumberGetListener(new OnPhoneNumberGetListener() {
             @Override
             public void onSuccess(String phoneNumber) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null));
-                startActivity(intent);
+                Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
+                startActivity(callIntent);
+            }
+
+            @Override
+            public void onFail() {
+                phoneNumberMessageError();
             }
         });
-    }
-
-    /**
-     * method to get the url string containing all the place information
-     * @param latitude     of the searching centre position
-     * @param longitude    of the searching centre position
-     * @param nearbyPlace  to search for
-     * @param radius       of the research
-     * @return URL string
-     */
-    private String getUrl(double latitude, double longitude, String nearbyPlace, int radius) {
-        String[] label = {"location", "radius", "type", "sensor", "key"};
-        String location = "" + latitude + "," + longitude;
-        String[] value = {location, Integer.toString(radius), nearbyPlace, "true", getResources().getString(R.string.google_maps_key)};
-        String url = UrlFactory.getRequest(NEARBY_URL_DOMAIN, label, value);
-        // TODO: remove following line on production
-        Log.d("GoogleMapsActivity", "url = " + url);
-        return url;
     }
 
     /**
      * Trigger the {@link OnPhoneNumberGetListener} when the
      * nearest phone number is found
-     * @param type of phone number you need
+     * @param type of phone number you need (need to be a {@link NearbyRequestType})
      */
     private void getPhoneNumber(NearbyRequestType type){
         final boolean[] phoneNumberFound = {false};
-        LocationFinder locationFinder = new LocationFinder();
-        locationFinder.setOnLocationSetListener(new OnLocationSetListener() {
+        GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
+        googleLocationFinder.setOnLocationSetListener(new OnLocationSetListener() {
             @Override
             public void onLocationSet(Location location) {
-                String url = getUrl(location.getLatitude(), location.getLongitude(), type.toString(), 5000);
-                String[] transferData = new String[1];
-                transferData[0] = url;
+                String url = UrlFactory.getNearbyRequest(location.getLatitude(), location.getLongitude(), type.toString(), 5000);
                 //the request will be downloaded and displayed
                 GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                getNearbyPlaces.execute(transferData);
+                getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
                 getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
                     @Override
                     public void onResultSet(List<Place> nearbyPlaceList) {
-                        for(int i = 0; i < nearbyPlaceList.size(); i++){
-                            Place currentPlace = nearbyPlaceList.get(i);
-                            if(!Places.isInitialized())
-                                //TODO: UNDERSTAND THAT LOCALE.US WTF IT IS?
-                                //TODO: CAN I INITIALIZE IT OUTSIDE THIS SHIT?
-                               Places.initialize(getApplicationContext(), "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s", Locale.US);
-                            PlacesClient placesClient = Places.createClient(getApplicationContext());
-                            String placeId = currentPlace.getId();
-                            // Specify the fields to return.
-                            List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
-
-                            // Construct a request object, passing the place ID and fields array.
-                            FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-
-                            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                                Place place = response.getPlace();
-                                //place found
-                                if(place.getPhoneNumber()!=null) {
-                                    loadPhoneNumber(place.getPhoneNumber());
-                                    phoneNumberFound[0] = true;
+                        if(nearbyPlaceList != null) {
+                            if (!nearbyPlaceList.isEmpty()) {
+                                for (int i = 0; i < nearbyPlaceList.size(); i++) { //Scan the list until I found a valid phone number
+                                    Place currentPlace = nearbyPlaceList.get(i);
+                                    PlacesClient placesClient = Places.createClient(getApplicationContext());
+                                    String placeId = currentPlace.getId();
+                                    // Specify the fields to return.
+                                    List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
+                                    // Construct a request object, passing the place ID and fields array.
+                                    FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+                                    placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+                                        Place place = response.getPlace();
+                                        //place found
+                                        if (place.getPhoneNumber() != null) { //If the place has a phone number
+                                            loadPhoneNumber(place.getPhoneNumber()); //take it
+                                            phoneNumberFound[0] = true; //I have found a a phone number
+                                        }
+                                    });
+                                    if (phoneNumberFound[0]) { //If I found a phone number, I exit from the scansion
+                                        break;
+                                    }
                                 }
-                            }).addOnFailureListener((exception) -> {
-                                if (exception instanceof ApiException) {
-                                    ApiException apiException = (ApiException) exception;
-                                }
-                            });
-                            if(phoneNumberFound[0]) break;
+                            }
                         }
+                        if(!phoneNumberFound[0])
+                        phoneNumberSearchFailed();//If I'm here no phone number has been found
                     }
                 });
             }
         });
-        locationFinder.findCurrentLocation(this);
+
+        googleLocationFinder.findCurrentLocation(this);
     }
 
     /**
-     * Trigger the listener
+     * Trigger the on success method on the listener
      * @param phoneNumber to pass to caller
      */
     private void loadPhoneNumber(String phoneNumber){
@@ -193,6 +172,21 @@ public class HelpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Trigger the on fail method on the listener
+     */
+    private void phoneNumberSearchFailed(){
+        if(onPhoneNumberGetListener != null){
+            onPhoneNumberGetListener.onFail();
+        }
+    }
+
+    /**
+     * Basic request permission result override
+     * @param requestCode 1
+     * @param permissions permissions
+     * @param grantResults results
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -208,5 +202,11 @@ public class HelpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Toast message error for any type of problem
+     */
+    private void phoneNumberMessageError(){
+        Toast.makeText(getApplicationContext(), "Unable to find any phone number", Toast.LENGTH_LONG).show();
+    }
 
 }

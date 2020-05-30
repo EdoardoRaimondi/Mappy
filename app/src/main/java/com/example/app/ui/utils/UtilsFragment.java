@@ -28,7 +28,7 @@ import com.example.app.R;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.factories.ViewModelFactory;
-import com.example.app.sensors.LocationFinder;
+import com.example.app.sensors.GoogleLocationFinder;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.saved_place_database.SavedPlace;
@@ -68,7 +68,7 @@ public class UtilsFragment extends Fragment {
 
     private Random random;
 
-    private LocationFinder locationFinder = new LocationFinder();
+    private GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
 
     /**
      * Callback when the fragment is visible
@@ -174,7 +174,7 @@ public class UtilsFragment extends Fragment {
                 if(isViewMode) { //if the button has direction image
                     //Launch google maps app
                     Uri gmmIntentUri = UrlFactory.createDirectionsUrl(pos.latitude, pos.longitude);
-                    startActivity(IntentFactory.createGoogleMapsDirectionsIntent(getContext(), gmmIntentUri));
+                    startActivity(IntentFactory.createGoogleMapsDirectionsIntent( gmmIntentUri));
                 }
                 else{ //the button has home image
                     Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity());
@@ -215,11 +215,11 @@ public class UtilsFragment extends Fragment {
 
         //Set listener for save location button
         saveLocation.setOnClickListener(v -> {
-            locationFinder.setOnLocationSetListener(location -> {
+            googleLocationFinder.setOnLocationSetListener(location -> {
                 SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
                 setEditablePlaceName(place, mSavedViewModel);
             });
-            locationFinder.findCurrentLocation(getContext());
+            googleLocationFinder.findCurrentLocation(getContext());
         });
 
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.app.interfaces.LocationFinder;
 import com.example.app.listeners.OnLocationSetListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -19,16 +20,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 /**
- * Provide an agile (less controlled) location finder.
+ * Provide an agile location finder.
  * If you need to get user location, just implement a {@link OnLocationSetListener}
- * in your class. We will give it to you only when ready.
+ * in your class and then call findCurrentLocation method. We will give it to you only when (and if) ready.
+ * We also handle all the errors.
+ * Is there something easier?
  */
-public class LocationFinder {
+public class GoogleLocationFinder implements LocationFinder {
 
 
     private OnLocationSetListener onLocationSetListener;
 
-    public LocationFinder(){
+    public GoogleLocationFinder(){
         onLocationSetListener = null;
     }
 

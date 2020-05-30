@@ -7,15 +7,21 @@ import android.net.Uri;
  */
 public abstract class UrlFactory {
 
+    private static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+
     /**
      * Create nearby url request
-     * @param domain nearby request
-     * @param label label to append
-     * @param value value to append
+     * @param latitude lat
+     * @param longitude  lng
+     * @param radius int
+     * @param nearbyPlace the type of place to search
      * @return the string representing the url request
      */
-   public static String getRequest(String domain, String[] label, String[] value) {
-        StringBuilder url = new StringBuilder(domain);
+   public static String getNearbyRequest(double latitude, double longitude, String nearbyPlace, int radius) {
+       String[] label = {"location", "radius", "type", "sensor", "key"};
+       String location = "" + latitude + "," + longitude;
+       String[] value = {location, Integer.toString(radius), nearbyPlace, "true", "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s"};
+        StringBuilder url = new StringBuilder(NEARBY_URL_DOMAIN);
         url.append('?');
         for(int i = 0; i < label.length; i++){
             if(i != 0){

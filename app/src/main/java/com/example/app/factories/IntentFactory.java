@@ -78,13 +78,22 @@ public abstract class IntentFactory {
     /**
      * Method to create an intent in order to
      * open google maps and show a place directions
-     * @param context of the activity
      * @param uri for google maps
      * @return the intent
      */
-    public static Intent createGoogleMapsDirectionsIntent(Context context, Uri uri){
+    public static Intent createGoogleMapsDirectionsIntent(Uri uri){
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
         mapIntent.setPackage("com.google.android.apps.maps");
         return mapIntent;
+    }
+
+    /**
+     * Open the phone caller
+     * @param numberToCall number ready to be called
+     * @return intent to send
+     */
+    public static Intent createCallIntent(String numberToCall){
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", numberToCall, null));
+        return intent;
     }
 }

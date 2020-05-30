@@ -14,7 +14,7 @@ import com.example.app.factories.MarkerFactory;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.example.app.listeners.OnHomeSetListener;
-import com.example.app.sensors.LocationFinder;
+import com.example.app.sensors.GoogleLocationFinder;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -46,7 +46,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String HOME_LNG = "home_long";
 
     private OnHomeSetListener onHomeSetListener;
-    private LocationFinder locationFinder = new LocationFinder();
+    private GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
 
     private void setOnHomeSetListener(OnHomeSetListener listener) {
         this.onHomeSetListener = listener;
@@ -133,11 +133,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
      * If called twice, the home will be override
      */
     private void setHome() {
-        locationFinder.setOnLocationSetListener(location -> {
+        googleLocationFinder.setOnLocationSetListener(location -> {
             homeLocation = location;
             homeSet();
         });
-        locationFinder.findCurrentLocation(this);
+        googleLocationFinder.findCurrentLocation(this);
     }
 
     /**

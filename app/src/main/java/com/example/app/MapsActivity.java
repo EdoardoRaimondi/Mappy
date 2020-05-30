@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -284,24 +283,6 @@ public class MapsActivity
     }
 
     /**
-     * method to get the url string containing all the place information
-     * @param latitude     of the searching centre position
-     * @param longitude    of the searching centre position
-     * @param nearbyPlace  to search for
-     * @param radius       of the research
-     * @return URL string
-     */
-    private String getUrl(double latitude, double longitude, String nearbyPlace, int radius) {
-        String[] label = {"location", "radius", "type", "sensor", "key"};
-        String location = "" + latitude + "," + longitude;
-        String[] value = {location, Integer.toString(radius), nearbyPlace, "true", getResources().getString(R.string.google_maps_key)};
-        String url = UrlFactory.getRequest(NEARBY_URL_DOMAIN, label, value);
-        // TODO: remove following line on production
-        Log.d("GoogleMapsActivity", "url = " + url);
-        return url;
-    }
-
-    /**
      * Method to show markers on the map
      * @param radius the radius to search
      * @param type the type of place to display
@@ -316,12 +297,10 @@ public class MapsActivity
              @Override
              public void onLocationSet(Location location) {
                  //create the request
-                 String url = getUrl(myLastLocation.getLatitude(), myLastLocation.getLongitude(), type.toString(), radius);
-                 String[] transferData = new String[1];
-                 transferData[0] = url;
+                 String url = UrlFactory.getNearbyRequest(myLastLocation.getLatitude(), myLastLocation.getLongitude(), type.toString(), radius);
                  //the request will be downloaded and displayed
                  GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                 getNearbyPlaces.execute(transferData);
+                 getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
                  getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
                      @Override
                      public void onResultSet(List<Place> nearbyPlaceList) {
@@ -504,24 +483,26 @@ public class MapsActivity
      * @param nearbyPlaceList list of places to display
      */
     private void displayPlaces(List<Place> nearbyPlaceList){
-        if(nearbyPlaceList != null && !nearbyPlaceList.isEmpty()) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (int i = 0; i < nearbyPlaceList.size(); i++) {
-                //Extract the data
-                Place googleNearbyLocalPlace = nearbyPlaceList.get(i);
-                String placeName = googleNearbyLocalPlace.getName();
-                LatLng latLng = googleNearbyLocalPlace.getLatLng();
-                builder.include(latLng);
+        if(nearbyPlaceList != null) {
+            if(!nearbyPlaceList.isEmpty()) {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (int i = 0; i < nearbyPlaceList.size(); i++) {
+                    //Extract the data
+                    Place googleNearbyLocalPlace = nearbyPlaceList.get(i);
+                    String placeName = googleNearbyLocalPlace.getName();
+                    LatLng latLng = googleNearbyLocalPlace.getLatLng();
+                    builder.include(latLng);
 
-                MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
+                    MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
 
-                markerList.add(markerOptions);
-                mMap.addMarker(markerOptions);
+                    markerList.add(markerOptions);
+                    mMap.addMarker(markerOptions);
 
+                }
+                animateCamera(builder);
             }
-            animateCamera(builder);
-            showResponseInfo(DataParser.STATUS);
         }
+        showResponseInfo(DataParser.STATUS);
     }
 
 }
