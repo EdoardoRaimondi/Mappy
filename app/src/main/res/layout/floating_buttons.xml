@@ -7,25 +7,13 @@
     android:orientation="horizontal"
     android:layout_marginRight="10dp"
     android:layout_marginLeft="10dp"
-    android:gravity="center_vertical"
-    android:layout_marginBottom="20dp">
+    android:gravity="center_vertical">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/sos"
         style="@style/FloatStyle"
         android:src="@drawable/ic_help"
         app:backgroundTint="@color/sos_button_color" />
-
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/save_position"
-        style="@style/FloatStyle"
-        android:src="@drawable/ic_add_location"
-        app:backgroundTint="@color/add_location" />
 
     <Space
         android:layout_width="0dp"

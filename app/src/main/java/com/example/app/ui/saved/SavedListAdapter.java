@@ -44,7 +44,8 @@ public class SavedListAdapter extends
      */
     class SavedViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
-        public final TextView savedItemView;
+        private final TextView savedItemView;
+        private final TextView dateView;
         final SavedListAdapter mAdapter;
         /**
          * Creates a new custom view holder to hold the view to display in
@@ -57,6 +58,7 @@ public class SavedListAdapter extends
         public SavedViewHolder(View itemView, SavedListAdapter adapter) {
             super(itemView);
             savedItemView = itemView.findViewById(R.id.place);
+            dateView = itemView.findViewById(R.id.date);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
         }
@@ -114,7 +116,7 @@ public class SavedListAdapter extends
     @Override
     public SavedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflate an item view.
-        View mItemView = mInflater.inflate(R.layout.placelist_item, parent, false);
+        View mItemView = mInflater.inflate(R.layout.savedlist_item, parent, false);
         return new SavedViewHolder(mItemView, this);
     }
 
@@ -145,6 +147,7 @@ public class SavedListAdapter extends
             SavedPlace mCurrent = savedPlacesList.get(position);
             // Add the data to the view holder.
             holder.savedItemView.setText(mCurrent.getPlaceName());
+            holder.dateView.setText(mCurrent.getDateSaved());
         }
         else {
             holder.savedItemView.setText("LONG PRESS A PLACE TO SAVE IT!");

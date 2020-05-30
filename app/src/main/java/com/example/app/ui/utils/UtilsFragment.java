@@ -16,6 +16,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -63,12 +64,9 @@ public class UtilsFragment extends Fragment {
     private SeekBar bar;
     private TextView txt;
     private ImageView wheel;
-    private SavedViewModel mSavedViewModel;
     private Activity activity;
 
     private Random random;
-
-    private GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
 
     /**
      * Callback when the fragment is visible
@@ -92,12 +90,7 @@ public class UtilsFragment extends Fragment {
         //floating buttons
         final FloatingActionButton sos = root.findViewById(R.id.sos);
         final FloatingActionButton home = root.findViewById(R.id.home);
-        final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
-
-        mSavedViewModel = ViewModelProviders.of(
-                this,
-                new ViewModelFactory(activity.getApplication())
-        ).get(SavedViewModel.class);
+        final Switch switcher = root.findViewById(R.id.switcher);
 
         LatLng pos = getHomeLocation();
         //If user has no home set yet, I show a home button. A directions button is showed otherwise.
@@ -117,6 +110,16 @@ public class UtilsFragment extends Fragment {
         txt = root.findViewById(R.id.text);
         fineIncrement();
         random = new Random();
+        switcher.setOnClickListener(v -> {
+            if(switcher.isChecked()){
+                root.findViewById(R.id.more).setVisibility(View.VISIBLE);
+                root.findViewById(R.id.less).setVisibility(View.VISIBLE);
+            }
+            else{
+                root.findViewById(R.id.more).setVisibility(View.INVISIBLE);
+                root.findViewById(R.id.less).setVisibility(View.INVISIBLE);
+            }
+        });
 
         //User click the wheel and it starts rotate
         wheel.setOnClickListener(v -> {
@@ -210,16 +213,6 @@ public class UtilsFragment extends Fragment {
         sos.setOnClickListener(v -> {
             Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
             startActivity(helpIntent);
-        });
-
-
-        //Set listener for save location button
-        saveLocation.setOnClickListener(v -> {
-            googleLocationFinder.setOnLocationSetListener(location -> {
-                SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
-                setEditablePlaceName(place, mSavedViewModel);
-            });
-            googleLocationFinder.findCurrentLocation(getContext());
         });
 
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -379,30 +372,6 @@ public class UtilsFragment extends Fragment {
             startActivity(intent);
         }
     }
-
-    /**
-     * Open a dialog to let user choose a name for that saved name
-     * @param place     that user saved
-     * @param viewModel to save it into the database
-     */
-    private void setEditablePlaceName(SavedPlace place, SavedViewModel viewModel){
-        EditText inputEditText = new EditText(getContext());
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("PLACE NAME")
-                .setMessage("Insert the name of this place")
-                .setView(inputEditText)
-                .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
-                    place.setPlaceName(inputEditText.getText().toString());
-                    viewModel.insert(place);
-                })
-                .setNegativeButton(getString(R.string.cancel_button), (dialog1, which) -> {
-                    //like never happened
-                    dialog1.dismiss();
-                })
-                .create();
-        dialog.show();
-    }
-
 
     // METHODS TO CHANGE BUTTON IMAGE AND MODE
 

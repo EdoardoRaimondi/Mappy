@@ -2,8 +2,17 @@
 <resources>
     <string name="app_name">App</string>
 
+    <!-- Fragments and activity -->
     <string name="help">Help</string>
     <string name="helper">How can we help you?</string>
+    <string name="pharmacy">PHARMACY</string>
+    <string name="hospital">HOSPITAL</string>
+    <string name="police">POLICE</string>
+    <string name="taxi">TAXI</string>
+    <string name="fine_radius">FINE</string>
+    <string name="scale_radius">SCALE</string>
+    <string name="new_place">New Place</string>
+    <string name="new_place_label">Insert new place name</string>
 
     <!-- Tabs for main activity -->
     <string name="title_utils">Utils</string>
@@ -18,7 +27,7 @@
 
     <!-- Snack bar -->
     <string name="no_gps">Your GPS sensor is turned off.\nWould you like to switch it on now?</string>
-    <string name="no_internet">Your device is not connected to any Internet provider.\nWould you like to connect?</string>
+    <string name="no_internet">Your device is not connected.\nConnect now?</string>
     <string name="yes">YES</string>
     <string name="home_delete">Home coordinates deleted.</string>
     <string name="undo">UNDO</string>
@@ -52,6 +61,7 @@
     <string name="unknown_err">Something really strange happened. Try again please</string>
     <string name="no_conn">What did you expect, we need an Internet provider to search places nearby you. Activate now?</string>
     <string name="retry">RETRY</string>
+    <string name="save_place">Do you want to save </string>
 
     <!-- Toasts -->
     <string name="no_gps_permission">Well, no GPS means nothing to display</string>
@@ -60,8 +70,5 @@
     <!-- Descriptions -->
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
     <string name="indicator_description">spinning wheel indicator</string>
-    <string name="pharmacy">PHARMACY</string>
-    <string name="hospital">HOSPITAL</string>
-    <string name="police">POLICE</string>
-    <string name="taxi">TAXI</string>
+
 </resources>
