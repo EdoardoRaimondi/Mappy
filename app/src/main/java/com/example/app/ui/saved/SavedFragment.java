@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.app.R;
 import com.example.app.factories.ViewModelFactory;
 import com.example.app.saved_place_database.SavedPlace;
-import com.example.app.sensors.LocationFinder;
+import com.example.app.sensors.GoogleLocationFinder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DateFormat;
@@ -37,7 +37,7 @@ public class SavedFragment extends Fragment {
     private SavedViewModel savedViewModel;
     private SavedListAdapter savedListAdapter;
 
-    private LocationFinder locationFinder = new LocationFinder();
+    private GoogleLocationFinder locationFinder = new GoogleLocationFinder();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(getActivity() != null) {
