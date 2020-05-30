@@ -14,6 +14,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.ListIterator;
 
 
 /**
@@ -89,7 +90,8 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
             DataParser.STATUS = ResponseStatus.NO_CONNECTION;
             nearByPlacesList = null;
         }
-        loadResult(nearByPlacesList);
+        StoppablePlaceIterator iterator = new StoppablePlaceIterator(nearByPlacesList);
+        loadResult(iterator);
     }
 
 
@@ -97,7 +99,7 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
      * Method that trigger the listener and send
      * it the result data
      */
-    protected void loadResult(List<Place> nearbyPlaces){
+    protected void loadResult(StoppablePlaceIterator nearbyPlaces){
         if(onResultSetListener != null) {
             onResultSetListener.onResultSet(nearbyPlaces);
         }

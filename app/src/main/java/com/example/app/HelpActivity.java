@@ -1,5 +1,6 @@
 package com.example.app;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -116,7 +119,6 @@ public class HelpActivity extends AppCompatActivity {
      * @param type of phone number you need (need to be a {@link NearbyRequestType})
      */
     private void getPhoneNumber(NearbyRequestType type){
-        final boolean[] phoneNumberFound = {false};
         GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
         googleLocationFinder.setOnLocationSetListener(new OnLocationSetListener() {
             @Override
@@ -127,33 +129,25 @@ public class HelpActivity extends AppCompatActivity {
                 getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
                 getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
                     @Override
-                    public void onResultSet(List<Place> nearbyPlaceList) {
-                        if(nearbyPlaceList != null) {
-                            if (!nearbyPlaceList.isEmpty()) {
-                                for (int i = 0; i < nearbyPlaceList.size(); i++) { //Scan the list until I found a valid phone number
-                                    Place currentPlace = nearbyPlaceList.get(i);
-                                    PlacesClient placesClient = Places.createClient(getApplicationContext());
-                                    String placeId = currentPlace.getId();
-                                    // Specify the fields to return.
-                                    List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
-                                    // Construct a request object, passing the place ID and fields array.
-                                    FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-                                    placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                                        Place place = response.getPlace();
-                                        //place found
-                                        if (place.getPhoneNumber() != null) { //If the place has a phone number
-                                            loadPhoneNumber(place.getPhoneNumber()); //take it
-                                            phoneNumberFound[0] = true; //I have found a a phone number
-                                        }
-                                    });
-                                    if (phoneNumberFound[0]) { //If I found a phone number, I exit from the scansion
-                                        break;
-                                    }
+                    public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
+                        if(!nearbyPlaceListIterator.hasNext()) phoneNumberSearchFailed();
+                        while (nearbyPlaceListIterator.hasNext()) {
+                            Place currentPlace = nearbyPlaceListIterator.next();
+                            PlacesClient placesClient = Places.createClient(getApplicationContext());
+                            String placeId = currentPlace.getId();
+                            // Specify the fields to return.
+                            List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
+                            // Construct a request object, passing the place ID and fields array.
+                            FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+                            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+                                Place place = response.getPlace();
+                                //place found
+                                if (place.getPhoneNumber() != null) { //If the place has a phone number
+                                    loadPhoneNumber(place.getPhoneNumber()); //take it
+                                    nearbyPlaceListIterator.stopIteration();
                                 }
-                            }
+                            });
                         }
-                        if(!phoneNumberFound[0])
-                        phoneNumberSearchFailed();//If I'm here no phone number has been found
                     }
                 });
             }

@@ -1,8 +1,9 @@
 package com.example.app.listeners;
 
+import com.example.app.StoppablePlaceIterator;
 import com.google.android.libraries.places.api.model.Place;
 
-import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Query result listener interface
@@ -11,7 +12,7 @@ public interface OnResultSetListener {
 
     /**
      * Callback when the result is loaded
-     * @param nearbyPlaceList to get
+     * @param nearbyPlaceListIterator to the place list
      */
-    void onResultSet(List<Place> nearbyPlaceList);
+    void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator);
 }

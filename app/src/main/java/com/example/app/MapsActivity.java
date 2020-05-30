@@ -57,6 +57,7 @@ import com.google.android.libraries.places.api.model.Place;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class MapsActivity
         extends FragmentActivity
@@ -303,8 +304,8 @@ public class MapsActivity
                  getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
                  getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
                      @Override
-                     public void onResultSet(List<Place> nearbyPlaceList) {
-                         displayPlaces(nearbyPlaceList);
+                     public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
+                         displayPlaces(nearbyPlaceListIterator);
                      }
                  });
              }
@@ -480,27 +481,23 @@ public class MapsActivity
 
     /**
      * Display nearby places
-     * @param nearbyPlaceList list of places to display
+     * @param nearbyPlaceListIterator list of places to display
      */
-    private void displayPlaces(List<Place> nearbyPlaceList){
-        if(nearbyPlaceList != null) {
-            if(!nearbyPlaceList.isEmpty()) {
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                for (int i = 0; i < nearbyPlaceList.size(); i++) {
-                    //Extract the data
-                    Place googleNearbyLocalPlace = nearbyPlaceList.get(i);
-                    String placeName = googleNearbyLocalPlace.getName();
-                    LatLng latLng = googleNearbyLocalPlace.getLatLng();
-                    builder.include(latLng);
+    private void displayPlaces(StoppablePlaceIterator nearbyPlaceListIterator){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        if(nearbyPlaceListIterator.hasNext()) {
+            while (nearbyPlaceListIterator.hasNext()) {
+                //Extract the data
+                Place googleNearbyLocalPlace = nearbyPlaceListIterator.next();
+                String placeName = googleNearbyLocalPlace.getName();
+                LatLng latLng = googleNearbyLocalPlace.getLatLng();
+                builder.include(latLng);
 
-                    MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
-
-                    markerList.add(markerOptions);
-                    mMap.addMarker(markerOptions);
-
-                }
-                animateCamera(builder);
+                MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
+                markerList.add(markerOptions);
+                mMap.addMarker(markerOptions);
             }
+            animateCamera(builder);
         }
         showResponseInfo(DataParser.STATUS);
     }
