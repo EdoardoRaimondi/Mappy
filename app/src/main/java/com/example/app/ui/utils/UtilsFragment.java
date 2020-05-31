@@ -14,7 +14,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,13 +41,12 @@ import java.util.Random;
 public class UtilsFragment extends Fragment {
 
     private int degree = 0;
-    private boolean fineRadius = false;
     private boolean isViewMode = false;
     private boolean isSpinning = false;
 
     private static final String BAR_KEY = "bar_k";
 
-    private static final double M_TO_KM_DIVIDER = 1000.0;
+    private static final int KM_TO_M = 1000;
     // considering a 360 degree circle divided in 6 sections and
     // I start from an half of one. I got 360 / 6 / 2.
     // (so 1 section will be 2 FACTOR large)
@@ -84,14 +82,14 @@ public class UtilsFragment extends Fragment {
         //floating buttons
         final FloatingActionButton sos = root.findViewById(R.id.sos);
         final FloatingActionButton home = root.findViewById(R.id.home);
-        final Switch switcher = root.findViewById(R.id.switcher);
 
         LatLng pos = getHomeLocation();
         //If user has no home set yet, I show a home button. A directions button is showed otherwise.
         if (pos.latitude != 0 && pos.longitude != 0) {
             //Directions button
             setDirectionsButton(home);
-        } else {
+        }
+        else {
             //Home button
             setHomeButton(home);
         }
@@ -99,21 +97,10 @@ public class UtilsFragment extends Fragment {
         //Get the radius bar
         bar = root.findViewById(R.id.seek);
         //Restore the last radius research
-        bar.setProgress(((MainActivity) activity).getRadius());
+        bar.setProgress(((MainActivity) activity).getRadius() / KM_TO_M);
         //Get the text
         txt = root.findViewById(R.id.text);
-        fineIncrement();
         random = new Random();
-        switcher.setOnClickListener(v -> {
-            if(switcher.isChecked()){
-                root.findViewById(R.id.more).setVisibility(View.VISIBLE);
-                root.findViewById(R.id.less).setVisibility(View.VISIBLE);
-            }
-            else{
-                root.findViewById(R.id.more).setVisibility(View.INVISIBLE);
-                root.findViewById(R.id.less).setVisibility(View.INVISIBLE);
-            }
-        });
 
         //User click the wheel and it starts rotate
         wheel.setOnClickListener(v -> {
@@ -218,16 +205,7 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                String display;
-                if(progress == 0){
-                    progress = getResources().getInteger(R.integer.radius_increment);
-                }
-                if(progress >= M_TO_KM_DIVIDER){
-                    display = (int) Math.ceil(progress / M_TO_KM_DIVIDER) + " km";
-                }
-                else{
-                    display = progress + " m";
-                }
+                String display = "" + progress + " km";
                 txt.setText(display);
             }
 
@@ -237,7 +215,6 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                fineRadius = false;
             }
 
             /**
@@ -246,37 +223,12 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                settingRadius();
+                ((MainActivity) activity).setRadius(
+                        (bar.getProgress() + getResources().getInteger(R.integer.default_radius)) * KM_TO_M
+                );
             }
         });
 
-        root.findViewById(R.id.more).setOnClickListener(v -> {
-            if(!fineRadius){
-                adjustFine();
-            }
-            if(bar.getProgress() + getResources().getInteger(R.integer.radius_increment) <= getResources().getInteger(R.integer.max_radius)){
-                bar.setProgress(bar.getProgress() + getResources().getInteger(R.integer.radius_increment));
-                fineIncrement();
-            }
-            else{
-                bar.setProgress(getResources().getInteger(R.integer.max_radius));
-            }
-            settingRadius();
-        });
-
-        root.findViewById(R.id.less).setOnClickListener(v -> {
-            if(!fineRadius){
-                adjustFine();
-            }
-            if(bar.getProgress() - getResources().getInteger(R.integer.radius_increment) >= getResources().getInteger(R.integer.radius_increment)){
-                bar.setProgress(bar.getProgress() - getResources().getInteger(R.integer.radius_increment));
-                fineIncrement();
-            }
-            else{
-                bar.setProgress(getResources().getInteger(R.integer.radius_increment));
-            }
-            settingRadius();
-        });
         return root;
 
     }
@@ -288,7 +240,7 @@ public class UtilsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-            savedInstanceState.putInt(BAR_KEY, bar.getProgress());
+        savedInstanceState.putInt(BAR_KEY, bar.getProgress());
     }
 
     // END OF HOME FRAGMENT LIFE CYCLE
@@ -296,57 +248,11 @@ public class UtilsFragment extends Fragment {
     // UTILITY METHODS
 
     /**
-     * Callback to save radius in main activity
-     */
-    private void settingRadius(){
-        if(bar.getProgress() == 0){
-            bar.setProgress(getResources().getInteger(R.integer.radius_increment));
-        }
-        ((MainActivity) activity).setRadius(bar.getProgress());
-    }
-
-    /**
-     * Procedure to override bar onProgressChanged to
-     * show fine increment on text view
-     */
-    private void fineIncrement(){
-        fineRadius = true;
-        int progress = bar.getProgress();
-        int decimals = progress % (int) M_TO_KM_DIVIDER;
-        int km = (int) Math.floor(progress / M_TO_KM_DIVIDER);
-        if(decimals != 0){
-            StringBuilder str = new StringBuilder();
-            if(km != 0){
-                str.append(km);
-                str.append(" km ");
-            }
-            str.append(decimals);
-            str.append(" m");
-            txt.setText(str.toString());
-        }
-    }
-
-    /**
-     *
-     */
-    private void adjustFine(){
-         if(bar.getProgress() >= M_TO_KM_DIVIDER){
-             bar.setProgress((int) (Math.ceil(bar.getProgress()/M_TO_KM_DIVIDER) * M_TO_KM_DIVIDER));
-         }
-    }
-
-    /**
      * Analise the wheel position and send the corresponding command
      * @param position the result position
      */
     private void sendRequest(int position) {
-        int radius;
-        if(fineRadius){
-            radius = bar.getProgress();
-        }
-        else{
-            radius = (int) (Math.ceil(bar.getProgress() / M_TO_KM_DIVIDER) * M_TO_KM_DIVIDER);
-        }
+        int radius = ((MainActivity) getActivity()).getRadius();
         if ((position >= FACTOR * 1) && (position < FACTOR * 3)) {
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.art_gallery, radius);
             startActivity(intent);
