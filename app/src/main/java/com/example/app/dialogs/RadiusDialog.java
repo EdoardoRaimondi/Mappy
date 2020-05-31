@@ -32,7 +32,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * @param actualRadius  old radius research
      */
     public RadiusDialog(int actualRadius){
-        this.actualRadius = actualRadius;
+        this.actualRadius = actualRadius + 1000;
     }
 
     /**

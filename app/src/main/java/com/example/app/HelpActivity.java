@@ -8,7 +8,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -18,25 +17,15 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.app.factories.IntentFactory;
-import com.example.app.factories.UrlFactory;
 import com.example.app.finals.NearbyRequestType;
-import com.example.app.iterators.StoppablePlaceIterator;
-import com.example.app.listeners.OnLocationSetListener;
-import com.example.app.listeners.OnPhoneNumberGetListener;
-import com.example.app.listeners.OnResultSetListener;
-import com.example.app.sensors.GoogleLocationFinder;
+import com.example.app.handlers.HelpActivityHandler;
+import com.example.app.listeners.PhoneNumberGetListener;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
-
-import java.util.Collections;
-import java.util.List;
 
 public class HelpActivity extends AppCompatActivity {
 
-    private OnPhoneNumberGetListener onPhoneNumberGetListener;
     private TelephonyManager  telephonyManager;
+    private HelpActivityHandler helpActivityHandler = new HelpActivityHandler();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -57,18 +46,11 @@ public class HelpActivity extends AppCompatActivity {
     }
 
     /**
-     * @param listener to set
-     */
-    private void setOnPhoneNumberGetListener(OnPhoneNumberGetListener listener){
-        onPhoneNumberGetListener = listener;
-    }
-
-    /**
      * Method to show the nearby hospitals
      * @param view button {@id hospital}
      */
     public void showNearbyHospital(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.hospital, 1000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.hospital, 5000);
         startActivity(intent);
     }
 
@@ -86,7 +68,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param view button {@id taxi}
      */
     public void showNearbyTaxi(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, 1000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, 5000);
         startActivity(intent);
     }
 
@@ -95,7 +77,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param view button {@id taxi}
      */
     public void showNearbyPharmacy(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.pharmacy, 1000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.pharmacy, 5000);
         startActivity(intent);
     }
 
@@ -104,8 +86,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param view button {@id call}
      */
     public void callPolice(View view) {
-        getPhoneNumber(NearbyRequestType.police);
-        setOnPhoneNumberGetListener(new OnPhoneNumberGetListener() {
+        helpActivityHandler.setPhoneNumberGetListener(new PhoneNumberGetListener() {
             @Override
             public void onSuccess(String phoneNumber) {
                 Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
@@ -115,76 +96,19 @@ public class HelpActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onFail() {
-                EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
-                if(emergencyNumber == null) showPhoneNumberMessageError();
-                else {
-                    Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
-                    startActivity(callIntent);
-                }
-            }
-        });
-    }
-
-    /**
-     * Trigger the {@link OnPhoneNumberGetListener} when the
-     * nearest phone number is found
-     * @param type of phone number you need (need to be a {@link NearbyRequestType})
-     */
-    private void getPhoneNumber(NearbyRequestType type){
-        GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
-        googleLocationFinder.setOnLocationSetListener(new OnLocationSetListener() {
-            @Override
-            public void onLocationSet(Location location) {
-                String url = UrlFactory.getNearbyRequest(location.getLatitude(), location.getLongitude(), type.toString(), 5000);
-                //the request will be downloaded and displayed
-                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
-                getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
-                    @Override
-                    public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
-                        if(!nearbyPlaceListIterator.hasNext()) phoneNumberSearchFailed();
-                        while (nearbyPlaceListIterator.hasNext() && !nearbyPlaceListIterator.hasBeenStopped()) {
-                            Place currentPlace = nearbyPlaceListIterator.next();
-                            PlacesClient placesClient = Places.createClient(getApplicationContext());
-                            String placeId = currentPlace.getId();
-                            // Specify the fields to return.
-                            List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
-                            // Construct a request object, passing the place ID and fields array.
-                            FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-                            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                                Place place = response.getPlace();
-                                //place found
-                                if (place.getPhoneNumber() != null) { //If the place has a phone number
-                                    loadPhoneNumber(place.getPhoneNumber()); //take it
-                                    nearbyPlaceListIterator.stopIteration();
-                                }
-                            });
-                        }
+                //if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.Q) { TODO: Add this if/else on production
+                    EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
+                    if (emergencyNumber == null) showPhoneNumberMessageError();
+                    else {
+                        Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
+                        startActivity(callIntent);
                     }
-                });
+                //}
+                //else showPhoneNumberMessageError();
             }
         });
 
-        googleLocationFinder.findCurrentLocation(this);
-    }
-
-    /**
-     * Trigger the on success method on the listener
-     * @param phoneNumber to pass to caller
-     */
-    private void loadPhoneNumber(String phoneNumber){
-        if(onPhoneNumberGetListener != null){
-            onPhoneNumberGetListener.onSuccess(phoneNumber);
-        }
-    }
-
-    /**
-     * Trigger the on fail method on the listener
-     */
-    private void phoneNumberSearchFailed(){
-        if(onPhoneNumberGetListener != null){
-            onPhoneNumberGetListener.onFail();
-        }
+        helpActivityHandler.getPhoneNumber(NearbyRequestType.police, this);
     }
 
     /**

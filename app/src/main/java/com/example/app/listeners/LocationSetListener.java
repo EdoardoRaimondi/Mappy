@@ -5,7 +5,7 @@ import android.location.Location;
 /**
  * Location listener interface
  */
-public interface OnLocationSetListener {
+public interface LocationSetListener {
 
     /**
      * Callback when the user position is set

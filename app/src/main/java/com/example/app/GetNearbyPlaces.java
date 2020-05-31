@@ -4,8 +4,7 @@ import android.os.AsyncTask;
 
 import com.example.app.finals.ResponseStatus;
 import com.example.app.iterators.StoppablePlaceIterator;
-import com.example.app.listeners.OnResultSetListener;
-import com.google.android.gms.maps.model.Marker;
+import com.example.app.listeners.ResultSetListener;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.Place;
 
@@ -25,7 +24,7 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
     private String googlePlaceData, url;
 
-    private OnResultSetListener onResultSetListener;
+    private ResultSetListener resultSetListener;
 
     public static List<MarkerOptions> markerList = new ArrayList<>();
 
@@ -33,15 +32,15 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
      * Constructor in order to set null the listener
      */
     public GetNearbyPlaces(){
-        onResultSetListener = null;
+        resultSetListener = null;
     }
 
     /**
-     * Set the listener following the {@link OnResultSetListener} interface
+     * Set the listener following the {@link ResultSetListener} interface
      * @param listener to build
      */
-    public void setOnResultSetListener(OnResultSetListener listener){
-        onResultSetListener = listener;
+    public void setResultSetListener(ResultSetListener listener){
+        resultSetListener = listener;
     }
 
     /**
@@ -103,8 +102,8 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
      * it the result data
      */
     protected void loadResult(StoppablePlaceIterator nearbyPlaces){
-        if(onResultSetListener != null) {
-            onResultSetListener.onResultSet(nearbyPlaces);
+        if(resultSetListener != null) {
+            resultSetListener.onResultSet(nearbyPlaces);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.example.app.listeners;
 
-public interface OnHomeSetListener {
+public interface HomeSetListener {
 
     /**
      * Callback when the home is set correctly
