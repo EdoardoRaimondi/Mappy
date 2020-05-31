@@ -205,7 +205,7 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                String display = "" + progress + " km";
+                String display = "" + (progress + getResources().getInteger(R.integer.default_radius)) + " km";
                 txt.setText(display);
             }
 

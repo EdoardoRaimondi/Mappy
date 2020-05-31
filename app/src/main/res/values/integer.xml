@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="default_radius">1000</integer>
-    <integer name="max_radius">50000</integer>
-    <integer name="radius_increment">50</integer>
+    <integer name="default_radius">1</integer>
+    <integer name="max_radius">49</integer>
 </resources>
