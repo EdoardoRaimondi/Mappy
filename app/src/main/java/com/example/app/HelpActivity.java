@@ -111,16 +111,18 @@ public class HelpActivity extends AppCompatActivity {
                 Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
                 startActivity(callIntent);
             }
-
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onFail() {
-                EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
-                if(emergencyNumber == null) showPhoneNumberMessageError();
-                else {
-                    Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
-                    startActivity(callIntent);
+                if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.Q) {
+                    EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
+                    if (emergencyNumber == null) showPhoneNumberMessageError();
+                    else {
+                        Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
+                        startActivity(callIntent);
+                    }
                 }
+                else showPhoneNumberMessageError(); 
             }
         });
     }
