@@ -14,7 +14,8 @@ import com.example.app.R;
  * App search fragment
  * It contains: a list of places to search group by category.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements View.OnClickListener{
+
 
     /**
      * Callback when the fragment is visible
@@ -31,5 +32,12 @@ public class SearchFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Common listener for all buttons
+     * @param v the View that called the listener
+     */
+    @Override
+    public void onClick(View v) {
 
+    }
 }

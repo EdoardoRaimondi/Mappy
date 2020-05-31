@@ -5,15 +5,33 @@
     <!-- Fragments and activity -->
     <string name="help">Help</string>
     <string name="helper">How can we help you?</string>
-    <string name="pharmacy">PHARMACY</string>
-    <string name="hospital">HOSPITAL</string>
-    <string name="police">POLICE</string>
-    <string name="taxi">TAXI</string>
     <string name="fine_radius">FINE</string>
     <string name="scale_radius">SCALE</string>
     <string name="new_place">New Place</string>
     <string name="new_place_label">Insert new place name</string>
-    <string name="food">  Food  </string>
+    <!-- Search fragment cathegories -->
+    <string name="food">Food</string>
+    <string name="help_label">Help</string>
+    <string name="tourist">Tourist</string>
+    <!-- Search fragment button labels -->
+    <string name="pharmacy">PHARMACY</string>
+    <string name="hospital">HOSPITAL</string>
+    <string name="police">POLICE</string>
+    <string name="taxi">TAXI</string>
+    <string name="bakery">BAKERY</string>
+    <string name="bar">BAR</string>
+    <string name="cafe">CAFE</string>
+    <string name="restaurant">RESTAURANT</string>
+    <string name="meal_delivery">MEAL DELIVERY</string>
+    <string name="supermarket">SUPERMARKET</string>
+    <string name="aquarium">AQUARIUM</string>
+    <string name="art_gallery">ART GALLERY</string>
+    <string name="museum">MUSEUM</string>
+    <string name="night_club">NIGHT CLUB</string>
+    <string name="park">PARK</string>
+    <string name="spa">SPA</string>
+    <string name="tourist_attraction">ATTRACTION</string>
+    <string name="zoo">ZOO</string>
 
     <!-- Tabs for main activity -->
     <string name="title_utils">Utils</string>

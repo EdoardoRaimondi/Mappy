@@ -7,51 +7,43 @@
     android:layout_height="match_parent"
     tools:context=".ui.search.SearchFragment">
 
+    <!-- Card for food -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_padding"
+        android:padding="@dimen/default_padding"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/labeled_box"
-                android:layout_marginTop="10dp"
                 android:orientation="vertical"
-                android:padding="15dp">
-
+                android:layout_marginTop="10dp">
                 <GridLayout
-                    android:id="@+id/rapid_actions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="@dimen/default_padding"
-                    android:rowCount="3"
+                    android:rowCount="4"
                     android:columnCount="3">
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_row="0"
                         android:layout_column="0"
                         android:orientation="vertical">
-
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/bakery"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/pharmacy"
+                            android:src="@drawable/backery"
                             app:backgroundTint="@color/colorPrimaryLight"/>
-
                         <TextView
-                            android:text="@string/pharmacy"
+                            android:text="@string/bakery"
                             style="@style/Label"
                             />
                     </LinearLayout>
@@ -61,61 +53,87 @@
                         android:layout_row="0"
                         android:layout_column="2"
                         android:orientation="vertical">
-
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/bar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/hospital"
+                            android:src="@drawable/bar"
                             app:backgroundTint="@color/colorPrimaryLight" />
-
                         <TextView
-                            android:text="@string/hospital"
+                            android:text="@string/bar"
                             style="@style/Label"
                             />
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_row="1"
                         android:layout_column="0"
                         android:orientation="vertical">
-
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/cafe"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/police"
+                            android:src="@drawable/cafe"
                             app:backgroundTint="@color/colorPrimaryLight"/>
-
                         <TextView
-                            android:text="@string/police"
+                            android:text="@string/cafe"
                             style="@style/Label"
                             />
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_row="1"
                         android:layout_column="2"
                         android:orientation="vertical">
-
                         <androidx.appcompat.widget.AppCompatImageButton
-                            android:src="@drawable/taxi"
+                            android:id="@+id/meal_delivery"
+                            android:src="@drawable/meal_delivery"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:backgroundTint="@color/colorPrimaryLight"/>
-
                         <TextView
-                            android:text="@string/taxi"
+                            android:text="@string/meal_delivery"
                             style="@style/Label"
                             />
                     </LinearLayout>
-
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="3"
+                        android:layout_column="0"
+                        android:orientation="vertical">
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/restaurant"
+                            android:src="@drawable/restaurant"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:backgroundTint="@color/colorPrimaryLight"/>
+                        <TextView
+                            android:text="@string/restaurant"
+                            style="@style/Label"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="3"
+                        android:layout_column="2"
+                        android:orientation="vertical">
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/supermarket"
+                            android:src="@drawable/supermarket"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:backgroundTint="@color/colorPrimaryLight"/>
+                        <TextView
+                            android:text="@string/supermarket"
+                            style="@style/Label"
+                            />
+                    </LinearLayout>
                 </GridLayout>
-
             </LinearLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -125,34 +143,28 @@
                 android:layout_marginStart="@dimen/default_padding"
                 android:background="@color/absoluteWhite"
                 android:textSize="17sp" />
-
         </RelativeLayout>
 
+        <!-- Card for tourist places -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
+            android:layout_marginTop="@dimen/default_padding">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/labeled_box"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:padding="15dp">
+                android:orientation="vertical">
 
                 <GridLayout
                     android:id="@+id/rapid_actions2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:columnCount="3"
                     android:orientation="horizontal"
                     android:padding="@dimen/default_padding"
-                    android:rowCount="3"
-                    android:columnCount="3">
+                    android:rowCount="4">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -162,11 +174,184 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/aquarium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/aquarium"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/aquarium" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="0"
+                        android:layout_column="2"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/art_gallery"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/art_gallery"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/art_gallery" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="0"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/museum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/museum"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/museum" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="2"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/night_club"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/night_club" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="2"
+                        android:layout_column="0"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/park"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/park" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="2"
+                        android:layout_column="2"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/spa"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/spa" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="3"
+                        android:layout_column="0"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/tourist_attraction"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/tourist_attraction" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="3"
+                        android:layout_column="2"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/zoo"
+                            app:backgroundTint="@color/colorPrimaryLight" />
+
+                        <TextView
+                            style="@style/Label"
+                            android:text="@string/zoo" />
+                    </LinearLayout>
+
+                </GridLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textStyle="bold"
+                android:text="@string/tourist"
+                android:layout_marginStart="@dimen/default_padding"
+                android:background="@color/absoluteWhite"
+                android:textSize="17sp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/labeled_box"
+                android:orientation="vertical">
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/default_padding"
+                    android:rowCount="3"
+                    android:columnCount="3">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:orientation="vertical">
+                        <androidx.appcompat.widget.AppCompatImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/pharmacy"
                             app:backgroundTint="@color/colorPrimaryLight"/>
-
                         <TextView
                             android:text="@string/pharmacy"
                             style="@style/Label"
@@ -178,38 +363,32 @@
                         android:layout_row="0"
                         android:layout_column="2"
                         android:orientation="vertical">
-
                         <androidx.appcompat.widget.AppCompatImageButton
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/hospital"
                             app:backgroundTint="@color/colorPrimaryLight" />
-
                         <TextView
                             android:text="@string/hospital"
                             style="@style/Label"
                             />
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_row="1"
                         android:layout_column="0"
                         android:orientation="vertical">
-
                         <androidx.appcompat.widget.AppCompatImageButton
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/police"
                             app:backgroundTint="@color/colorPrimaryLight"/>
-
                         <TextView
                             android:text="@string/police"
                             style="@style/Label"
                             />
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -228,21 +407,17 @@
                             style="@style/Label"
                             />
                     </LinearLayout>
-
                 </GridLayout>
-
             </LinearLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:textStyle="bold"
-                android:text="@string/food"
+                android:text="@string/help_label"
                 android:layout_marginStart="@dimen/default_padding"
                 android:background="@color/absoluteWhite"
                 android:textSize="17sp" />
-
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>
