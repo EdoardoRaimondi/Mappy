@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         super.onCreate(savedInstanceState);
         // if instance state was saved then backup
         if(savedInstanceState != null){
-            radius = savedInstanceState.getInt(RADIUS_KEY, getResources().getInteger(R.integer.default_radius));
+            radius = savedInstanceState.getInt(RADIUS_KEY, getResources().getInteger(R.integer.default_radius) * 1000);
         }
         else{
-            radius = getResources().getInteger(R.integer.default_radius);
+            radius = getResources().getInteger(R.integer.default_radius) * 1000;
         }
         // setting main activity as full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class RadiusDialog extends AppCompatDialogFragment {
 
-    private static final double M_TO_KM_DIVIDER = 1000.0;
+    private static final int KM_TO_M = 1000;
 
     private int actualRadius;
     private int newRadius;
@@ -32,7 +32,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * @param actualRadius  old radius research
      */
     public RadiusDialog(int actualRadius){
-        this.actualRadius = actualRadius + 1000;
+        this.actualRadius = actualRadius + getResources().getInteger(R.integer.default_radius) * KM_TO_M;
     }
 
     /**
@@ -52,23 +52,10 @@ public class RadiusDialog extends AppCompatDialogFragment {
         final SeekBar seekBar = view.findViewById(R.id.seek);
 
         seekBar.setMax(getResources().getInteger(R.integer.max_radius) - actualRadius);
-        String display;
-        if(actualRadius >= M_TO_KM_DIVIDER){
-            display = (int) Math.ceil(actualRadius / M_TO_KM_DIVIDER) + " km";
-        }
-        else{
-            display = actualRadius + " m";
-        }
-        textView.setText(display);
 
         builder.setView(view)
                 .setTitle(getString(R.string.radius_title))
-                .setNegativeButton(getString(R.string.radius_cancel_button), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton(getString(R.string.radius_cancel_button), (dialog, i) -> dialog.dismiss())
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     /**
                      * Callback when Ok button is pressed
@@ -77,7 +64,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        listener.onRadiusDialogResult(newRadius);
+                        listener.onRadiusDialogResult(newRadius * KM_TO_M);
                         dialog.dismiss();
                     }
                 });
@@ -92,13 +79,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 newRadius = progress + actualRadius;
-                String display;
-                if(newRadius >= M_TO_KM_DIVIDER){
-                    display = (int) Math.ceil(newRadius / M_TO_KM_DIVIDER) + " km";
-                }
-                else{
-                    display = newRadius + " m";
-                }
+                String display = "" + newRadius + " km";
                 textView.setText(display);
             }
 

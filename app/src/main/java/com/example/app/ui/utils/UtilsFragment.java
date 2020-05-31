@@ -100,6 +100,8 @@ public class UtilsFragment extends Fragment {
         bar.setProgress(((MainActivity) activity).getRadius() / KM_TO_M);
         //Get the text
         txt = root.findViewById(R.id.text);
+        String display = "" + ((MainActivity) activity).getRadius() / KM_TO_M + " km";
+        txt.setText(display);
         random = new Random();
 
         //User click the wheel and it starts rotate
