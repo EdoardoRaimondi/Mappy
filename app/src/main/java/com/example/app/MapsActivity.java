@@ -18,14 +18,15 @@ import android.widget.RelativeLayout;
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.IntentFactory;
-import com.example.app.factories.MarkerFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
+import com.example.app.handlers.MapsActivityHandler;
 import com.example.app.iterators.StoppablePlaceIterator;
 import com.example.app.listeners.LocationSetListener;
+import com.example.app.listeners.ResultSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
 import com.example.app.factories.ViewModelFactory;
@@ -38,7 +39,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -46,12 +46,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -301,7 +299,13 @@ public class MapsActivity
                  //the request will be downloaded and displayed
                  GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                  getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
-                 getNearbyPlaces.setResultSetListener(nearbyPlaceListIterator -> displayPlaces(nearbyPlaceListIterator));
+                 getNearbyPlaces.setResultSetListener(new ResultSetListener() {
+                     @Override
+                     public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
+                         String result = MapsActivityHandler.displayPlaces(nearbyPlaceListIterator, mMap);
+                         showResponseInfo(result);
+                     }
+                 });
              }
          });
      }
@@ -460,39 +464,6 @@ public class MapsActivity
                 .setNegativeButton(getString(R.string.no), (dialog, id) -> dialog.cancel())
                 .create()
                 .show();
-    }
-
-    /**
-     * Method to animate the camera
-     */
-    void animateCamera(LatLngBounds.Builder builder){
-        LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        mMap.animateCamera(cu);
-    }
-
-    /**
-     * Display nearby places
-     * @param nearbyPlaceListIterator list of places to display
-     */
-    private void displayPlaces(StoppablePlaceIterator nearbyPlaceListIterator){
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        if(nearbyPlaceListIterator.hasNext()) {
-            while (nearbyPlaceListIterator.hasNext()) {
-                //Extract the data
-                Place googleNearbyLocalPlace = nearbyPlaceListIterator.next();
-                String placeName = googleNearbyLocalPlace.getName();
-                LatLng latLng = googleNearbyLocalPlace.getLatLng();
-                builder.include(latLng);
-
-                MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
-                GetNearbyPlaces.markerList.add(markerOptions);
-                mMap.addMarker(markerOptions);
-            }
-            animateCamera(builder);
-        }
-        showResponseInfo(DataParser.STATUS);
     }
 
 }
