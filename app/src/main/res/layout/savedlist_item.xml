@@ -19,11 +19,12 @@
         android:textSize="17sp"
         android:maxLines="4"
         android:singleLine="false"
-        android:paddingStart="@dimen/default_padding"
+        android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="0dp"/>
 
     <TextView
         android:id="@+id/date"
+        android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="10"
@@ -32,5 +33,5 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="12sp"
         android:paddingStart="0dp"
-        android:paddingEnd="@dimen/default_padding"/>
+        android:paddingEnd="@dimen/activity_horizontal_margin"/>
 </LinearLayout>

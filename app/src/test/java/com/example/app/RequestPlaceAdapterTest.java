@@ -2,9 +2,7 @@ package com.example.app;
 
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.SearchablePlace;
-import com.example.app.ui.search.RequestAdapter;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
