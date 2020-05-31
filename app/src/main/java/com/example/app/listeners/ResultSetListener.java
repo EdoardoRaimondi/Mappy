@@ -5,7 +5,7 @@ import com.example.app.iterators.StoppablePlaceIterator;
 /**
  * Query result listener interface
  */
-public interface OnResultSetListener {
+public interface ResultSetListener {
 
     /**
      * Callback when the result is loaded

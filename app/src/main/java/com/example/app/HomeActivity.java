@@ -13,7 +13,7 @@ import com.example.app.factories.IntentFactory;
 import com.example.app.factories.MarkerFactory;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
-import com.example.app.listeners.OnHomeSetListener;
+import com.example.app.listeners.HomeSetListener;
 import com.example.app.sensors.GoogleLocationFinder;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -45,11 +45,11 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String HOME_LAT = "home_lat";
     public static final String HOME_LNG = "home_long";
 
-    private OnHomeSetListener onHomeSetListener;
+    private HomeSetListener homeSetListener;
     private GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
 
-    private void setOnHomeSetListener(OnHomeSetListener listener) {
-        this.onHomeSetListener = listener;
+    private void setHomeSetListener(HomeSetListener listener) {
+        this.homeSetListener = listener;
     }
 
     /**
@@ -113,7 +113,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         });
-        setOnHomeSetListener(new OnHomeSetListener() {
+        setHomeSetListener(new HomeSetListener() {
             /**
              * Callback when home is well set
              */
@@ -133,7 +133,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
      * If called twice, the home will be override
      */
     private void setHome() {
-        googleLocationFinder.setOnLocationSetListener(location -> {
+        googleLocationFinder.setLocationSetListener(location -> {
             homeLocation = location;
             homeSet();
         });
@@ -177,8 +177,8 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
      * Trigger the listener when everything has been all right
      */
     private void homeSet() {
-        if (onHomeSetListener != null) {
-            onHomeSetListener.onHomeSet();
+        if (homeSetListener != null) {
+            homeSetListener.onHomeSet();
         }
     }
 

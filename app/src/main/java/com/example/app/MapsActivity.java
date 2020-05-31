@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -26,7 +25,7 @@ import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.iterators.StoppablePlaceIterator;
-import com.example.app.listeners.OnLocationSetListener;
+import com.example.app.listeners.LocationSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
 import com.example.app.factories.ViewModelFactory;
@@ -99,7 +98,7 @@ public class MapsActivity
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers;
 
-    private OnLocationSetListener onLocationSetListener;
+    private LocationSetListener locationSetListener;
 
     // BEGIN OF ACTIVITY'S LIFE CYCLE CALLBACKS
 
@@ -193,8 +192,8 @@ public class MapsActivity
      * Method to set the location listener.
      * @param listener to set
      */
-    private void setOnLocationSetListener(OnLocationSetListener listener){
-        onLocationSetListener = listener;
+    private void setLocationSetListener(LocationSetListener listener){
+        locationSetListener = listener;
     }
 
     /**
@@ -289,7 +288,7 @@ public class MapsActivity
      * @param type the type of place to display
      */
      private void showPlaces(final int radius, final NearbyRequestType type) {
-         setOnLocationSetListener(new OnLocationSetListener() {
+         setLocationSetListener(new LocationSetListener() {
              /**
               * Callback when the position is ready
               *
@@ -302,7 +301,7 @@ public class MapsActivity
                  //the request will be downloaded and displayed
                  GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                  getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
-                 getNearbyPlaces.setOnResultSetListener(nearbyPlaceListIterator -> displayPlaces(nearbyPlaceListIterator));
+                 getNearbyPlaces.setResultSetListener(nearbyPlaceListIterator -> displayPlaces(nearbyPlaceListIterator));
              }
          });
      }
@@ -378,12 +377,12 @@ public class MapsActivity
     }
 
     /**
-     * Method that triggered the {@link OnLocationSetListener}
+     * Method that triggered the {@link LocationSetListener}
      * @param location my last location
      */
     private void loadLocation(Location location){
-        if(onLocationSetListener != null){
-            onLocationSetListener.onLocationSet(location);
+        if(locationSetListener != null){
+            locationSetListener.onLocationSet(location);
         }
     }
 

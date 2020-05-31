@@ -52,7 +52,7 @@ public class SavedFragment extends Fragment {
         final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
         //Set listener for save location button
         saveLocation.setOnClickListener(v -> {
-            locationFinder.setOnLocationSetListener(location -> {
+            locationFinder.setLocationSetListener(location -> {
                 SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
                 setEditablePlaceName(place, savedViewModel);
             });

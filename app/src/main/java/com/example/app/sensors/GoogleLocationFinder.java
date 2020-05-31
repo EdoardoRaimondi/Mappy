@@ -2,26 +2,20 @@ package com.example.app.sensors;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.app.interfaces.LocationFinder;
-import com.example.app.listeners.OnLocationSetListener;
+import com.example.app.listeners.LocationSetListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 /**
  * Provide an agile location finder.
- * If you need to get user location, just implement a {@link OnLocationSetListener}
+ * If you need to get user location, just implement a {@link LocationSetListener}
  * in your class and then call findCurrentLocation method. We will give it to you only when (and if) ready.
  * We also handle all the errors.
  * Is there something easier?
@@ -29,14 +23,14 @@ import com.google.android.gms.tasks.Task;
 public class GoogleLocationFinder implements LocationFinder {
 
 
-    private OnLocationSetListener onLocationSetListener;
+    private LocationSetListener locationSetListener;
 
     public GoogleLocationFinder(){
-        onLocationSetListener = null;
+        locationSetListener = null;
     }
 
-    public void setOnLocationSetListener(OnLocationSetListener listener){
-        onLocationSetListener = listener;
+    public void setLocationSetListener(LocationSetListener listener){
+        locationSetListener = listener;
     }
 
     /**
@@ -69,8 +63,8 @@ public class GoogleLocationFinder implements LocationFinder {
      * @param location set
      */
     private void locationSet(Location location){
-        if(onLocationSetListener != null){
-            onLocationSetListener.onLocationSet(location);
+        if(locationSetListener != null){
+            locationSetListener.onLocationSet(location);
         }
     }
 }

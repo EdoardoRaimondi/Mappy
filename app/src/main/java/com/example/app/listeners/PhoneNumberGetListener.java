@@ -1,6 +1,6 @@
 package com.example.app.listeners;
 
-public interface OnPhoneNumberGetListener {
+public interface PhoneNumberGetListener {
 
     /**
      * Called when found a phone number

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.telephony.emergency.EmergencyNumber;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -21,9 +22,9 @@ import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.iterators.StoppablePlaceIterator;
-import com.example.app.listeners.OnLocationSetListener;
-import com.example.app.listeners.OnPhoneNumberGetListener;
-import com.example.app.listeners.OnResultSetListener;
+import com.example.app.listeners.LocationSetListener;
+import com.example.app.listeners.PhoneNumberGetListener;
+import com.example.app.listeners.ResultSetListener;
 import com.example.app.sensors.GoogleLocationFinder;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class HelpActivity extends AppCompatActivity {
 
-    private OnPhoneNumberGetListener onPhoneNumberGetListener;
+    private PhoneNumberGetListener phoneNumberGetListener;
     private TelephonyManager  telephonyManager;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -59,8 +60,8 @@ public class HelpActivity extends AppCompatActivity {
     /**
      * @param listener to set
      */
-    private void setOnPhoneNumberGetListener(OnPhoneNumberGetListener listener){
-        onPhoneNumberGetListener = listener;
+    private void setPhoneNumberGetListener(PhoneNumberGetListener listener){
+        phoneNumberGetListener = listener;
     }
 
     /**
@@ -105,7 +106,7 @@ public class HelpActivity extends AppCompatActivity {
      */
     public void callPolice(View view) {
         getPhoneNumber(NearbyRequestType.police);
-        setOnPhoneNumberGetListener(new OnPhoneNumberGetListener() {
+        setPhoneNumberGetListener(new PhoneNumberGetListener() {
             @Override
             public void onSuccess(String phoneNumber) {
                 Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
@@ -122,26 +123,26 @@ public class HelpActivity extends AppCompatActivity {
                         startActivity(callIntent);
                     }
                 }
-                else showPhoneNumberMessageError(); 
+                else showPhoneNumberMessageError();
             }
         });
     }
 
     /**
-     * Trigger the {@link OnPhoneNumberGetListener} when the
+     * Trigger the {@link PhoneNumberGetListener} when the
      * nearest phone number is found
      * @param type of phone number you need (need to be a {@link NearbyRequestType})
      */
     private void getPhoneNumber(NearbyRequestType type){
         GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
-        googleLocationFinder.setOnLocationSetListener(new OnLocationSetListener() {
+        googleLocationFinder.setLocationSetListener(new LocationSetListener() {
             @Override
             public void onLocationSet(Location location) {
                 String url = UrlFactory.getNearbyRequest(location.getLatitude(), location.getLongitude(), type.toString(), 5000);
                 //the request will be downloaded and displayed
                 GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                 getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
-                getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
+                getNearbyPlaces.setResultSetListener(new ResultSetListener() {
                     @Override
                     public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
                         if(!nearbyPlaceListIterator.hasNext()) phoneNumberSearchFailed();
@@ -175,8 +176,8 @@ public class HelpActivity extends AppCompatActivity {
      * @param phoneNumber to pass to caller
      */
     private void loadPhoneNumber(String phoneNumber){
-        if(onPhoneNumberGetListener != null){
-            onPhoneNumberGetListener.onSuccess(phoneNumber);
+        if(phoneNumberGetListener != null){
+            phoneNumberGetListener.onSuccess(phoneNumber);
         }
     }
 
@@ -184,8 +185,8 @@ public class HelpActivity extends AppCompatActivity {
      * Trigger the on fail method on the listener
      */
     private void phoneNumberSearchFailed(){
-        if(onPhoneNumberGetListener != null){
-            onPhoneNumberGetListener.onFail();
+        if(phoneNumberGetListener != null){
+            phoneNumberGetListener.onFail();
         }
     }
 
