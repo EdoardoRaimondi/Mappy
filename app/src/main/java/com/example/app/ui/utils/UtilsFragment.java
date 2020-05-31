@@ -219,6 +219,9 @@ public class UtilsFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 String display;
+                if(progress == 0){
+                    progress = getResources().getInteger(R.integer.radius_increment);
+                }
                 if(progress >= M_TO_KM_DIVIDER){
                     display = (int) Math.ceil(progress / M_TO_KM_DIVIDER) + " km";
                 }
@@ -296,6 +299,9 @@ public class UtilsFragment extends Fragment {
      * Callback to save radius in main activity
      */
     private void settingRadius(){
+        if(bar.getProgress() == 0){
+            bar.setProgress(getResources().getInteger(R.integer.radius_increment));
+        }
         ((MainActivity) activity).setRadius(bar.getProgress());
     }
 
