@@ -1,7 +1,6 @@
 package com.example.app.ui.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -28,12 +26,8 @@ import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
-import com.example.app.factories.ViewModelFactory;
-import com.example.app.sensors.GoogleLocationFinder;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.NearbyRequestType;
-import com.example.app.saved_place_database.SavedPlace;
-import com.example.app.ui.saved.SavedViewModel;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -197,7 +191,7 @@ public class UtilsFragment extends Fragment {
                 final boolean[] hasUndo = {false};
                 setHomeButton(home);
                 if(getActivity() != null) {
-                    Snackbar.make(getActivity().findViewById(R.id.coordinator), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
+                    Snackbar.make(root.findViewById(R.id.box_for_undo), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
                             .setAction(getString(R.string.undo), v1 -> {
                                 setDirectionsButton(home);
                                 hasUndo[0] = true;

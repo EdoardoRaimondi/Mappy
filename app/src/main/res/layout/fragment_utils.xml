@@ -44,4 +44,12 @@
     <!-- Rapid actions buttons -->
     <include layout="@layout/floating_buttons"/>
 
+    <!-- Undo box for snackbar -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/box_for_undo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </LinearLayout>

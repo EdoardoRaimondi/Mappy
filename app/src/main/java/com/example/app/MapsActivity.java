@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -26,7 +27,6 @@ import com.example.app.finals.NearbyRequestType;
 import com.example.app.finals.ResponseStatus;
 import com.example.app.iterators.StoppablePlaceIterator;
 import com.example.app.listeners.OnLocationSetListener;
-import com.example.app.listeners.OnResultSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
 import com.example.app.factories.ViewModelFactory;
@@ -116,7 +116,6 @@ public class MapsActivity
         );
         setContentView(R.layout.activity_maps);
         progressBar = findViewById(R.id.prog_bar);
-        animateProgress(0,20,1000);
         restoreMarkers = new ArrayList<>();
 
         // restoring instance state if any
@@ -139,6 +138,7 @@ public class MapsActivity
                 }
                 canRestore = true;
             }
+            animateProgress(0,20, 1000);
         }
 
         mSavedViewModel =  ViewModelProviders.of(this, new ViewModelFactory(getApplication())).get(SavedViewModel.class);
@@ -151,6 +151,7 @@ public class MapsActivity
 
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
+        animateProgress(20,30, 500);
     }
 
     /**
@@ -216,7 +217,7 @@ public class MapsActivity
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, 40, 180);
         }
-
+        animateProgress(30,50, 500);
         final LocationRequest locationRequest = MapsUtility.createLocationRequest();
 
         final LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
@@ -228,16 +229,17 @@ public class MapsActivity
             //Get button pressed information
             Intent requestInfo = getIntent();
             requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
-            radius = requestInfo.getIntExtra(RADIUS, 1000);
+            radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius));
 
             if(canRestore){
                 mMap.clear();
                 displayMarkers(restoreMarkers);
                 restoreMarkers.clear();
-                animateProgress(20,100,1000);
+                animateProgress(50,100, 500);
             }
             else {
                 showPlaces(radius, requestType);
+                animateProgress(50,100, 500);
             }
         });
     }
@@ -257,7 +259,6 @@ public class MapsActivity
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
-                                animateProgress(20,100,1000);
                             }
                             else {
                                 final LocationRequest locationRequest = MapsUtility.createLocationRequest();
@@ -271,7 +272,6 @@ public class MapsActivity
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
-                                        animateProgress(20,100,1000);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
@@ -302,12 +302,7 @@ public class MapsActivity
                  //the request will be downloaded and displayed
                  GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                  getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
-                 getNearbyPlaces.setOnResultSetListener(new OnResultSetListener() {
-                     @Override
-                     public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
-                         displayPlaces(nearbyPlaceListIterator);
-                     }
-                 });
+                 getNearbyPlaces.setOnResultSetListener(nearbyPlaceListIterator -> displayPlaces(nearbyPlaceListIterator));
              }
          });
      }
@@ -357,7 +352,6 @@ public class MapsActivity
                     overQueryBuilder.setTitle(getString(R.string.sorry));
                     overQueryBuilder.setText(getString(R.string.sorry_message));
                     overQueryBuilder.setTextForOkButton(getString(R.string.ok_button));
-                    overQueryBuilder.setTextForCancelButton(getString(R.string.cancel_button));
                     overQueryBuilder.build().show(getSupportFragmentManager(), TAG);
                     break;
                 // GPS is disabled or no Internet provider
@@ -373,7 +367,6 @@ public class MapsActivity
                     requestDeniedBuilder.setTitle(getString(R.string.oh_no));
                     requestDeniedBuilder.setText(getString(R.string.unknown_err));
                     requestDeniedBuilder.setTextForOkButton(getString(R.string.ok_button));
-                    requestDeniedBuilder.setTextForCancelButton(getString(R.string.cancel_button));
                     requestDeniedBuilder.build().show(getSupportFragmentManager(), TAG);
                     break;
             }
@@ -411,8 +404,7 @@ public class MapsActivity
                 public void onAnimationRepeat(Animation animation) {}
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    // TODO: should make progress bar floating or transparent
-                    progressBar.setVisibility(View.GONE); // resizing is horrible
+                    animateProgress(0,0,0);
                 }
 
             });
@@ -430,7 +422,7 @@ public class MapsActivity
     public void onDialogResult(String id, boolean positiveButton) {
         //just go back to the main activity
         startActivity(IntentFactory.createLobbyReturn(this));
-        }
+    }
 
     /**
      * RadiusDialog listener
@@ -478,7 +470,6 @@ public class MapsActivity
         LatLngBounds bounds = builder.build();
         int padding = 0; // offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
         mMap.animateCamera(cu);
     }
 
