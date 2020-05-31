@@ -14,10 +14,10 @@
             android:id="@+id/less"
             android:layout_width="@dimen/handler_minimum_size"
             android:layout_height="@dimen/handler_minimum_size"
-            android:text="@string/minus"
-            android:background="@drawable/plus_thumb"
             android:visibility="invisible"
-            app:backgroundTint="@color/radius_button_color"
+            android:text="@string/minus"
+            android:background="@drawable/button_thumb"
+            app:backgroundTint="@color/colorPrimaryViolet"
             style="@style/RadiusButtonStyle"/>
 
         <!-- Progress bar & live value -->
@@ -29,6 +29,7 @@
             android:layout_marginRight="@dimen/radius_margin"
             android:layout_weight=".70">
 
+            <!-- Label for selected radius -->
             <TextView
                 android:id="@+id/text"
                 android:layout_width="match_parent"
@@ -39,6 +40,7 @@
                 android:textColor="@color/absoluteBlack"
                 />
 
+            <!-- Seekbar -->
             <SeekBar
                 android:id="@+id/seek"
                 android:layout_width="match_parent"
@@ -54,6 +56,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal">
 
+                <!-- Label -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -61,6 +64,7 @@
                     android:layout_marginEnd="@dimen/default_padding"
                     android:textColor="@color/absoluteBlack"/>
 
+                <!-- Swicth for fine or scaled radius -->
                 <Switch
                     android:id="@+id/switcher"
                     android:layout_width="wrap_content"
@@ -69,6 +73,7 @@
                     android:textOn="@string/fine_radius"
                     android:theme="@style/switchStyle"/>
 
+                <!-- Label -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -86,8 +91,8 @@
             android:layout_height="@dimen/handler_medium_size"
             android:text="@string/plus"
             android:visibility="invisible"
-            android:background="@drawable/plus_thumb"
-            app:backgroundTint="@color/radius_button_color"
+            android:background="@drawable/button_thumb"
+            app:backgroundTint="@color/colorPrimaryViolet"
             style="@style/RadiusButtonStyle"/>
 
 </LinearLayout>

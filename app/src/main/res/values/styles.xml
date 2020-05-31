@@ -62,9 +62,9 @@
 
     <!-- Switch style -->
     <style name="switchStyle" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">@color/seekbar_handler_main</item>
-        <item name="colorSwitchThumbNormal">@color/seek_background_back</item>
-        <item name="android:colorForeground">@color/seek_background_main</item>
+        <item name="colorControlActivated">@color/colorAccentSecondary</item>
+        <item name="colorSwitchThumbNormal">@color/colorGreySecondary</item>
+        <item name="android:colorForeground">@color/colorGreyPrimary</item>
     </style>
 
 </resources>

@@ -8,8 +8,10 @@
     tools:context=".ui.utils.UtilsFragment"
     style="@style/MainStyle">
 
+    <!-- Radius selection box -->
     <include layout="@layout/radius_selector"/>
 
+    <!-- Spinning wheel container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -17,6 +19,7 @@
         android:gravity="center|center_vertical"
         android:orientation="vertical">
 
+        <!-- Indicator -->
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,8 +27,8 @@
             android:scaleX="1"
             android:scaleY="1"
             android:src="@drawable/indicator"
-            android:contentDescription="@string/indicator_description"
-            />
+            android:contentDescription="@string/indicator_description" />
+        <!-- Spinning wheel -->
         <ImageView
             android:id="@+id/wheel"
             android:layout_width="wrap_content"
@@ -38,6 +41,7 @@
 
     </LinearLayout>
 
+    <!-- Rapid actions buttons -->
     <include layout="@layout/floating_buttons"/>
 
 </LinearLayout>

@@ -129,7 +129,7 @@
             android:src="@drawable/ic_call"
             style="@style/FloatStyle"
             android:onClick="callPolice"
-            app:backgroundTint="@color/green_call"
+            app:backgroundTint="@color/colorGreenCall"
             android:layout_gravity="end"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -9,6 +9,7 @@
     tools:context=".ui.saved.SavedFragment"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <!-- Recycler view for saved places items -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_saved"
         android:layout_width="0dp"
@@ -21,6 +22,7 @@
         app:layout_constraintRight_toRightOf="parent">
     </androidx.recyclerview.widget.RecyclerView>
 
+    <!-- Container for add place floating action button -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/add_coord"
         android:layout_width="match_parent"
@@ -34,16 +36,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
+        <!-- Add place floating action button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/save_position"
             style="@style/FloatStyle"
             android:src="@drawable/ic_add_location"
             android:layout_gravity="end"
-            app:backgroundTint="@color/add_location"
+            app:backgroundTint="@color/colorAccentSecondary"
             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <!-- Container for undo snackbar -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/delete_box"
         android:layout_width="match_parent"

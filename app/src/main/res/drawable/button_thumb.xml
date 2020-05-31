@@ -2,8 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/seekbar_handler_main"/>
-            <stroke android:color="@color/seekbar_handler_back" android:width="3dp"/>
+            <solid android:color="@color/colorPrimaryViolet"/>
+            <stroke android:color="@color/colorPrimary" android:width="3dp"/>
             <size android:height="@dimen/handler_minimum_size" android:width="@dimen/handler_minimum_size"/>
         </shape>
     </item>
