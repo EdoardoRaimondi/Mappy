@@ -305,6 +305,10 @@ public class MapsActivity
                          String result = MapsActivityHandler.displayPlaces(nearbyPlaceListIterator, mMap);
                          showResponseInfo(result);
                      }
+                     @Override
+                     public void onResultNotSet(String error) {
+                         showResponseInfo(error);
+                     }
                  });
              }
          });

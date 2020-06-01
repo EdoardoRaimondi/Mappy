@@ -28,34 +28,22 @@ public class DataParser implements MapJSonDataParser {
      */
     private Place getSingleNearbyPlace(JSONObject googlePlaceJSON) {
         Place place = null;
-        String placeName = "-NA-";
-        String id = "-NA-";
+        String placeName;
+        String id;
         double latitude;
         double longitude;
-        int priceLevel;
 
         try {
             placeName = googlePlaceJSON.getString("name");
             id = googlePlaceJSON.getString("place_id");
             latitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat"));
             longitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng"));
-            //reference = googlePlaceJSON.getString("reference");
-            if(googlePlaceJSON.has("price")) {
-                priceLevel = googlePlaceJSON.getInt("price");
-                place = Place.builder()
-                        .setLatLng(new LatLng(latitude, longitude))
-                        .setName(placeName)
-                        .setPriceLevel(priceLevel)
-                        .setId(id)
-                        .build();
-            }
-            else {
-                place = Place.builder()
-                        .setLatLng(new LatLng(latitude, longitude))
-                        .setName(placeName)
-                        .setId(id)
-                        .build();
-            }
+            //reference = googlePlaceJSON.getString("reference")
+            place = Place.builder()
+                    .setLatLng(new LatLng(latitude, longitude))
+                    .setName(placeName)
+                    .setId(id)
+                    .build();
         }
         catch (JSONException e) {
             e.printStackTrace();

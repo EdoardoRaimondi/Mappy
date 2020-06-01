@@ -27,7 +27,7 @@ public class HelpActivityHandler {
 
     private PhoneNumberGetListener phoneNumberGetListener;
 
-    public HelpActivityHandler(){ }
+    public HelpActivityHandler(){ phoneNumberGetListener = null; }
 
     public void setPhoneNumberGetListener(PhoneNumberGetListener phoneNumberGetListener){
         this.phoneNumberGetListener = phoneNumberGetListener;
@@ -59,8 +59,7 @@ public class HelpActivityHandler {
                             List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
                             // Construct a request object, passing the place ID and fields array.
                             FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-                            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                                Place place = response.getPlace();
+                            placesClient.fetchPlace(request).addOnSuccessListener((response) -> { Place place = response.getPlace();
                                 //place found
                                 if (place.getPhoneNumber() != null) { //If the place has a phone number
                                     loadPhoneNumber(place.getPhoneNumber()); //take it
@@ -68,6 +67,10 @@ public class HelpActivityHandler {
                                 }
                             });
                         }
+                    }
+                    @Override
+                    public void onResultNotSet(String error) {
+                        phoneNumberSearchFailed();
                     }
                 });
             }

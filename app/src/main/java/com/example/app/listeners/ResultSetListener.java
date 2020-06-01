@@ -1,5 +1,6 @@
 package com.example.app.listeners;
 
+import com.example.app.finals.ResponseStatus;
 import com.example.app.iterators.StoppablePlaceIterator;
 
 /**
@@ -12,4 +13,10 @@ public interface ResultSetListener {
      * @param nearbyPlaceListIterator to the place list
      */
     void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator);
+
+    /**
+     * Callback when unable to get the result
+     * @param error called
+     */
+    void onResultNotSet(String error);
 }

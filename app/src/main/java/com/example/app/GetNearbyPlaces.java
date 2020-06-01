@@ -67,7 +67,7 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
         } catch(UnknownHostException e){
             DataParser.STATUS = ResponseStatus.CONNECTION_LOW;
         } catch (IOException e) {
-            DataParser.STATUS = ResponseStatus.CONNECTION_LOW;
+            DataParser.STATUS = ResponseStatus.UNKNOWN_ERROR;
         }
         return googlePlaceData;
     }
@@ -92,8 +92,11 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
             DataParser.STATUS = ResponseStatus.NO_CONNECTION;
             nearByPlacesList = null;
         }
-        StoppablePlaceIterator iterator = new StoppablePlaceIterator(nearByPlacesList);
-        loadResult(iterator);
+        if(nearByPlacesList != null) {
+            StoppablePlaceIterator iterator = new StoppablePlaceIterator(nearByPlacesList);
+            loadResult(iterator);
+        }
+        else resultNotSet(DataParser.STATUS);
     }
 
 
@@ -101,12 +104,22 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
      * Method that trigger the listener and send
      * it the result data
      */
-    protected void loadResult(StoppablePlaceIterator nearbyPlaces){
+    private void loadResult(StoppablePlaceIterator nearbyPlaces){
         if(resultSetListener != null) {
             resultSetListener.onResultSet(nearbyPlaces);
         }
     }
 
+    /**
+     * Method that trigger the listener and send
+     * it the
+     * @param error done
+     */
+    private void resultNotSet(String error){
+        if(resultSetListener != null){
+            resultSetListener.onResultNotSet(error);
+        }
+    }
 
 }
 
