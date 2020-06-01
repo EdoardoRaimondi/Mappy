@@ -93,5 +93,6 @@
 
     <!-- Hints -->
     <string name="hint">place name</string>
+    <string name="cinema">CINEMA</string>
 
 </resources>

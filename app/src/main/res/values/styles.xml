@@ -60,4 +60,53 @@
         <item name="android:textAlignment">center</item>
     </style>
 
+    <!-- Card style -->
+    <style name="CardStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/default_padding</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <!-- Box style -->
+    <style name="BoxStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/labeled_box</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="LabelSearch">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginStart">@dimen/default_padding</item>
+        <item name="android:background">@color/absoluteWhite</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:paddingStart">@dimen/default_padding</item>
+        <item name="android:paddingEnd">@dimen/default_padding</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Grid">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/default_padding</item>
+    </style>
+    
+    <style name="BannerStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="WrapperStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>
