@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
+    android:id="@+id/full_page"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -231,6 +232,7 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/night_club"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/night_club"
@@ -249,6 +251,7 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/park"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/park"
@@ -267,6 +270,7 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/spa"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/spa"
@@ -285,6 +289,7 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/local_attractions"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/tourist_attraction"
@@ -303,6 +308,7 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/zoo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/zoo"
@@ -348,6 +354,7 @@
                         android:layout_column="0"
                         android:orientation="vertical">
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/pharmacy"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/pharmacy"
@@ -364,6 +371,7 @@
                         android:layout_column="2"
                         android:orientation="vertical">
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/hospital"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/hospital"
@@ -380,6 +388,7 @@
                         android:layout_column="0"
                         android:orientation="vertical">
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/police"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:src="@drawable/police"
@@ -397,6 +406,7 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/taxi"
                             android:src="@drawable/taxi"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

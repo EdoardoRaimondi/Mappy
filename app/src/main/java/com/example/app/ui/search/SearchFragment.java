@@ -1,14 +1,24 @@
 package com.example.app.ui.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.example.app.MainActivity;
 import com.example.app.R;
+import com.example.app.factories.IntentFactory;
+import com.example.app.finals.NearbyRequestType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * App search fragment
@@ -16,7 +26,7 @@ import com.example.app.R;
  */
 public class SearchFragment extends Fragment implements View.OnClickListener{
 
-
+    private Map<String, NearbyRequestType> dictionary;
     /**
      * Callback when the fragment is visible
      * @param inflater layout
@@ -28,16 +38,31 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             ViewGroup container, Bundle savedInstanceState) {
         ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        // defining dictionary for get nearby request type
+        dictionary = new HashMap<>();
+        for(int i = 0; i < NearbyRequestType.values().length; i++){
+            dictionary.put(NearbyRequestType.values()[i].toString(), NearbyRequestType.values()[i]);
+        }
+        // getting all image button ids
+        ArrayList<View> allButtons;
+        allButtons = root.findViewById(R.id.full_page).getTouchables();
+        for(int i = 0; i < allButtons.size(); i++){
+            ImageButton button = (ImageButton) allButtons.get(i);
+            button.setOnClickListener(this);
+        }
 
         return root;
     }
 
-    /**
-     * Common listener for all buttons
-     * @param v the View that called the listener
-     */
     @Override
     public void onClick(View v) {
-
+        if (v.getId() != View.NO_ID){
+            String stringId = v.getResources().getResourceName(v.getId());
+            stringId = stringId.replace("com.example.app:id/","");
+            NearbyRequestType type = dictionary.get(stringId);
+            int radius = ((MainActivity) getActivity()).getRadius();
+            Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), type, radius);
+            startActivity(intent);
+        }
     }
 }
