@@ -54,15 +54,38 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         return root;
     }
 
+    /**
+     * Common OnClick listener
+     * @param v the view that called the listener
+     */
     @Override
     public void onClick(View v) {
+        // if it is a valid id
         if (v.getId() != View.NO_ID){
+            // getting string variable id
             String stringId = v.getResources().getResourceName(v.getId());
+            // getting string variable id filtered
             stringId = stringId.replace("com.example.app:id/","");
-            NearbyRequestType type = dictionary.get(stringId);
-            int radius = ((MainActivity) getActivity()).getRadius();
+            // searching NearbyRequestType from dictionary
+            NearbyRequestType type;
+            try {
+                type = dictionary.get(stringId);
+            }
+            catch (NullPointerException exc){
+                type = NearbyRequestType.tourist_attraction;
+            }
+            // getting radius from MainActivity
+            int radius;
+            if(getActivity() != null) {
+                radius = ((MainActivity) getActivity()).getRadius();
+            }
+            else{
+                radius = getResources().getInteger(R.integer.default_radius) * 1000;
+            }
+            // ging to MapsActivity
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), type, radius);
             startActivity(intent);
         }
     }
+
 }
