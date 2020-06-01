@@ -27,7 +27,7 @@ public class HelpActivityHandler {
 
     private PhoneNumberGetListener phoneNumberGetListener;
 
-    public HelpActivityHandler(){ }
+    public HelpActivityHandler(){ phoneNumberGetListener = null; }
 
     public void setPhoneNumberGetListener(PhoneNumberGetListener phoneNumberGetListener){
         this.phoneNumberGetListener = phoneNumberGetListener;
@@ -67,6 +67,10 @@ public class HelpActivityHandler {
                                 }
                             });
                         }
+                    }
+                    @Override
+                    public void onResultNotSet(String error) {
+                        phoneNumberSearchFailed();
                     }
                 });
             }
