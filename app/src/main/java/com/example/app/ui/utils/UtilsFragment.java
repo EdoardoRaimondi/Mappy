@@ -105,39 +105,47 @@ public class UtilsFragment extends Fragment {
         random = new Random();
 
         //User click the wheel and it starts rotate
-        wheel.setOnClickListener(v -> {
-            if(!isSpinning) {
-                isSpinning = true;
-                int oldDegree = degree % 360;
-                degree = random.nextInt(360) + 720;
-                RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
-                        RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                        RotateAnimation.RELATIVE_TO_SELF, 0.5f
-                );
-                rotate.setDuration(3600);
-                rotate.setFillAfter(true);
-                rotate.setInterpolator(new DecelerateInterpolator());
-                rotate.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+        wheel.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when a view has been clicked.
+             *
+             * @param v The view that was clicked.
+             */
+            @Override
+            public void onClick(View v) {
+                if(!isSpinning) {
+                    isSpinning = true;
+                    int oldDegree = degree % 360;
+                    degree = random.nextInt(360) + 720;
+                    RotateAnimation rotate = new RotateAnimation(oldDegree, degree,
+                            RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                            RotateAnimation.RELATIVE_TO_SELF, 0.5f
+                    );
+                    rotate.setDuration(3600);
+                    rotate.setFillAfter(true);
+                    rotate.setInterpolator(new DecelerateInterpolator());
+                    rotate.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                        }
 
-                    /**
-                     * Send a request depending on its final position
-                     *
-                     * @param animation the animation
-                     */
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        sendRequest(360 - (degree % 360));
-                        isSpinning = false;
-                    }
+                        /**
+                         * Send a request depending on its final position
+                         *
+                         * @param animation the animation
+                         */
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            sendRequest(360 - (degree % 360));
+                            isSpinning = false;
+                        }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-                wheel.startAnimation(rotate);
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+                    });
+                    wheel.startAnimation(rotate);
+                }
             }
         });
 
