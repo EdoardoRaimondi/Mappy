@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    tools:context=".ui.utils.UtilsFragment"
+    style="@style/MainStyle">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <!-- Spinning wheel container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:gravity="center|center_vertical"
+            android:orientation="vertical">
+
+                <!-- Indicator -->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    android:src="@drawable/indicator"
+                    android:contentDescription="@string/indicator_description" />
+                <!-- Spinning wheel -->
+                <ImageView
+                    android:id="@+id/wheel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/wheel_descr"
+                    android:scaleType="fitXY"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    android:src="@drawable/speriamo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:orientation="vertical">
+            <!-- Radius selection box -->
+            <include layout="@layout/radius_selector"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <!-- Rapid actions buttons -->
+            <include layout="@layout/floating_buttons"/>
+
+            <!-- Undo box for snackbar -->
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/box_for_undo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
