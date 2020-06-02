@@ -375,6 +375,7 @@
                             />
                     </LinearLayout>
                 </GridLayout>
+                
             </LinearLayout>
             <TextView style="@style/LabelSearch"
                 android:text="@string/help_label"/>
