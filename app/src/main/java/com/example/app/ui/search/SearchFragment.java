@@ -74,6 +74,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             catch (NullPointerException exc){
                 type = NearbyRequestType.tourist_attraction;
             }
+            if(type == null){
+                //default place is a place attraction as we expect mainly
+                //tourists to use our app but this should never happen if
+                //managed correctly image buttons' ids
+                type = NearbyRequestType.tourist_attraction;
+            }
             // getting radius from MainActivity
             int radius;
             if(getActivity() != null) {
