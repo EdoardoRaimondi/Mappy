@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card for food places -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout style="@style/BoxStyle">
+
+        <GridLayout
+            style="@style/Grid"
+            android:columnCount="3"
+            android:rowCount="2">
+
+            <LinearLayout
+                style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="0">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/bakery"
+                    style="@style/WrapperStyle"
+                    android:src="@drawable/backery"
+                    app:backgroundTint="@color/colorPrimaryLight" />
+
+                <TextView
+                    style="@style/Label"
+                    android:text="@string/bakery" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="1">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/bar"
+                    style="@style/WrapperStyle"
+                    android:src="@drawable/bar"
+                    app:backgroundTint="@color/colorPrimaryLight" />
+
+                <TextView
+                    style="@style/Label"
+                    android:text="@string/bar" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="2">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/cafe"
+                    style="@style/WrapperStyle"
+                    android:src="@drawable/cafe"
+                    app:backgroundTint="@color/colorPrimaryLight" />
+
+                <TextView
+                    style="@style/Label"
+                    android:text="@string/cafe" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="0">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/meal_delivery"
+                    style="@style/WrapperStyle"
+                    android:src="@drawable/meal_delivery"
+                    app:backgroundTint="@color/colorPrimaryLight" />
+
+                <TextView
+                    style="@style/Label"
+                    android:text="@string/meal_delivery" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="1">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/restaurant"
+                    style="@style/WrapperStyle"
+                    android:src="@drawable/restaurant"
+                    app:backgroundTint="@color/colorPrimaryLight" />
+
+                <TextView
+                    style="@style/Label"
+                    android:text="@string/restaurant" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="2">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/supermarket"
+                    style="@style/WrapperStyle"
+                    android:src="@drawable/supermarket"
+                    app:backgroundTint="@color/colorPrimaryLight" />
+
+                <TextView
+                    style="@style/Label"
+                    android:text="@string/supermarket" />
+            </LinearLayout>
+        </GridLayout>
+    </LinearLayout>
+    <TextView style="@style/LabelSearch"
+        android:text="@string/food"/>
+</RelativeLayout>

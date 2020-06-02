@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card for service places -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/default_padding">
+    <LinearLayout style="@style/BoxStyle">
+        <GridLayout style="@style/Grid"
+            android:rowCount="2"
+            android:columnCount="3">
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="0">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/airport"
+                    android:src="@drawable/airport"/>
+                <TextView
+                    android:text="@string/airport"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="1">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/atm"
+                    android:src="@drawable/atm"/>
+                <TextView
+                    android:text="@string/atm"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="2">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/bus_station"
+                    android:src="@drawable/bus"/>
+                <TextView
+                    android:text="@string/bus"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="0">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/car_rental"
+                    android:src="@drawable/car"/>
+                <TextView
+                    android:text="@string/car_rental"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="1">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/gas_station"
+                    android:src="@drawable/gas_station"/>
+                <TextView
+                    android:text="@string/gas_station"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="2">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/parking"
+                    android:src="@drawable/parking"/>
+                <TextView
+                    android:text="@string/parking"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+        </GridLayout>
+    </LinearLayout>
+    <TextView style="@style/LabelSearch"
+        android:text="@string/services"/>
+</RelativeLayout>

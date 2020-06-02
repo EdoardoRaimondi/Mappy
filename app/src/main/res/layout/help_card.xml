@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card for help places -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/default_padding">
+    <LinearLayout style="@style/BoxStyle">
+        <GridLayout style="@style/Grid"
+            android:rowCount="3"
+            android:columnCount="3">
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="0">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/pharmacy"
+                    android:src="@drawable/pharmacy"/>
+                <TextView
+                    android:text="@string/pharmacy"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="0"
+                android:layout_column="2">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/hospital"
+                    android:src="@drawable/hospital"/>
+                <TextView
+                    android:text="@string/hospital"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="0">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/police"
+                    android:src="@drawable/police"/>
+                <TextView
+                    android:text="@string/police"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+            <LinearLayout style="@style/BannerStyle"
+                android:layout_row="1"
+                android:layout_column="2">
+                <androidx.appcompat.widget.AppCompatImageButton
+                    style="@style/WrapperStyle"
+                    app:backgroundTint="@color/colorPrimaryLight"
+                    android:id="@+id/taxi"
+                    android:src="@drawable/taxi"/>
+                <TextView
+                    android:text="@string/taxi"
+                    style="@style/Label"
+                    />
+            </LinearLayout>
+        </GridLayout>
+    </LinearLayout>
+    <TextView style="@style/LabelSearch"
+        android:text="@string/help_label"/>
+</RelativeLayout>
