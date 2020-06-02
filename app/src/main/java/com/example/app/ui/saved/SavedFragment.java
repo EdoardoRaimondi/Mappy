@@ -140,12 +140,15 @@ public class SavedFragment extends Fragment {
                 savedViewModel.remove(savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()));
                 savedListAdapter.notifyDataSetChanged();
                 Snackbar.make(root.findViewById(R.id.delete_box), getString(R.string.place_delete), Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.undo), v1 -> {
-                            final SavedPlace place = new SavedPlace(lat, lng);
-                            place.setPlaceName(name);
-                            place.setDateSaved(date);
-                            savedViewModel.insert(place);
-                            savedListAdapter.notifyDataSetChanged();
+                        .setAction(getString(R.string.undo), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                final SavedPlace place = new SavedPlace(lat, lng);
+                                place.setPlaceName(name);
+                                place.setDateSaved(date);
+                                savedViewModel.insert(place);
+                                savedListAdapter.notifyDataSetChanged();
+                            }
                         })
                         .show();
             }

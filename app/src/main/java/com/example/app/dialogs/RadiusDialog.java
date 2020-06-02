@@ -16,8 +16,6 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.app.R;
 
-import java.util.Objects;
-
 public class RadiusDialog extends AppCompatDialogFragment {
 
     private static final int KM_TO_M = 1000;
@@ -45,8 +43,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.activity_maps, requireActivity().findViewById(R.id.maps_container), false);
-        View view = inflater.inflate(R.layout.radius_dialog, root);
+        View view = inflater.inflate(R.layout.radius_dialog, null);
 
         textView = view.findViewById(R.id.text_view);
         final SeekBar seekBar = view.findViewById(R.id.seek);
@@ -56,13 +53,6 @@ public class RadiusDialog extends AppCompatDialogFragment {
         builder.setView(view)
                 .setTitle(getString(R.string.radius_title))
                 .setNegativeButton(getString(R.string.radius_cancel_button), new DialogInterface.OnClickListener() {
-                    /**
-                     * This method will be invoked when a button in the dialog is clicked.
-                     *
-                     * @param dialog the dialog that received the click
-                     * @param which  the button that was clicked (ex.
-                     *               {@link DialogInterface#BUTTON_POSITIVE}) or the position
-                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -72,7 +62,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
                     /**
                      * Callback when Ok button is pressed
                      * @param dialog the dialog
-                     * @param i (?)
+                     * @param i the dialog universal id
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int i) {

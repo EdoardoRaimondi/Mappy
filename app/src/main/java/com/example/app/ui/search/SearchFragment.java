@@ -88,7 +88,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             else{
                 radius = getResources().getInteger(R.integer.default_radius) * 1000;
             }
-            // ging to MapsActivity
+            // going to MapsActivity
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), type, radius);
             startActivity(intent);
         }
