@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -30,6 +31,7 @@ import com.example.app.listeners.ResultSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
 import com.example.app.factories.ViewModelFactory;
+import com.example.app.ui_tools.CustomInfoWindow;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -50,6 +52,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -226,7 +229,7 @@ public class MapsActivity
             //Get button pressed information
             Intent requestInfo = getIntent();
             requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
-            radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius));
+            radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius) * 1000);
 
             if(canRestore){
                 mMap.clear();
@@ -335,6 +338,8 @@ public class MapsActivity
      * @param markerList the list of the marker representing the precedent state
      */
     private void displayMarkers(List<MarkerOptions> markerList){
+        CustomInfoWindow customInfoWindow = new CustomInfoWindow(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);
         for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
             mMap.addMarker(markerList.get(currentMarker));
         }
@@ -463,6 +468,8 @@ public class MapsActivity
                         place.setPlaceName(marker.getTitle());
                         //add it to the database
                         mSavedViewModel.insert(place);
+                        Snackbar.make(findViewById(R.id.map_coord), getString(R.string.saved), Snackbar.LENGTH_LONG)
+                                .show();
                     }
                 })
                 .setNegativeButton(getString(R.string.no), (dialog, id) -> dialog.cancel())
