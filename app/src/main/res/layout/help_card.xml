@@ -55,7 +55,7 @@
                 <androidx.appcompat.widget.AppCompatImageButton
                     style="@style/WrapperStyle"
                     app:backgroundTint="@color/colorPrimaryLight"
-                    android:id="@+id/taxi"
+                    android:id="@+id/taxi_stand"
                     android:src="@drawable/taxi"/>
                 <TextView
                     android:text="@string/taxi"
