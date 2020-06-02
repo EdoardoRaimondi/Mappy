@@ -1,12 +1,12 @@
 package com.example.app.dialogs;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -44,10 +44,9 @@ public class RadiusDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        @SuppressLint("InflateParams")
-        View view = inflater.inflate(R.layout.radius_dialog, null);
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        ViewGroup root = (ViewGroup) inflater.inflate(R.layout.activity_maps, requireActivity().findViewById(R.id.maps_container), false);
+        View view = inflater.inflate(R.layout.radius_dialog, root);
 
         textView = view.findViewById(R.id.text_view);
         final SeekBar seekBar = view.findViewById(R.id.seek);
@@ -56,7 +55,19 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
         builder.setView(view)
                 .setTitle(getString(R.string.radius_title))
-                .setNegativeButton(getString(R.string.radius_cancel_button), (dialog, i) -> dialog.dismiss())
+                .setNegativeButton(getString(R.string.radius_cancel_button), new DialogInterface.OnClickListener() {
+                    /**
+                     * This method will be invoked when a button in the dialog is clicked.
+                     *
+                     * @param dialog the dialog that received the click
+                     * @param which  the button that was clicked (ex.
+                     *               {@link DialogInterface#BUTTON_POSITIVE}) or the position
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     /**
                      * Callback when Ok button is pressed

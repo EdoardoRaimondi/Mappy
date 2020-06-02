@@ -1,6 +1,5 @@
 package com.example.app.ui.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,19 +43,17 @@ public class UtilsFragment extends Fragment {
     private boolean isViewMode = false;
     private boolean isSpinning = false;
 
-    private static final String BAR_KEY = "bar_k";
-
     private static final int KM_TO_M = 1000;
     // considering a 360 degree circle divided in 6 sections and
     // I start from an half of one. I got 360 / 6 / 2.
     // (so 1 section will be 2 FACTOR large)
     private static final float FACTOR = 30f;
 
-    // view components
+    // view components and activity
     private SeekBar bar;
     private TextView txt;
     private ImageView wheel;
-    private Activity activity;
+    private MainActivity activity;
 
     private Random random;
 
@@ -74,7 +71,8 @@ public class UtilsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_utils, container, false);
 
         if(getActivity() != null){
-            this.activity = getActivity();
+            // this should never happen
+            this.activity = (MainActivity) getActivity();
         }
 
         //Get the widgets references
@@ -97,10 +95,10 @@ public class UtilsFragment extends Fragment {
         //Get the radius bar
         bar = root.findViewById(R.id.seek);
         //Restore the last radius research
-        bar.setProgress(((MainActivity) activity).getRadius() / KM_TO_M);
+        bar.setProgress(activity.getRadius() / KM_TO_M);
         //Get the text
         txt = root.findViewById(R.id.text);
-        String display = "" + ((MainActivity) activity).getRadius() / KM_TO_M + " km";
+        String display = "" + (activity.getRadius() / KM_TO_M) + " km";
         txt.setText(display);
         random = new Random();
 
@@ -201,9 +199,12 @@ public class UtilsFragment extends Fragment {
         });
 
         //User click to open the {@link HelpActivity}
-        sos.setOnClickListener(v -> {
-            Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
-            startActivity(helpIntent);
+        sos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
+                startActivity(helpIntent);
+            }
         });
 
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -233,24 +234,12 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                ((MainActivity) activity).setRadius(
-                        (bar.getProgress() + getResources().getInteger(R.integer.default_radius)) * KM_TO_M
-                );
+                activity.setRadius((bar.getProgress() + getResources().getInteger(R.integer.default_radius)) * KM_TO_M);
             }
         });
 
         return root;
 
-    }
-
-    /**
-     * Callback to save the state when necessary
-     * @param savedInstanceState Bundle where to save places information
-     */
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt(BAR_KEY, bar.getProgress());
     }
 
     // END OF HOME FRAGMENT LIFE CYCLE
@@ -262,7 +251,7 @@ public class UtilsFragment extends Fragment {
      * @param position the result position
      */
     private void sendRequest(int position) {
-        int radius = ((MainActivity) getActivity()).getRadius();
+        int radius = activity.getRadius();
         if ((position >= FACTOR * 1) && (position < FACTOR * 3)) {
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.art_gallery, radius);
             startActivity(intent);
