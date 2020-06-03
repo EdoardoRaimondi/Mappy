@@ -1,18 +1,40 @@
 package com.example.app;
 
+import android.net.Uri;
+
 import com.example.app.factories.UrlFactory;
+import com.example.app.finals.NearbyRequestType;
+
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class UrlFactoryUnitTest {
-    /**
+
+    private static final double LAT = 1.1;
+    private static final double LNG = 2.2;
+    private static final String TYPE = NearbyRequestType.police.toString();
+    private static final int RADIUS = 1000;
+    private static final int RADIUS_NEGATIVE = -1000;
+
     @Test
-    public void working() {
-        String[] label = {"location", "radius", "type", "sensor", "key"};
-        String location = "" + 12.68575 + "," + 15.2589;
-        String[] value = {location, Integer.toString(1000), "restaurant", "true", "google_api_key"};
-        String url = UrlFactory.createNearbyUrl("www.domain.com", label, value);
-        assertEquals("www.domain.com?location=12.68575,15.2589&radius=1000&type=restaurant&sensor=true&key=google_api_key", url);
+    public void getNearbyRequest_setUp(){
+        String expected = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=1.1,2.2&radius=1000&type=police&sensor=true&key=AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
+        String actual = UrlFactory.getNearbyRequest(LAT, LNG, TYPE, RADIUS);
+        Assert.assertEquals(expected, actual);
     }
-    */
+
+    @Test
+    public void getNearbyRequest_NegativeRadius(){
+        String expected = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=1.1,2.2&radius=-1000&type=police&sensor=true&key=AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
+        String actual = UrlFactory.getNearbyRequest(LAT, LNG, TYPE, RADIUS_NEGATIVE);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getNearbyRequest_ZeroRadius(){
+        String expected = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=1.1,2.2&radius=0&type=police&sensor=true&key=AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s";
+        String actual = UrlFactory.getNearbyRequest(LAT, LNG, TYPE, 0);
+        Assert.assertEquals(expected, actual);
+    }
+    
 }
