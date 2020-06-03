@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
@@ -468,8 +469,8 @@ public class MapsActivity
                         place.setPlaceName(marker.getTitle());
                         //add it to the database
                         mSavedViewModel.insert(place);
-                        Snackbar.make(findViewById(R.id.map_coord), getString(R.string.saved), Snackbar.LENGTH_LONG)
-                                .show();
+                        Toast.makeText(getApplicationContext(), getText(R.string.saved), Toast.LENGTH_SHORT)
+                            .show();
                     }
                 })
                 .setNegativeButton(getString(R.string.no), (dialog, id) -> dialog.cancel())
