@@ -206,6 +206,8 @@ public class MapsActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        /*CustomInfoWindow customInfoWindow = new CustomInfoWindow(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);*/
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.setOnInfoWindowLongClickListener(this);
@@ -338,8 +340,6 @@ public class MapsActivity
      * @param markerList the list of the marker representing the precedent state
      */
     private void displayMarkers(List<MarkerOptions> markerList){
-        CustomInfoWindow customInfoWindow = new CustomInfoWindow(this);
-        mMap.setInfoWindowAdapter(customInfoWindow);
         for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
             mMap.addMarker(markerList.get(currentMarker));
         }

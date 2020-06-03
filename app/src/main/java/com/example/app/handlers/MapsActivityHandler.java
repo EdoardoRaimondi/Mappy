@@ -4,6 +4,7 @@ import com.example.app.DataParser;
 import com.example.app.GetNearbyPlaces;
 import com.example.app.factories.MarkerFactory;
 import com.example.app.iterators.StoppablePlaceIterator;
+import com.example.app.ui_tools.CustomInfoWindow;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

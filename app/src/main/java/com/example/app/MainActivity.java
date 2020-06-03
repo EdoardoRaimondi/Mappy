@@ -15,6 +15,7 @@ import android.provider.Settings;
 import android.view.WindowManager;
 
 import com.example.app.dialogs.BasicDialog;
+import com.example.app.dialogs.RadiusDialog;
 import com.example.app.sensors.ConnectionManager;
 import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;

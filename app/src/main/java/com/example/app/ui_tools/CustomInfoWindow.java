@@ -3,7 +3,6 @@ package com.example.app.ui_tools;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.app.R;
