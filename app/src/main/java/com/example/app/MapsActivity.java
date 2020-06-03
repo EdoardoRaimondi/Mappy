@@ -9,11 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-<<<<<<< HEAD
-import android.util.Log;
-=======
-import android.provider.Settings;
->>>>>>> 5d2ee9325317e18fc2873fe419b405ddd7bcb8c2
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -59,11 +54,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-<<<<<<< HEAD
 import com.google.android.libraries.places.api.model.Place;
-=======
-import com.google.android.material.snackbar.Snackbar;
->>>>>>> 5d2ee9325317e18fc2873fe419b405ddd7bcb8c2
+
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
