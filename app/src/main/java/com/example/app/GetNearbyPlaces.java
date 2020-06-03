@@ -80,18 +80,19 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
     @Override
     protected void onPostExecute(String s) {
         List<Place> nearByPlacesList;
-        DataParser parser = new DataParser();
-        try {
-            nearByPlacesList = parser.parse(s);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            nearByPlacesList = null;
-        }
-        catch(NullPointerException e){
-            // Here because no/slow connection
-            DataParser.STATUS = ResponseStatus.NO_CONNECTION;
-            nearByPlacesList = null;
+        if(s==null) nearByPlacesList = null;
+        else {
+            DataParser parser = new DataParser();
+            try {
+                nearByPlacesList = parser.parse(s);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                nearByPlacesList = null;
+            } catch (NullPointerException e) {
+                // Here because no/slow connection
+                DataParser.STATUS = ResponseStatus.NO_CONNECTION;
+                nearByPlacesList = null;
+            }
         }
         if(nearByPlacesList != null) {
             StoppablePlaceIterator iterator = new StoppablePlaceIterator(nearByPlacesList);
@@ -105,7 +106,7 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
      * Method that trigger the listener and send
      * it the result data
      */
-    private void loadResult(StoppablePlaceIterator nearbyPlaces){
+    protected void loadResult(StoppablePlaceIterator nearbyPlaces){
         if(resultSetListener != null) {
             resultSetListener.onResultSet(nearbyPlaces);
         }
@@ -116,7 +117,7 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
      * it the
      * @param error done
      */
-    private void resultNotSet(String error){
+    protected void resultNotSet(String error){
         if(resultSetListener != null){
             resultSetListener.onResultNotSet(error);
         }

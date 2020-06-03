@@ -36,15 +36,13 @@ public class GetNearbyPlacesTest {
     @Spy
     GetNearbyPlaces dummyGetNearbyPlaces;
 
-
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
 
         dummyGetNearbyPlaces = Mockito.spy(GetNearbyPlaces.class);
-
         Mockito.doCallRealMethod().when(dummyGetNearbyPlaces).doInBackground(Mockito.anyString());
-
+        Mockito.doNothing().when(dummyGetNearbyPlaces).resultNotSet(Mockito.anyString());
     }
 
     @Test
@@ -54,9 +52,15 @@ public class GetNearbyPlacesTest {
         Assert.assertEquals(expected, actual);
     }
 
-    @Test (expected = IOException.class)
-    public void execute(){
-        dummyGetNearbyPlaces.execute("test");
+    @Test
+    public void doInBackground_NotValidUrl(){
+        Assert.assertNull(dummyGetNearbyPlaces.doInBackground("test"));
+    }
+
+    @Test
+    public void onPostExecute_NullParameter(){
+        dummyGetNearbyPlaces.onPostExecute(null);
+        Mockito.verify(dummyGetNearbyPlaces).resultNotSet(Mockito.anyString());
     }
 
 
