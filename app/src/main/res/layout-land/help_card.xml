@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Card for food places -->
+<!-- Card for help places -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_marginTop="@dimen/default_padding">
     <LinearLayout style="@style/BoxStyle"
-        android:gravity="center"
-        android:textAlignment="center">
+        android:gravity="center_horizontal">
         <GridLayout style="@style/Grid"
-            android:layout_width="wrap_content"
             android:rowCount="2"
-            android:columnCount="5">
-            <LinearLayout  style="@style/BannerStyleLand"
+            android:columnCount="3"
+            android:layout_width="wrap_content">
+            <LinearLayout style="@style/BannerStyleLand"
                 android:layout_row="0"
                 android:layout_column="0">
                 <androidx.appcompat.widget.AppCompatImageButton
                     style="@style/WrapperStyle"
                     app:backgroundTint="@color/colorPrimaryLight"
-                    android:id="@+id/bakery"
-                    android:src="@drawable/backery"/>
+                    android:id="@+id/pharmacy"
+                    android:src="@drawable/pharmacy"/>
                 <TextView
-                    android:text="@string/bakery"
+                    android:text="@string/pharmacy"
                     style="@style/Label"
                     />
             </LinearLayout>
@@ -32,10 +31,10 @@
                 <androidx.appcompat.widget.AppCompatImageButton
                     style="@style/WrapperStyle"
                     app:backgroundTint="@color/colorPrimaryLight"
-                    android:id="@+id/bar"
-                    android:src="@drawable/bar"/>
+                    android:id="@+id/hospital"
+                    android:src="@drawable/hospital"/>
                 <TextView
-                    android:text="@string/bar"
+                    android:text="@string/hospital"
                     style="@style/Label"
                     />
             </LinearLayout>
@@ -45,23 +44,10 @@
                 <androidx.appcompat.widget.AppCompatImageButton
                     style="@style/WrapperStyle"
                     app:backgroundTint="@color/colorPrimaryLight"
-                    android:id="@+id/cafe"
-                    android:src="@drawable/cafe"/>
+                    android:id="@+id/police"
+                    android:src="@drawable/police"/>
                 <TextView
-                    android:text="@string/cafe"
-                    style="@style/Label"
-                    />
-            </LinearLayout>
-            <LinearLayout style="@style/BannerStyleLand"
-                android:layout_row="1"
-                android:layout_column="0">
-                <androidx.appcompat.widget.AppCompatImageButton
-                    style="@style/WrapperStyle"
-                    app:backgroundTint="@color/colorPrimaryLight"
-                    android:id="@+id/meal_delivery"
-                    android:src="@drawable/meal_delivery"/>
-                <TextView
-                    android:text="@string/meal_delivery"
+                    android:text="@string/police"
                     style="@style/Label"
                     />
             </LinearLayout>
@@ -71,28 +57,15 @@
                 <androidx.appcompat.widget.AppCompatImageButton
                     style="@style/WrapperStyle"
                     app:backgroundTint="@color/colorPrimaryLight"
-                    android:id="@+id/restaurant"
-                    android:src="@drawable/restaurant"/>
+                    android:id="@+id/taxi_stand"
+                    android:src="@drawable/taxi"/>
                 <TextView
-                    android:text="@string/restaurant"
-                    style="@style/Label"
-                    />
-            </LinearLayout>
-            <LinearLayout style="@style/BannerStyleLand"
-                android:layout_row="1"
-                android:layout_column="2">
-                <androidx.appcompat.widget.AppCompatImageButton
-                    style="@style/WrapperStyle"
-                    app:backgroundTint="@color/colorPrimaryLight"
-                    android:id="@+id/supermarket"
-                    android:src="@drawable/supermarket"/>
-                <TextView
-                    android:text="@string/supermarket"
+                    android:text="@string/taxi"
                     style="@style/Label"
                     />
             </LinearLayout>
         </GridLayout>
     </LinearLayout>
     <TextView style="@style/LabelSearch"
-        android:text="@string/food"/>
+        android:text="@string/help_label"/>
 </RelativeLayout>

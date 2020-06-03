@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -30,7 +29,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * @param actualRadius  old radius research
      */
     public RadiusDialog(int actualRadius){
-        this.actualRadius = actualRadius + getResources().getInteger(R.integer.default_radius) * KM_TO_M;
+        this.actualRadius = actualRadius + KM_TO_M;
     }
 
     /**

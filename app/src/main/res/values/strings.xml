@@ -60,6 +60,7 @@
     <string name="home_delete">Home coordinates deleted.</string>
     <string name="undo">UNDO</string>
     <string name="place_delete">Place deleted.</string>
+    <string name="saved">Saved!</string>
 
     <string name="set_home_info">Hold the map to set a new home!</string>
     <string name="want_button">I WANT THIS HOME</string>
@@ -102,4 +103,6 @@
 
     <!-- Hints -->
     <string name="hint">place name</string>
+    <string name="go">GO</string>
+    <string name="save">SAVE</string>
 </resources>

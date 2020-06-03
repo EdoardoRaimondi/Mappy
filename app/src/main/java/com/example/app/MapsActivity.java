@@ -9,12 +9,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.util.Log;
+=======
+import android.provider.Settings;
+>>>>>>> 5d2ee9325317e18fc2873fe419b405ddd7bcb8c2
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.app.dialogs.BasicDialog;
 import com.example.app.dialogs.RadiusDialog;
@@ -31,6 +36,7 @@ import com.example.app.listeners.ResultSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
 import com.example.app.factories.ViewModelFactory;
+import com.example.app.ui_tools.CustomInfoWindow;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -53,7 +59,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+<<<<<<< HEAD
 import com.google.android.libraries.places.api.model.Place;
+=======
+import com.google.android.material.snackbar.Snackbar;
+>>>>>>> 5d2ee9325317e18fc2873fe419b405ddd7bcb8c2
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -207,6 +217,8 @@ public class MapsActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        /*CustomInfoWindow customInfoWindow = new CustomInfoWindow(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);*/
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.setOnInfoWindowLongClickListener(this);
@@ -230,7 +242,7 @@ public class MapsActivity
             //Get button pressed information
             Intent requestInfo = getIntent();
             requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
-            radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius));
+            radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius) * 1000);
 
             if(canRestore){
                 mMap.clear();
@@ -466,6 +478,8 @@ public class MapsActivity
                         place.setPlaceName(marker.getTitle());
                         //add it to the database
                         mSavedViewModel.insert(place);
+                        Toast.makeText(getApplicationContext(), getText(R.string.saved), Toast.LENGTH_SHORT)
+                            .show();
                     }
                 })
                 .setNegativeButton(getString(R.string.no), (dialog, id) -> dialog.cancel())
