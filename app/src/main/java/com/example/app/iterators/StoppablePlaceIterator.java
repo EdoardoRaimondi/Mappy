@@ -37,9 +37,13 @@ public class StoppablePlaceIterator implements StoppableListIterator {
         return iterator.hasNext();
     }
 
+    /**
+     * @return place if the iterator has not been stopped, null otherwise
+     */
     @Override
     public Place next() {
-        return iterator.next();
+        if(!hasBeenStopped) return iterator.next();
+        return null;
     }
 }
 
