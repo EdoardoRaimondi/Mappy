@@ -78,6 +78,7 @@
         <item name="android:layout_marginTop">10dp</item>
     </style>
 
+    <!-- Search labeled box style -->
     <style name="LabelSearch">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -91,19 +92,31 @@
         <item name="android:background">?android:colorBackground</item>
     </style>
 
+    <!-- GridLayout style -->
     <style name="Grid">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">@dimen/default_padding</item>
     </style>
-    
+
+    <!-- Search button card layout portrait -->
     <style name="BannerStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
     </style>
 
+    <!-- Search button card layout land -->
+    <style name="BannerStyleLand">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginRight">@dimen/default_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_padding</item>
+    </style>
+
+    <!-- Wrapper layout -->
     <style name="WrapperStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
