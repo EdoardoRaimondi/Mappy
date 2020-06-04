@@ -279,6 +279,10 @@ public class UtilsFragment extends Fragment {
             Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.park, radius);
             startActivity(intent);
         }
+        else{
+            //Something goes wrong. Make another wheel spin
+            wheel.performClick();
+        }
     }
 
     // METHODS TO CHANGE BUTTON IMAGE AND MODE
