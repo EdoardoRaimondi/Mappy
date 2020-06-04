@@ -68,12 +68,12 @@
 
     <!-- DIALOGS -->
     <!-- Radius dialog -->
-    <string name="radius_title">NO PLACE NEAR YOU</string>
+    <string name="radius_title">Update Radius</string>
     <string name="radius_ok_button">OK</string>
     <string name="no">NO</string>
 
     <string name="radius_cancel_button">Cancel</string>
-    <string name="dialog_text">Think big</string>
+    <string name="dialog_text">It seems there is no place like that nearby you. Would you like to update the research radius?</string>
     <!-- Basic dialogs -->
     <string name="to_clarify">To clarify</string>
     <string name="rationale">
