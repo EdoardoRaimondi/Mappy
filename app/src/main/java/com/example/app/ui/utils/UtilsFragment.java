@@ -111,6 +111,7 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
+                wheel.setClickable(false);
                 if(!isSpinning) {
                     isSpinning = true;
                     int oldDegree = degree % 360;
@@ -134,6 +135,7 @@ public class UtilsFragment extends Fragment {
                          */
                         @Override
                         public void onAnimationEnd(Animation animation) {
+                            wheel.setClickable(true);
                             sendRequest(360 - (degree % 360));
                             isSpinning = false;
                         }
@@ -163,6 +165,7 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
+                home.setClickable(false);
                 if(isViewMode) { //if the button has direction image
                     //Launch google maps app
                     Uri gmmIntentUri = UrlFactory.createDirectionsUrl(pos.latitude, pos.longitude);
