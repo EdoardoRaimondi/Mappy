@@ -121,7 +121,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             public void onHomeSet() {
                 displayHome(homeLocation);
                 Snackbar.make(findViewById(android.R.id.content), getString(R.string.set_home_info), Snackbar.LENGTH_INDEFINITE)
-                        .setAction(getString(R.string.want_button), v -> startActivity(IntentFactory.createLobbyReturn(getApplicationContext())))
+                        .setAction(getString(R.string.want_button), v -> startActivity(IntentFactory.createLobbyReturn(getApplicationContext(), R.id.navigation_utils)))
                         .show();
             }
         });

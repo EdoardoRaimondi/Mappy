@@ -39,22 +39,23 @@ import java.util.Random;
  */
 public class UtilsFragment extends Fragment {
 
+    // Private members
     private int degree = 0;
     private boolean isViewMode = false;
     private boolean isSpinning = false;
 
     private static final int KM_TO_M = 1000;
-    // considering a 360 degree circle divided in 6 sections and
+    // Considering a 360 degree circle divided in 6 sections and
     // I start from an half of one. I got 360 / 6 / 2.
     // (so 1 section will be 2 FACTOR large)
     private static final float FACTOR = 30f;
 
-    // view components and activity
+    // View components and Activity
     private SeekBar bar;
     private TextView txt;
     private ImageView wheel;
     private MainActivity activity;
-
+    // Java objects
     private Random random;
 
     /**
@@ -71,38 +72,40 @@ public class UtilsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_utils, container, false);
 
         if(getActivity() != null){
-            // this should never happen
-            this.activity = (MainActivity) getActivity();
+            activity = (MainActivity) getActivity();
         }
 
-        //Get the widgets references
+        // Saving current displayed fragment
+        activity.setFragment(R.id.navigation_utils);
+
+        // Get the widgets references
         wheel = root.findViewById(R.id.wheel);
-        //floating buttons
+        // Floating buttons
         final FloatingActionButton sos = root.findViewById(R.id.sos);
         final FloatingActionButton home = root.findViewById(R.id.home);
 
         LatLng pos = getHomeLocation();
-        //If user has no home set yet, I show a home button. A directions button is showed otherwise.
+        // If user has no home set yet, I show a home button. A directions button is showed otherwise.
         if (pos.latitude != 0 && pos.longitude != 0) {
-            //Directions button
+            // Directions button
             setDirectionsButton(home);
         }
         else {
-            //Home button
+            // Home button
             setHomeButton(home);
         }
 
-        //Get the radius bar
+        // Get the radius bar
         bar = root.findViewById(R.id.seek);
-        //Restore the last radius research
+        // Restore the last radius research
         bar.setProgress(activity.getRadius() / KM_TO_M);
-        //Get the text
+        // Get the text
         txt = root.findViewById(R.id.text);
         String display = "" + (activity.getRadius() / KM_TO_M) + " km";
         txt.setText(display);
         random = new Random();
 
-        //User click the wheel and it starts rotate
+        // User click the wheel and it starts rotate
         wheel.setOnClickListener(new View.OnClickListener() {
             /**
              * Called when a view has been clicked.
@@ -166,12 +169,12 @@ public class UtilsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 home.setClickable(false);
-                if(isViewMode) { //if the button has direction image
-                    //Launch google maps app
+                if(isViewMode) { // If the button has direction image
+                    // Launch google maps app
                     Uri gmmIntentUri = UrlFactory.createDirectionsUrl(pos.latitude, pos.longitude);
                     startActivity(IntentFactory.createGoogleMapsDirectionsIntent( gmmIntentUri));
                 }
-                else{ //the button has home image
+                else{ // The button has home image
                     Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity());
                     startActivity(setHomeIntent);
                 }
@@ -201,7 +204,7 @@ public class UtilsFragment extends Fragment {
             }
         });
 
-        //User click to open the {@link HelpActivity}
+        // User click to open the {@link HelpActivity}
         sos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -280,7 +283,7 @@ public class UtilsFragment extends Fragment {
             startActivity(intent);
         }
         else{
-            //Something goes wrong. Make another wheel spin
+            // Something goes wrong. Make another wheel spin
             wheel.performClick();
         }
     }

@@ -53,6 +53,19 @@ public abstract class IntentFactory {
      }
 
     /**
+     * Method to create a intent in order to return
+     * to the main lobby specifying the fragment
+     * @param context of the current activity
+     * @param fragment id where we were
+     * @return the intent
+     */
+    public static Intent createLobbyReturn(Context context, int fragment){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(MainActivity.FRAGMENT_KEY_INTENT, fragment);
+        return intent;
+    }
+
+    /**
      * Method to create a intent in order to set
      * a marker in the current user position
      * @param context of the activity

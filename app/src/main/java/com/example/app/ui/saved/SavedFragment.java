@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.app.MainActivity;
 import com.example.app.R;
 import android.app.AlertDialog;
 import com.example.app.factories.ViewModelFactory;
@@ -36,18 +37,23 @@ public class SavedFragment extends Fragment {
 
     private SavedViewModel savedViewModel;
     private SavedListAdapter savedListAdapter;
+    private MainActivity activity;
 
     private GoogleLocationFinder locationFinder = new GoogleLocationFinder();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(getActivity() != null) {
-            savedViewModel = ViewModelProviders.of(this,
-                    new ViewModelFactory(
-                            getActivity().getApplication())
-            ).get(SavedViewModel.class);
+            activity = (MainActivity) getActivity();
         }
+        savedViewModel = ViewModelProviders.of(this,
+                new ViewModelFactory(
+                        activity.getApplication())
+        ).get(SavedViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_saved, container, false);
+
+        // Saving current displayed fragment
+        activity.setFragment(R.id.navigation_saved);
 
         final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
         //Set listener for save location button
@@ -70,7 +76,7 @@ public class SavedFragment extends Fragment {
         // 4. set adapter
         mRecyclerView.setAdapter(savedListAdapter);
 
-        //observe the change of the live data
+        // Observe the change of the live data
         savedViewModel.getAllPlaces().observe(getActivity(), savedPlaces -> savedListAdapter.setPlace(savedPlaces));
 
 
@@ -118,7 +124,7 @@ public class SavedFragment extends Fragment {
 
                         // Draw the delete icon
                         icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
-                        // compute top and left margin to the view bounds
+                        // Compute top and left margin to the view bounds
                         icon.draw(c);
                     }
                 }
@@ -182,7 +188,7 @@ public class SavedFragment extends Fragment {
                     savedListAdapter.notifyDataSetChanged();
                 })
                 .setNegativeButton(getString(R.string.cancel_button), (dialog1, which) -> {
-                    //like never happened
+                    // Like never happened
                     dialog1.dismiss();
                 })
                 .create();
