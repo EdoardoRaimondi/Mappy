@@ -60,7 +60,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
      */
     @Override
     public void onClick(View v) {
-        v.setClickable(false);
         // if it is a valid id
         if (v.getId() != View.NO_ID){
             // getting string variable id
