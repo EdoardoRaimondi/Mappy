@@ -29,7 +29,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * @param actualRadius  old radius research
      */
     public RadiusDialog(int actualRadius){
-        this.actualRadius = actualRadius + KM_TO_M;
+        this.actualRadius = actualRadius/KM_TO_M + 1;
     }
 
     /**
@@ -46,8 +46,9 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
         textView = view.findViewById(R.id.text_view);
         final SeekBar seekBar = view.findViewById(R.id.seek);
-
-        seekBar.setMax(getResources().getInteger(R.integer.max_radius) - actualRadius);
+        String display = "" + actualRadius  + " km";
+        textView.setText(display);
+        seekBar.setMax(getResources().getInteger(R.integer.max_radius) - actualRadius + 1);
 
         builder.setView(view)
                 .setTitle(getString(R.string.radius_title))
