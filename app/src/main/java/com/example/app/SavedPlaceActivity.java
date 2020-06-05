@@ -103,8 +103,4 @@ public class SavedPlaceActivity extends FragmentActivity implements
         mMap.addMarker(marker);
     }
 
-
-
-
-
 }

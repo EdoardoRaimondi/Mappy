@@ -46,7 +46,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
         textView = view.findViewById(R.id.text_view);
         final SeekBar seekBar = view.findViewById(R.id.seek);
-        String display = "" + actualRadius  + " km";
+        String display = "" + actualRadius  + " " + getResources().getString(R.string.measure_unit);
         textView.setText(display);
         seekBar.setMax(getResources().getInteger(R.integer.max_radius) - actualRadius + 1);
 
@@ -81,7 +81,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 newRadius = progress + actualRadius;
-                String display = "" + newRadius + " km";
+                String display = "" + newRadius + " " + getResources().getString(R.string.measure_unit);
                 textView.setText(display);
             }
 

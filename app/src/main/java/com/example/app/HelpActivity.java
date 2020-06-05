@@ -38,7 +38,7 @@ public class HelpActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(HelpActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, 2);
         }
         if(!Places.isInitialized())
-            Places.initialize(getApplicationContext(), "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s");
+            Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         // setting help activity as full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_help);
@@ -118,22 +118,17 @@ public class HelpActivity extends AppCompatActivity {
      * @param grantResults results
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                } else {
-                    Toast.makeText(HelpActivity.this, "Permission denied to call", Toast.LENGTH_SHORT).show();
+                if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Toast.makeText(HelpActivity.this, getString(R.string.unauthorized_call), Toast.LENGTH_SHORT).show();
                 }
             }
             case 2:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                } else {
-                    Toast.makeText(HelpActivity.this, "Permission denied to call", Toast.LENGTH_SHORT).show();
+                if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Toast.makeText(HelpActivity.this, getString(R.string.unauthorized_call), Toast.LENGTH_SHORT).show();
                 }
 
         }
@@ -143,7 +138,7 @@ public class HelpActivity extends AppCompatActivity {
      * Toast message error for any type of problem
      */
     private void showPhoneNumberMessageError(){
-        Toast.makeText(getApplicationContext(), "Unable to find any phone number", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.no_call), Toast.LENGTH_LONG).show();
     }
 
 }

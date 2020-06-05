@@ -39,8 +39,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     public Location homeLocation;
 
-    public static final String SET_KEY = "set_key";
-
     //Shared preference keys
     public static final String HOME_LAT = "home_lat";
     public static final String HOME_LNG = "home_long";

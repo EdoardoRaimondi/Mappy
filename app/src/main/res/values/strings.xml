@@ -5,10 +5,10 @@
     <!-- Fragments and activity -->
     <string name="help">Help</string>
     <string name="helper">How can we help you?</string>
-    <string name="fine_radius">FINE</string>
-    <string name="scale_radius">SCALE</string>
     <string name="new_place">New Place</string>
     <string name="new_place_label">Insert new place name</string>
+    <string name="no_call">Unable to find any phone number</string>
+    <string name="unauthorized_call">Permission denied to call</string>
     <!-- Search fragment cathegories -->
     <string name="food">Food</string>
     <string name="help_label">Help</string>
@@ -52,6 +52,7 @@
     <string name="initial">1 km</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <string name="measure_unit">km</string>
 
     <!-- Snack bar -->
     <string name="no_gps">Your GPS sensor is turned off.\nWould you like to switch it on now?</string>

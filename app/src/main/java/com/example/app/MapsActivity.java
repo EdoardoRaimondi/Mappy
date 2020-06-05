@@ -240,11 +240,9 @@ public class MapsActivity
                 mMap.clear();
                 displayMarkers(restoreMarkers);
                 restoreMarkers.clear();
-                animateProgress(50,100, 500);
             }
             else {
                 showPlaces(radius, requestType);
-                animateProgress(50,100, 500);
             }
         });
     }
@@ -505,11 +503,13 @@ public class MapsActivity
     /**
      * Method to animate the camera
      */
-    static void animateCamera(LatLngBounds.Builder builder, GoogleMap map){
+    private void animateCamera(LatLngBounds.Builder builder, GoogleMap map){
         LatLngBounds bounds = builder.build();
         int padding = 0; // offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         map.animateCamera(cu);
+
+        animateProgress(50,100, 500);
     }
 
 }
