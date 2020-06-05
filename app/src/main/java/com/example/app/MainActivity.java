@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
             // Restore previous radius
             radius = savedInstanceState.getInt(RADIUS_KEY, getResources().getInteger(R.integer.default_radius) * 1000);
             // Return to previous fragment
-            int fragment = savedInstanceState.getInt(FRAGMENT_KEY, R.id.navigation_search);
-            displayFragment = fragment;
+            displayFragment = savedInstanceState.getInt(FRAGMENT_KEY, R.id.navigation_search);
         }
         else{
             radius = getResources().getInteger(R.integer.default_radius) * 1000;
