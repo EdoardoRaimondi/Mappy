@@ -114,8 +114,8 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                wheel.setClickable(false);
                 if(!isSpinning) {
+                    wheel.setClickable(false);
                     isSpinning = true;
                     int oldDegree = degree % 360;
                     degree = random.nextInt(360) + 720;
@@ -129,6 +129,7 @@ public class UtilsFragment extends Fragment {
                     rotate.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
+                            wheel.setClickable(false);
                         }
 
                         /**
@@ -138,7 +139,6 @@ public class UtilsFragment extends Fragment {
                          */
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            wheel.setClickable(true);
                             sendRequest(360 - (degree % 360));
                             isSpinning = false;
                         }
@@ -246,6 +246,12 @@ public class UtilsFragment extends Fragment {
 
         return root;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        wheel.setClickable(true);
     }
 
     // END OF HOME FRAGMENT LIFE CYCLE
