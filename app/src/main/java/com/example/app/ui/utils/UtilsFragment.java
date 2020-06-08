@@ -19,12 +19,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.app.HelpActivity;
 import com.example.app.HomeActivity;
 import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.MapsParameters;
+import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,7 +46,6 @@ public class UtilsFragment extends Fragment {
     private boolean isViewMode = false;
     private boolean isSpinning = false;
 
-    private static final int KM_TO_M = 1000;
     // Considering a 360 degree circle divided in 6 sections and
     // I start from an half of one. I got 360 / 6 / 2.
     // (so 1 section will be 2 FACTOR large)
@@ -60,10 +61,10 @@ public class UtilsFragment extends Fragment {
 
     /**
      * Callback when the fragment is visible
-     * @param inflater layout
-     * @param container root container
-     * @param savedInstanceState for eventual instance to restore
-     * @return the fragment view
+     * @param inflater  The layout Inflater
+     * @param container The root container
+     * @param savedInstanceState Bundle for eventual instance to restore
+     * @return The fragment view
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -98,18 +99,17 @@ public class UtilsFragment extends Fragment {
         // Get the radius bar
         bar = root.findViewById(R.id.seek);
         // Restore the last radius research
-        bar.setProgress(activity.getRadius() / KM_TO_M);
+        bar.setProgress(activity.getRadius() / MapsUtility.KM_TO_M);
         // Get the text
         txt = root.findViewById(R.id.text);
-        String display = "" + (activity.getRadius() / KM_TO_M) + " km";
+        String display = "" + (activity.getRadius() / MapsUtility.KM_TO_M) + " km";
         txt.setText(display);
         random = new Random();
 
         // User click the wheel and it starts rotate
         wheel.setOnClickListener(new View.OnClickListener() {
             /**
-             * Called when a view has been clicked.
-             *
+             * Called when wheel has been clicked.
              * @param v The view that was clicked.
              */
             @Override
@@ -135,7 +135,7 @@ public class UtilsFragment extends Fragment {
                         /**
                          * Send a request depending on its final position
                          *
-                         * @param animation the animation
+                         * @param animation The Animation selected
                          */
                         @Override
                         public void onAnimationEnd(Animation animation) {
@@ -164,17 +164,19 @@ public class UtilsFragment extends Fragment {
              * User can have one home at time set
              *  !viewMode  -> user click to set a home.
              *  viewMode -> user click to view his home.
-             * @param v the button
+             * @param v The button View
              */
             @Override
             public void onClick(View v) {
                 home.setClickable(false);
-                if(isViewMode) { // If the button has direction image
+                if(isViewMode) {
+                    // If the button has direction image
                     // Launch google maps app
                     Uri gmmIntentUri = UrlFactory.createDirectionsUrl(pos.latitude, pos.longitude);
                     startActivity(IntentFactory.createGoogleMapsDirectionsIntent( gmmIntentUri));
                 }
-                else{ // The button has home image
+                else{
+                    // The button has home image
                     Intent setHomeIntent = IntentFactory.createHomeRequest(getActivity());
                     startActivity(setHomeIntent);
                 }
@@ -184,7 +186,7 @@ public class UtilsFragment extends Fragment {
         home.setOnLongClickListener(new View.OnLongClickListener() {
             /**
              * Delete the old home and reset the button in !isViewMode
-             * @param v the button
+             * @param v The button View
              * @return true because no longer actions are excepted
              */
             @Override
@@ -204,31 +206,30 @@ public class UtilsFragment extends Fragment {
             }
         });
 
-        // User click to open the {@link HelpActivity}
-        sos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
-                startActivity(helpIntent);
-            }
+        /**
+         * User click to open the {@link HelpActivity}
+         */
+        sos.setOnClickListener(v -> {
+            Intent helpIntent = IntentFactory.createHelpIntentRequest(getActivity());
+            startActivity(helpIntent);
         });
 
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             /**
              * Callback when user tracks the bar
-             * @param seekBar  the bar displayed
-             * @param progress int representing the position of the user touch on the bar
-             * @param fromUser boolean to check if the progress is from the user
+             * @param seekBar  The bar displayed
+             * @param progress Integer representing the position of the user touch on the bar
+             * @param fromUser The boolean to check if the progress is from the user
              */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                String display = "" + (progress + getResources().getInteger(R.integer.default_radius)) + " km";
+                String display = "" + (progress + getResources().getInteger(R.integer.default_radius)) + " " + getResources().getString(R.string.measure_unit);
                 txt.setText(display);
             }
 
             /**
              * Callback when the user start tracking the bar
-             * @param seekBar the bar displayed
+             * @param seekBar The bar displayed
              */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -236,11 +237,11 @@ public class UtilsFragment extends Fragment {
 
             /**
              * Callback when the user stop tracking the bar
-             * @param seekBar the bar displayed
+             * @param seekBar The bar displayed
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                activity.setRadius((bar.getProgress() + getResources().getInteger(R.integer.default_radius)) * KM_TO_M);
+                activity.setRadius((bar.getProgress() + getResources().getInteger(R.integer.default_radius)) * MapsUtility.KM_TO_M);
             }
         });
 
@@ -260,7 +261,7 @@ public class UtilsFragment extends Fragment {
 
     /**
      * Analise the wheel position and send the corresponding command
-     * @param position the result position
+     * @param position The result position
      */
     private void sendRequest(int position) {
         int radius = activity.getRadius();
@@ -298,7 +299,7 @@ public class UtilsFragment extends Fragment {
 
     /**
      * Set the direction home button image
-     * @param home the button
+     * @param home The button FloatingActionButton
      */
     private void setDirectionsButton(FloatingActionButton home){
         home.setImageResource(R.drawable.ic_direction);
@@ -308,7 +309,7 @@ public class UtilsFragment extends Fragment {
 
     /**
      * Set the plus home button image
-     * @param home the button
+     * @param home The button FloatingActionButton
      */
     private void setHomeButton(FloatingActionButton home){
         home.setImageResource(R.drawable.ic_home);
@@ -318,11 +319,10 @@ public class UtilsFragment extends Fragment {
     // SHARED PREFERENCE METHODS
 
     /**
-     * @return current home coordinates
-     * 0.0 if not valid
+     * @return Current home coordinates (0,0) if not valid
      */
     private LatLng getHomeLocation(){
-        // getting eventual home coordinate set in a previous app usage
+        // Getting eventual home coordinate set in a previous app usage
         SharedPreferences shared = activity.getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, Context.MODE_PRIVATE);
         double homeLat = Double.parseDouble(shared.getString(HomeActivity.HOME_LAT, "0.0"));
         double homeLng = Double.parseDouble(shared.getString(HomeActivity.HOME_LNG, "0.0"));

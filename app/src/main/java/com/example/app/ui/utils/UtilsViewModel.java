@@ -10,7 +10,7 @@ public class UtilsViewModel extends ViewModel {
 
     public UtilsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        mText.setValue("This is utils fragment");
     }
 
     public LiveData<String> getText() {
