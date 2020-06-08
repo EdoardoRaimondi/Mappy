@@ -8,7 +8,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.provider.Settings;
 import android.view.WindowManager;
 
 import com.example.app.dialogs.BasicDialog;
+import com.example.app.finals.MapsUtility;
 import com.example.app.sensors.ConnectionManager;
 import com.example.app.sensors.GPSManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     // Fragment displayed
     private int displayFragment;
 
-
     // BEGIN OF MAIN ACTIVITY'S LIFE CYCLE CALLBACKS
+
     /**
      * Callback invoked while creating MainActivity
      * @param savedInstanceState the Bundle were previous state has been saved
@@ -67,19 +67,23 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         // If instance state was saved then backup
         if(savedInstanceState != null){
             // Restore previous radius
-            radius = savedInstanceState.getInt(RADIUS_KEY, getResources().getInteger(R.integer.default_radius) * 1000);
+            radius = savedInstanceState.getInt(RADIUS_KEY, getResources().getInteger(R.integer.default_radius) * MapsUtility.KM_TO_M);
             // Return to previous fragment
             displayFragment = savedInstanceState.getInt(FRAGMENT_KEY, R.id.navigation_search);
         }
         else{
-            radius = getResources().getInteger(R.integer.default_radius) * 1000;
+            radius = getResources().getInteger(R.integer.default_radius) * MapsUtility.KM_TO_M;
             displayFragment = R.id.navigation_search;
         }
+        // If another activity opened this one, get the fragment to return
         Intent intent = getIntent();
         displayFragment = intent.getIntExtra(FRAGMENT_KEY_INTENT, displayFragment);
+        // Managing navigation graph
         NavGraph navGraph = navController.getGraph();
+        // Setting starting fragment
         navGraph.setStartDestination(displayFragment);
         navController.setGraph(navGraph);
+        // Initializing navigation bar (footer)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
@@ -94,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         // Checking Google Play services apk
         GoogleApiAvailability google = GoogleApiAvailability.getInstance();
         int result = google.isGooglePlayServicesAvailable(this);
-        // If Google Play Services is disabled or not present
+        // If Google Play Services SDK is disabled or not present
         if(result != ConnectionResult.SUCCESS){
-            Dialog dial = google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
-            dial.show();
+            google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE)
+                .show();
         }
         else{
             // Checking GPS fine location permissions
@@ -108,11 +112,12 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                     gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
                 }
                 else{
-                    BasicDialog.BasicDialogBuilder overQueryBuilder = new BasicDialog.BasicDialogBuilder(RATIONALE_ID);
-                    overQueryBuilder.setTitle(getString(R.string.to_clarify));
-                    overQueryBuilder.setText(getString(R.string.rationale));
-                    overQueryBuilder.setTextForOkButton(getString(R.string.ok_button));
-                    overQueryBuilder.build().show(getSupportFragmentManager(), TAG);
+                    // Showing Rationale
+                    BasicDialog.BasicDialogBuilder basicDialogBuilder = new BasicDialog.BasicDialogBuilder(RATIONALE_ID);
+                    basicDialogBuilder.setTitle(getString(R.string.to_clarify));
+                    basicDialogBuilder.setText(getString(R.string.rationale));
+                    basicDialogBuilder.setTextForOkButton(getString(R.string.ok_button));
+                    basicDialogBuilder.build().show(getSupportFragmentManager(), TAG);
                 }
             }
             else {
@@ -198,8 +203,8 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     // DIALOGS RESULT LISTENER
     /**
      * BasicDialog common listener
-     * @param id the identifyer of dialog that was dismissed
-     * @param option the option choosen by user
+     * @param id the identifier of dialog that was dismissed
+     * @param option the option chosen by user
      */
     public void onDialogResult(String id, boolean option){
         if(id.equals(RATIONALE_ID)) {

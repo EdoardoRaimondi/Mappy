@@ -1,5 +1,6 @@
 package com.example.app.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,6 +43,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
+        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.radius_dialog, null);
 
         textView = view.findViewById(R.id.text_view);
@@ -52,12 +54,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
         builder.setView(view)
                 .setTitle(getString(R.string.radius_title))
-                .setNegativeButton(getString(R.string.radius_cancel_button), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton(getString(R.string.radius_cancel_button), (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     /**
                      * Callback when Ok button is pressed
@@ -119,6 +116,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
             listener = (RadiusDialogListener) context;
         }
         catch (ClassCastException e) {
+            // this should be managed in some LOG file of the app
             throw new ClassCastException(context.toString() + "must implement RadiusDialogListener");
         }
     }

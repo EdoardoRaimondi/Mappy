@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationRequest;
  */
 public class MapsUtility {
 
+    public static final int KM_TO_M = 1000;
 
     /**
      * Perform a location request
