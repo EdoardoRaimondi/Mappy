@@ -13,9 +13,9 @@ public interface MapJSonDataParser {
 
     /**
      * Method to parse the Json string data
-     * @param JSonData in string form
+     * @param JSonData String formed by obtained json file
      * @return List<Place>
-     * @throws JSONException if Json computation goes wrong
+     * @throws JSONException If Json computation goes wrong
      */
     List<Place> parse(String JSonData) throws JSONException;
 
