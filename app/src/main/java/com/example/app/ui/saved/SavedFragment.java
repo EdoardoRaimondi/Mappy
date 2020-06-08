@@ -114,7 +114,6 @@ public class SavedFragment extends Fragment {
                     if(icon != null) {
                         int intrinsicHeight = icon.getIntrinsicHeight();
                         int intrinsicWidth = icon.getIntrinsicWidth();
-
                         // Calculate position of delete icon
                         int iconTop = viewHolder.itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                         int iconMargin = (itemHeight - intrinsicHeight) / 2;

@@ -1,7 +1,6 @@
 package com.example.app;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.app.finals.ResponseStatus;
 import com.example.app.iterators.StoppablePlaceIterator;

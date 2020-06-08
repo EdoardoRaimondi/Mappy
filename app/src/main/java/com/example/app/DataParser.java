@@ -3,7 +3,6 @@ package com.example.app;
 import com.example.app.interfaces.MapJSonDataParser;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;

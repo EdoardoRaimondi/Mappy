@@ -381,7 +381,7 @@ public class MapsActivity
             }
         }
         catch(IllegalStateException exc){
-            // TODO: missing resume
+            //If app on background with dialog, nothing happened
         }
     }
 
