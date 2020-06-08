@@ -1,14 +1,13 @@
 package com.example.app.handlers;
 
 import android.content.Context;
-import android.location.Location;
 
 import com.example.app.GetNearbyPlaces;
 import com.example.app.HelpActivity;
+import com.example.app.R;
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.iterators.StoppablePlaceIterator;
-import com.example.app.listeners.LocationSetListener;
 import com.example.app.listeners.PhoneNumberGetListener;
 import com.example.app.listeners.ResultSetListener;
 import com.example.app.sensors.GoogleLocationFinder;
@@ -36,44 +35,52 @@ public class HelpActivityHandler {
     /**
      * Trigger the {@link PhoneNumberGetListener} when the
      * nearest phone number is found
-     * @param type of phone number you need (need to be a {@link NearbyRequestType})
+     * @param type Type of phone number you need (need to be a {@link NearbyRequestType})
      */
      public void getPhoneNumber(NearbyRequestType type, Context context){
         GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
-        googleLocationFinder.setLocationSetListener(new LocationSetListener() {
-            @Override
-            public void onLocationSet(Location location) {
-                String url = UrlFactory.getNearbyRequest(location.getLatitude(), location.getLongitude(), type.toString(), 5000);
-                //the request will be downloaded and displayed
-                GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
-                getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
-                getNearbyPlaces.setResultSetListener(new ResultSetListener() {
-                    @Override
-                    public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
-                        if(!nearbyPlaceListIterator.hasNext()) phoneNumberSearchFailed();
-                        while (nearbyPlaceListIterator.hasNext() && !nearbyPlaceListIterator.hasBeenStopped()) {
-                            Place currentPlace = nearbyPlaceListIterator.next();
-                            PlacesClient placesClient = Places.createClient(context);
-                            String placeId = currentPlace.getId();
-                            // Specify the fields to return.
-                            List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
-                            // Construct a request object, passing the place ID and fields array.
+        googleLocationFinder.setLocationSetListener(location -> {
+            String url = UrlFactory.getNearbyRequest(
+                    location.getLatitude(),
+                    location.getLongitude(),
+                    type.toString(), 
+                    context.getResources().getInteger(R.integer.help_radius)
+            );
+            // The request will be downloaded and displayed
+            GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
+            getNearbyPlaces.execute(getNearbyPlaces.createTransferData(url));
+            getNearbyPlaces.setResultSetListener(new ResultSetListener() {
+                @Override
+                public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
+                    if(!nearbyPlaceListIterator.hasNext()) phoneNumberSearchFailed();
+                    while (nearbyPlaceListIterator.hasNext() && !nearbyPlaceListIterator.hasBeenStopped()) {
+                        Place currentPlace = nearbyPlaceListIterator.next();
+                        PlacesClient placesClient = Places.createClient(context);
+                        String placeId = currentPlace.getId();
+                        // Specify the fields to return.
+                        List<Place.Field> placeFields = Collections.singletonList(Place.Field.PHONE_NUMBER);
+                        // Construct a request object, passing the place ID and fields array.
+                        if(placeId != null) {
                             FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-                            placesClient.fetchPlace(request).addOnSuccessListener((response) -> { Place place = response.getPlace();
-                                //place found
-                                if (place.getPhoneNumber() != null) { //If the place has a phone number
-                                    loadPhoneNumber(place.getPhoneNumber()); //take it
+                            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+                                Place place = response.getPlace();
+                                // Place found
+                                if (place.getPhoneNumber() != null) { // If the place has a phone number
+                                    loadPhoneNumber(place.getPhoneNumber()); // Take it
                                     nearbyPlaceListIterator.stopIteration();
                                 }
                             });
                         }
+                        else{
+                            nearbyPlaceListIterator.stopIteration();
+                        }
                     }
-                    @Override
-                    public void onResultNotSet(String error) {
-                        phoneNumberSearchFailed();
-                    }
-                });
-            }
+                }
+                @Override
+                public void onResultNotSet(String error) {
+                    phoneNumberSearchFailed();
+                }
+            });
         });
 
         googleLocationFinder.findCurrentLocation(context);
@@ -81,7 +88,7 @@ public class HelpActivityHandler {
 
     /**
      * Trigger the on success method on the listener
-     * @param phoneNumber to pass to caller
+     * @param phoneNumber Phone number to pass to caller
      */
     private void loadPhoneNumber(String phoneNumber){
         if(phoneNumberGetListener != null){
