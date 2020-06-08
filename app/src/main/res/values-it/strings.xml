@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mappy</string>
+
+    <!-- Fragments and activity -->
+    <string name="help">Aiuto</string>
+    <string name="helper">Come possiamo aiutarti?</string>
+    <string name="new_place">Nuovo luogo</string>
+    <string name="new_place_label">Inserire il numer del nuovo posto</string>
+    <string name="no_call">Impossibile trovare un numero di telefono</string>
+    <string name="unauthorized_call">Permesso di chiamare negato</string>
+    <!-- Search fragment cathegories -->
+    <string name="food">Cibi e bevande</string>
+    <string name="help_label">Soccorso</string>
+    <string name="tourist">Attrazioni</string>
+    <string name="services">Servizi</string>
+    <!-- Search fragment button labels -->
+    <string name="pharmacy">FARMACIA</string>
+    <string name="hospital">OSPEDALE</string>
+    <string name="police">POLIZIA</string>
+    <string name="taxi">TAXI</string>
+    <string name="bakery">PANETTERIA</string>
+    <string name="bar">BAR</string>
+    <string name="cafe">CAFE</string>
+    <string name="restaurant">RISTORANTE</string>
+    <string name="meal_delivery">DA ASPORTO</string>
+    <string name="supermarket">SUPERMERCATO</string>
+    <string name="aquarium">ACQUARIO</string>
+    <string name="art_gallery">GALLERIA</string>
+    <string name="museum">MUSEO</string>
+    <string name="night_club">DISCOTECA</string>
+    <string name="park">PARCO</string>
+    <string name="spa">SPA</string>
+    <string name="tourist_attraction">ATTRAZIONE</string>
+    <string name="zoo">ZOO</string>
+    <string name="airport">AEROPORTO</string>
+    <string name="atm">BANCOMAT</string>
+    <string name="bus">AUTOBUS</string>
+    <string name="car_rental">NOLEGGIO AUTO</string>
+    <string name="gas_station">DISTRIBUTORE</string>
+    <string name="parking">PARCHEGGIO</string>
+    <string name="cinema">CINEMA</string>
+
+
+    <!-- Tabs for main activity -->
+    <string name="title_utils">Strumenti</string>
+    <string name="title_saved">Salvati</string>
+    <string name="title_search">Ricerca</string>
+    <string name="title_activity_maps">Mappa</string>
+
+    <!-- Radius selector -->
+    <string name="initial">1 km</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="measure_unit">km</string>
+
+    <!-- Snack bar -->
+    <string name="no_gps">Il tuo GPS è spento.\nVuoi attivarlo ora?</string>
+    <string name="no_internet">Il tuo dispositivo non è connesso.\nConnettere ora?</string>
+    <string name="yes">SI</string>
+    <string name="home_delete">Coordinate casa cancellate.</string>
+    <string name="undo">ANNULLA</string>
+    <string name="place_delete">Posto rimosso dalla lista.</string>
+    <string name="saved">Salvato!</string>
+
+    <string name="set_home_info">Punta sulla mappa per cambiare!</string>
+    <string name="want_button">SETTA COME CASA</string>
+
+
+    <!-- DIALOGS -->
+    <!-- Radius dialog -->
+    <string name="radius_title">Aggiorna raggio</string>
+    <string name="radius_ok_button">OK</string>
+    <string name="no">NO</string>
+
+    <string name="radius_cancel_button">Cancella</string>
+    <string name="dialog_text">Sembra non ci sia nessun luogo come quello che stavi cercando vicino a te. Vuoi aggiornare il raggio di ricerca?</string>
+    <!-- Basic dialogs -->
+    <string name="to_clarify">Per chiarire</string>
+    <string name="rationale">
+        La nostra app ha bisogno di accedere al sensore GPS poiché, per permettere di cercare e trovare posti
+        di interesse vicini a te, necessita un elevata precisione nella localizzazione. In nessun caso utilizzeremo i dati
+        acquisiti per monitorare la tua attività per scopi commerciali o di spionaggio. La nostra prerogativa è fornire un servizio
+        trasparente, puntuale ed efficace; per questo motivo ci teniamo a precisare che i dati sensibili saranno memorizzate nel suo dispositivo
+        e non verranno in alcun modo trasmessi a server remoti.
+    </string>
+    <string name="ok_button">OK</string>
+    <string name="cancel_button">Annulla</string>
+    <string name="sorry">Perdonaci</string>
+    <string name="sorry_message">I nostri fornitori sono saturi di richieste, prova più tardi.</string>
+    <string name="oh_no">Oh no</string>
+    <string name="unknown_err">Errore imprevisto, riprova</string>
+    <string name="no_conn">Cosa ti aspettavi, abbiamo bisogno di Internet per trovare luoghi vicino a te. Connettere ora?</string>
+    <string name="retry">RIPROVA</string>
+    <string name="save_place">Vuoi salvare </string>
+
+    <!-- Toasts -->
+    <string name="no_gps_permission">No GPS = nulla da mostrare</string>
+    <string name="thank_you">Grazie!</string>
+
+    <!-- Descriptions -->
+    <string name="wheel_descr">ruota della fortuna</string>
+    <string name="indicator_description">indicatore della ruota della fortuna</string>
+
+    <!-- Hints -->
+    <string name="hint">nome del luogo</string>
+</resources>

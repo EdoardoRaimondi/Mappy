@@ -104,6 +104,4 @@
 
     <!-- Hints -->
     <string name="hint">place name</string>
-    <string name="go">GO</string>
-    <string name="save">SAVE</string>
 </resources>
