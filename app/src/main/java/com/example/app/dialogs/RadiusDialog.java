@@ -15,11 +15,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.app.R;
+import com.example.app.finals.MapsUtility;
 
+/**
+ * RadiusDialog class for a specific type of dialog required
+ * in {@link com.example.app.MapsActivity}
+ */
 public class RadiusDialog extends AppCompatDialogFragment {
 
-    private static final int KM_TO_M = 1000;
-
+    // Object params
     private int actualRadius;
     private int newRadius;
     private TextView textView;
@@ -27,15 +31,15 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
     /**
      * Set the some context information of the caller activity
-     * @param actualRadius  old radius research
+     * @param actualRadius The old int radius research
      */
     public RadiusDialog(int actualRadius){
-        this.actualRadius = actualRadius/KM_TO_M + 1;
+        this.actualRadius = actualRadius/ MapsUtility.KM_TO_M + MapsUtility.DEFAULT_INCREMENT;
     }
 
     /**
      * Callback when the dialog is created
-     * @param savedInstanceState for eventual saved data
+     * @param savedInstanceState For eventual instance saved data
      * @return The dialog
      */
     @NonNull
@@ -45,25 +49,26 @@ public class RadiusDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.radius_dialog, null);
-
-        textView = view.findViewById(R.id.text_view);
+        // Finding widgets
         final SeekBar seekBar = view.findViewById(R.id.seek);
+        textView = view.findViewById(R.id.text_view);
+        // Init them
         String display = "" + actualRadius  + " " + getResources().getString(R.string.measure_unit);
         textView.setText(display);
-        seekBar.setMax(getResources().getInteger(R.integer.max_radius) - actualRadius + 1);
-
+        seekBar.setMax(getResources().getInteger(R.integer.max_radius_bar) - actualRadius);
+        // Now build the Dialog
         builder.setView(view)
                 .setTitle(getString(R.string.radius_title))
                 .setNegativeButton(getString(R.string.radius_cancel_button), (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     /**
-                     * Callback when Ok button is pressed
-                     * @param dialog the dialog
-                     * @param i the dialog universal id
+                     * Callback when ok button is pressed
+                     * @param dialog The dialog
+                     * @param i      The dialog universal id
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        listener.onRadiusDialogResult(newRadius * KM_TO_M);
+                        listener.onRadiusDialogResult(newRadius * MapsUtility.KM_TO_M);
                         dialog.dismiss();
                     }
                 });
@@ -71,9 +76,9 @@ public class RadiusDialog extends AppCompatDialogFragment {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             /**
              * Callback when user tracks the bar
-             * @param seekBar  the bar displayed
-             * @param progress int representing the position of the user touch on the bar
-             * @param fromUser boolean to check if the progress is from the user
+             * @param seekBar  The bar displayed
+             * @param progress The int representing the position of the user touch on the bar
+             * @param fromUser The boolean to check if the progress is from the user
              */
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -83,16 +88,16 @@ public class RadiusDialog extends AppCompatDialogFragment {
             }
 
             /**
-             * Callback when the user start tracking the bar
-             * @param seekBar the bar displayed
+             * Callback when the user start moving the bar
+             * @param seekBar The bar displayed
              */
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
 
             /**
-             * Callback when the user stop tracking the bar
-             * @param seekBar the bar displayed
+             * Callback when the user stop moving the bar
+             * @param seekBar The bar displayed
              */
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -106,8 +111,8 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * that will be called on dialog result.
      * Result will be passed to the activity that called
      * the dialog
-     * @param context the activity context
-     * @throws ClassCastException if the listener is not implemented in activity class
+     * @param context             The activity context
+     * @throws ClassCastException If the listener is not implemented in activity class
      */
     @Override
     public void onAttach(@NonNull Context context) {
@@ -116,7 +121,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
             listener = (RadiusDialogListener) context;
         }
         catch (ClassCastException e) {
-            // this should be managed in some LOG file of the app
+            // This should be managed in some LOG file of the app
             throw new ClassCastException(context.toString() + "must implement RadiusDialogListener");
         }
     }

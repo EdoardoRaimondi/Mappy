@@ -9,6 +9,7 @@ import com.google.android.gms.location.LocationRequest;
 public class MapsUtility {
 
     public static final int KM_TO_M = 1000;
+    public static final int DEFAULT_INCREMENT = 1;
 
     /**
      * Perform a location request

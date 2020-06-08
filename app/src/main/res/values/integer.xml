@@ -2,4 +2,5 @@
 <resources>
     <integer name="default_radius">1</integer>
     <integer name="max_radius">49</integer>
+    <integer name="max_radius_bar">50</integer>
 </resources>

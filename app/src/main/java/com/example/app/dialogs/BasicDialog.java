@@ -14,15 +14,18 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.app.R;
 
+/**
+ * BasicDialog class for generic Dialog
+ */
 public class BasicDialog extends AppCompatDialogFragment {
 
+    // Object params
     private String id;
     private String title;
     private String text;
     private String textForOkButton;
     private String textForCancelButton;
     private BasicDialogListener listener;
-
 
     /**
      * Callback to get the basic dialog instance
@@ -35,10 +38,10 @@ public class BasicDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.basic_dialog, null);
-
+        // Getting and setting widgets
         TextView textView = view.findViewById(R.id.text_view);
         textView.setText(this.text);
-
+        // Build the Dialog
         builder.setView(view)
                 .setTitle(this.title)
                 .setNegativeButton(this.textForCancelButton, (dialog, i) -> {
@@ -58,8 +61,8 @@ public class BasicDialog extends AppCompatDialogFragment {
      * that will be called on dialog result.
      * Result will be passed to the activity that called
      * the dialog
-     * @param context the activity context
-     * @throws ClassCastException if the listener is not implemented in activity class
+     * @param context             The activity/fragment context
+     * @throws ClassCastException If the listener is not implemented in activity class
      */
     @Override
     public void onAttach(@NonNull Context context) {
@@ -68,6 +71,7 @@ public class BasicDialog extends AppCompatDialogFragment {
             listener = (BasicDialogListener) context;
         }
         catch (ClassCastException e) {
+            // This should be managed in some LOG file of the app
             throw new ClassCastException(context.toString() + "must implement BasicDialogListener");
         }
     }
@@ -80,10 +84,11 @@ public class BasicDialog extends AppCompatDialogFragment {
     }
 
     /**
-     * Builder for basic dialog
+     * Builder for BasicDialog
      */
     public static class BasicDialogBuilder {
 
+        // Builder params
         private String id;
         private String title;
         private String text;
@@ -92,35 +97,35 @@ public class BasicDialog extends AppCompatDialogFragment {
 
         /**
          * Builder constructor
-         * @param id of the dialog
+         * @param id Identification string of the dialog
          */
         public BasicDialogBuilder(String id){
             this.id = id;
         }
 
         /**
-         * @param title to set
+         * @param title String for title to set
          */
         public void setTitle(String title){
             this.title = title;
         }
 
         /**
-         * @param text to set
+         * @param text String for text to set
          */
         public void setText(String text){
             this.text = text;
         }
 
         /**
-         * @param textForOkButton to set
+         * @param textForOkButton String for ok button to set
          */
         public void setTextForOkButton(String textForOkButton){
             this.textForOkButton = textForOkButton;
         }
 
         /**
-         * @param textForCancelButton to set
+         * @param textForCancelButton String for cancel button to set
          */
         public void setTextForCancelButton(String textForCancelButton){
             this.textForCancelButton = textForCancelButton;
