@@ -208,8 +208,6 @@ public class MapsActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        /*CustomInfoWindow customInfoWindow = new CustomInfoWindow(this);
-        mMap.setInfoWindowAdapter(customInfoWindow);*/
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.setOnInfoWindowLongClickListener(this);
