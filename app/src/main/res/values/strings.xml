@@ -9,6 +9,7 @@
     <string name="new_place_label">Insert new place name</string>
     <string name="no_call">Unable to find any phone number</string>
     <string name="unauthorized_call">Permission denied to call</string>
+    <string name="home_sweet">Home sweet home</string>
     <!-- Search fragment cathegories -->
     <string name="food">Food</string>
     <string name="help_label">Help</string>

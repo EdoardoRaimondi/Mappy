@@ -8,14 +8,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public abstract class MarkerFactory {
 
-    private static final String HOME    = "Home sweet home";
-
     /**
      *
      * Create a basic marker
-     * @param latLng position
-     * @param placeName name of the place
-     * @return a marker option with selected param
+     * @param latLng    LatLng as position
+     * @param placeName The name of the place
+     * @return Marker option with selected param
      */
     public static MarkerOptions createBasicMarker(@NonNull LatLng latLng, @NonNull String placeName) {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -27,13 +25,14 @@ public abstract class MarkerFactory {
 
     /**
      * Method to create an home marker
-     * @param lat latitude
-     * @param lng longitude
-     * @return markerOption with selected param
+     * @param title The home title responsive to language
+     * @param lat   The latitude
+     * @param lng   The longitude
+     * @return The MarkerOption with selected param
      */
-    public static MarkerOptions createHomeMarker(double lat, double lng){
+    public static MarkerOptions createHomeMarker(String title, double lat, double lng){
         MarkerOptions marker = new MarkerOptions();
-        marker.title(HOME);
+        marker.title(title);
         LatLng latLng = new LatLng(lat, lng);
         marker.position(latLng);
         return marker;

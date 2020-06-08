@@ -10,6 +10,7 @@ public class MapsUtility {
     // Constants
     public static final int KM_TO_M = 1000;
     public static final int DEFAULT_INCREMENT = 1;
+    public static final String NEARBY_URL_DOMAIN = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 
     /**
      * Perform a location request

@@ -107,7 +107,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.clear();
                     homeLocation.setLatitude(latLng.latitude);
                     homeLocation.setLongitude(latLng.longitude);
-                    mMap.addMarker(MarkerFactory.createHomeMarker(latLng.latitude, latLng.longitude));
+                    mMap.addMarker(MarkerFactory.createHomeMarker(getResources().getString(R.string.home_sweet), latLng.latitude, latLng.longitude));
                 }
             });
         });
@@ -167,7 +167,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private void displayHome(Location homeLocation) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.SINGLE_PLACE_ZOOM));
-        mMap.addMarker(MarkerFactory.createHomeMarker(homeLocation.getLatitude(), homeLocation.getLongitude()));
+        mMap.addMarker(MarkerFactory.createHomeMarker(getResources().getString(R.string.home_sweet), homeLocation.getLatitude(), homeLocation.getLongitude()));
     }
 
 

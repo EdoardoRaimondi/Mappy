@@ -8,7 +8,7 @@
     <dimen name="radius_text_size">17sp</dimen>
     <dimen name="rad_btn_w">30dp</dimen>
     <dimen name="rad_btn_t_s">20sp</dimen>
-    <dimen name="rad_btn_pading">5dp</dimen>
+    <dimen name="rad_btn_padding">5dp</dimen>
     <dimen name="float_container_margin_lateral">10dp</dimen>
     <dimen name="float_container_margin_bottom">20dp</dimen>
     <dimen name="handler_minimum_size">30dp</dimen>

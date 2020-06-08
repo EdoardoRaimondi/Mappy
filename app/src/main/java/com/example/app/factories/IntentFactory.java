@@ -19,10 +19,10 @@ public abstract class IntentFactory {
 
     /**
      * Method to create a nearby request Intent
-     * @param context     of the activity
+     * @param context     The activity Context
      * @param requestType The place I'm looking for (disco, restaurant...)
      * @param radius      The research radius
-     * @return The intent created
+     * @return The Intent created
      */
     public static Intent createNearbyRequestIntent(Context context, NearbyRequestType requestType, int radius){
         Intent intent = new Intent(context, MapsActivity.class);
@@ -33,31 +33,29 @@ public abstract class IntentFactory {
 
     /**
      * Method to create an help request Intent
-     * @param context of the activity
-     * @return The intent created
+     * @param context The Context of the activity
+     * @return The Intent created
      */
     public static Intent createHelpIntentRequest(Context context){
-        Intent intent = new Intent(context, HelpActivity.class);
-        return intent;
+        return new Intent(context, HelpActivity.class);
     }
 
     /**
      * Method to create a intent in order to return
      * to the main lobby
-     * @param context of the current activity
-     * @return the intent
+     * @param context The Context of the current activity
+     * @return The Intent created
      */
      public static Intent createLobbyReturn(Context context){
-         Intent intent = new Intent(context, MainActivity.class);
-         return intent;
+         return new Intent(context, MainActivity.class);
      }
 
     /**
      * Method to create a intent in order to return
      * to the main lobby specifying the fragment
-     * @param context of the current activity
-     * @param fragment id where we were
-     * @return the intent
+     * @param context  The Context of the current activity
+     * @param fragment The fragment id where we were
+     * @return The Intent created
      */
     public static Intent createLobbyReturn(Context context, int fragment){
         Intent intent = new Intent(context, MainActivity.class);
@@ -68,8 +66,8 @@ public abstract class IntentFactory {
     /**
      * Method to create a intent in order to set
      * a marker in the current user position
-     * @param context of the activity
-     * @return the intent
+     * @param context The Context of the current activity
+     * @return The Intent created
      */
     public static Intent createHomeRequest(Context context){
         return new Intent(context, HomeActivity.class);
@@ -78,9 +76,9 @@ public abstract class IntentFactory {
     /**
      * Method to create a intent in order to
      * send place information
-     * @param context of the activity
-     * @param place to display
-     * @return the intent
+     * @param context The Context of the current activity
+     * @param place   The place to display
+     * @return The Intent
      */
     public static Intent createPlaceInfoIntent(Context context, Place place){
         Intent intent = new Intent(context, SavedPlaceActivity.class);
@@ -91,8 +89,8 @@ public abstract class IntentFactory {
     /**
      * Method to create an intent in order to
      * open google maps and show a place directions
-     * @param uri for google maps
-     * @return the intent
+     * @param uri Google Maps URI
+     * @return The Intent
      */
     public static Intent createGoogleMapsDirectionsIntent(Uri uri){
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
@@ -102,11 +100,10 @@ public abstract class IntentFactory {
 
     /**
      * Open the phone caller
-     * @param numberToCall number ready to be called
-     * @return intent to send
+     * @param numberToCall Number ready to be called
+     * @return Intent to send
      */
     public static Intent createCallIntent(String numberToCall){
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", numberToCall, null));
-        return intent;
+        return new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", numberToCall, null));
     }
 }
