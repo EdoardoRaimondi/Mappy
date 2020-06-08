@@ -14,30 +14,52 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-
+/*
+ * Class for managing GPS providers
+ */
 public class GPSManager implements LocationListener {
 
+    // Object params
     private Context context;
 
+    /**
+    * Constructor
+    * @param context The Context GPSManager instance has to be attached
+    */
     public GPSManager(Context context) {
         super();
         this.context = context;
     }
 
+    /*
+    * Method to know if app has GPS permissions granted
+    */
     public boolean hasPermissions(){
         return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+    * Method to know if app can request GPS permissions
+     * @param activity The Activity to attach
+    */
     public boolean canRequestNow(Activity activity){
         return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
+    /**
+    * Method to require GPS permissions
+     * @param activity The Activity required permissions
+     * @param reqCode  The request code (int)
+    */
     public void requirePermissions(Activity activity, int reqCode){
         if(canRequestNow(activity) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, reqCode);
         }
     }
 
+    /*
+    * Method to know if GPS Sensor is enabled
+    */
     public boolean isGPSOn(){
         if(hasPermissions()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -65,6 +87,9 @@ public class GPSManager implements LocationListener {
         return false;
     }
 
+    /*
+    * Method to know if GPS Provider is enabled
+    */
     public boolean isProviderEnabled(){
         if(hasPermissions()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

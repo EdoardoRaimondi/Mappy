@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.app.R;
 import com.example.app.interfaces.LocationFinder;
 import com.example.app.listeners.LocationSetListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -18,17 +19,23 @@ import com.google.android.gms.tasks.OnSuccessListener;
  * If you need to get user location, just implement a {@link LocationSetListener}
  * in your class and then call findCurrentLocation method. We will give it to you only when (and if) ready.
  * We also handle all the errors.
- * Is there something easier?
  */
 public class GoogleLocationFinder implements LocationFinder {
 
-
+    // Object params
     private LocationSetListener locationSetListener;
 
+    /*
+    * Constructor
+    */
     public GoogleLocationFinder(){
         locationSetListener = null;
     }
 
+    /**
+    * Setter method of listener
+    * @param listener The Listener
+    */
     public void setLocationSetListener(LocationSetListener listener){
         locationSetListener = listener;
     }
@@ -41,20 +48,17 @@ public class GoogleLocationFinder implements LocationFinder {
 
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(context);
         client.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if(location != null){
-                            locationSet(location);
-                        }
+                .addOnSuccessListener(location -> {
+                    if(location != null){
+                        locationSet(location);
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Unable to reach your position", Toast.LENGTH_LONG).show();
-                    }
-                });
+                .addOnFailureListener(
+                        e -> Toast.makeText(
+                                context,
+                                context.getResources().getString(R.string.no_position),
+                                Toast.LENGTH_LONG
+                        ).show());
     }
 
 

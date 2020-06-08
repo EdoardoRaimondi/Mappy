@@ -26,6 +26,10 @@ public class ProgressAnimation extends Animation {
         this.to = to;
     }
 
+    /**
+     * @param interpolatedTime The time in millis from one step to another
+     * @param t Transformation selected or default
+     */
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         super.applyTransformation(interpolatedTime, t);

@@ -10,6 +10,7 @@
     <string name="no_call">Impossibile trovare un numero di telefono</string>
     <string name="unauthorized_call">Permesso di chiamare negato</string>
     <string name="home_sweet">Casa dolce casa</string>
+    <string name="no_position">Impossibile raggiungere la tua posizione</string>
     <!-- Search fragment cathegories -->
     <string name="food">Cibi e bevande</string>
     <string name="help_label">Soccorso</string>

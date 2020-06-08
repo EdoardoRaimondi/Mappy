@@ -10,6 +10,7 @@
     <string name="no_call">Unable to find any phone number</string>
     <string name="unauthorized_call">Permission denied to call</string>
     <string name="home_sweet">Home sweet home</string>
+    <string name="no_position">Unable to reach your position</string>
     <!-- Search fragment cathegories -->
     <string name="food">Food</string>
     <string name="help_label">Help</string>
