@@ -31,7 +31,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
     /**
      * Set the some context information of the caller activity
-     * @param actualRadius The old int radius research
+     * @param actualRadius The old research int radius
      */
     public RadiusDialog(int actualRadius){
         this.actualRadius = actualRadius/ MapsUtility.KM_TO_M + MapsUtility.DEFAULT_INCREMENT;
@@ -39,8 +39,8 @@ public class RadiusDialog extends AppCompatDialogFragment {
 
     /**
      * Callback when the dialog is created
-     * @param savedInstanceState For eventual instance saved data
-     * @return The dialog
+     * @param savedInstanceState The Bundle for eventual instance saved data
+     * @return The Dialog
      */
     @NonNull
     @Override
@@ -63,8 +63,8 @@ public class RadiusDialog extends AppCompatDialogFragment {
                 .setPositiveButton(getString(R.string.radius_ok_button), new DialogInterface.OnClickListener() {
                     /**
                      * Callback when ok button is pressed
-                     * @param dialog The dialog
-                     * @param i      The dialog universal id
+                     * @param dialog The Dialog
+                     * @param i      The dialog int universal id
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
@@ -111,8 +111,8 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * that will be called on dialog result.
      * Result will be passed to the activity that called
      * the dialog
-     * @param context             The activity context
-     * @throws ClassCastException If the listener is not implemented in activity class
+     * @param context             The activity Context
+     * @throws ClassCastException If the listener is not implemented in any Context
      */
     @Override
     public void onAttach(@NonNull Context context) {

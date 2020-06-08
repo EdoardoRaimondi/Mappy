@@ -1,6 +1,5 @@
 package com.example.app.finals;
 
-
 import com.google.android.gms.location.LocationRequest;
 
 /**
@@ -8,6 +7,7 @@ import com.google.android.gms.location.LocationRequest;
  */
 public class MapsUtility {
 
+    // Constants
     public static final int KM_TO_M = 1000;
     public static final int DEFAULT_INCREMENT = 1;
 

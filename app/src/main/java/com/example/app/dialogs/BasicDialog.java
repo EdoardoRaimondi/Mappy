@@ -29,7 +29,7 @@ public class BasicDialog extends AppCompatDialogFragment {
 
     /**
      * Callback to get the basic dialog instance
-     * @param savedInstanceState the Bundle of any previous basic dialog if any
+     * @param savedInstanceState The Bundle of any previous basic dialog if any
      */
     @NonNull
     @Override
@@ -61,8 +61,8 @@ public class BasicDialog extends AppCompatDialogFragment {
      * that will be called on dialog result.
      * Result will be passed to the activity that called
      * the dialog
-     * @param context             The activity/fragment context
-     * @throws ClassCastException If the listener is not implemented in activity class
+     * @param context             The activity/fragment Context
+     * @throws ClassCastException If the listener is not implemented in any Context
      */
     @Override
     public void onAttach(@NonNull Context context) {
@@ -97,7 +97,7 @@ public class BasicDialog extends AppCompatDialogFragment {
 
         /**
          * Builder constructor
-         * @param id Identification string of the dialog
+         * @param id Identification String of the dialog
          */
         public BasicDialogBuilder(String id){
             this.id = id;
@@ -132,7 +132,7 @@ public class BasicDialog extends AppCompatDialogFragment {
         }
 
         /**
-         * @return A basic dialog instance built with the parameters set
+         * @return A basic Dialog instance built with the parameters set
          */
         public BasicDialog build(){
             BasicDialog basicDialog = new BasicDialog();
