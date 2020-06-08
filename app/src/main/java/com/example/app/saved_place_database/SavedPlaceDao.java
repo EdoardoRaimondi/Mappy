@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Dao layer to interact with the database.
- * As Room required
+ * As Room requires
  */
 @Dao
 public interface SavedPlaceDao {

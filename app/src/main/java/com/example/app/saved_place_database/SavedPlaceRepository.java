@@ -19,7 +19,7 @@ public class SavedPlaceRepository {
 
     /**
      * Constructor of the repository. It access to database
-     * @param application where is running
+     * @param application Application where it is running
      */
     public SavedPlaceRepository(Application application) {
         SavedPlaceDatabase db = SavedPlaceDatabase.getDatabase(application);
@@ -29,7 +29,7 @@ public class SavedPlaceRepository {
 
 
     /**
-     * @return return all places from the database as Live Data object
+     * @return Return a list of all places from the database as Live Data object
      */
     public LiveData<List<SavedPlace>> getAllPLaces(){
         return mAllPlaces;
@@ -37,21 +37,17 @@ public class SavedPlaceRepository {
 
     /**
      * Insert place method execute on a non-UI separated thread
-     * @param place to insert
+     * @param place Place to insert
      */
     public void insert(SavedPlace place) {
-        SavedPlaceDatabase.databaseWriteExecutor.execute(() -> {
-            mSavedPlaceDao.insertPlace(place);
-        });
+        SavedPlaceDatabase.databaseWriteExecutor.execute(() -> mSavedPlaceDao.insertPlace(place));
     }
 
     /**
      * Remove a place method execute on a non-UI separated thread
-     * @param place to remove
+     * @param place Place to remove
      */
     public void remove(SavedPlace place){
-        SavedPlaceDatabase.databaseWriteExecutor.execute(() -> {
-            mSavedPlaceDao.delete(place);
-        });
+        SavedPlaceDatabase.databaseWriteExecutor.execute(() -> mSavedPlaceDao.delete(place));
     }
 }

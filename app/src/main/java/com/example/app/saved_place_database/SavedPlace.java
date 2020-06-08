@@ -3,8 +3,6 @@ package com.example.app.saved_place_database;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-import java.util.Date;
-
 /**
  * Represents a saved place entity in our database
  */
@@ -23,8 +21,8 @@ public class SavedPlace {
 
     /**
      * Constructor
-     * @param latitude  key
-     * @param longitude key
+     * @param latitude  Double latitude
+     * @param longitude Double longitude
      */
     public SavedPlace(double latitude, double longitude){
         this.latitude = latitude;
