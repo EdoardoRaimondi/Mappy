@@ -31,7 +31,6 @@ import com.example.app.listeners.ResultSetListener;
 import com.example.app.saved_place_database.SavedPlace;
 import com.example.app.ui.saved.SavedViewModel;
 import com.example.app.factories.ViewModelFactory;
-import com.example.app.ui_tools.CustomInfoWindow;
 import com.example.app.ui_tools.ProgressAnimation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -383,9 +382,8 @@ public class MapsActivity
                     break;
             }
         }
-
         catch(IllegalStateException exc){
-            // TODO: missing resume
+            //If app on background with dialog, nothing happened
         }
     }
 
