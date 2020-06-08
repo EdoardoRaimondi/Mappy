@@ -4,7 +4,7 @@ public interface PhoneNumberGetListener {
 
     /**
      * Called when found a phone number
-     * @param phoneNumber found
+     * @param phoneNumber String of found phone number
      */
     void onSuccess(String phoneNumber);
 

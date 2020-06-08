@@ -35,7 +35,6 @@ import java.util.Objects;
 public class SavedPlaceActivity extends FragmentActivity implements
         OnMapReadyCallback {
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private GoogleMap mMap;
     private MapView mapView;
 
@@ -56,7 +55,7 @@ public class SavedPlaceActivity extends FragmentActivity implements
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(SavedPlaceActivity.this);
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(SavedPlaceActivity.this);
     }
 
 

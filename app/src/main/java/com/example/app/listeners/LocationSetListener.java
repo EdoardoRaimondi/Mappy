@@ -9,7 +9,7 @@ public interface LocationSetListener {
 
     /**
      * Callback when the user position is set
-     * @param location the user location
+     * @param location The user Location
      */
     void onLocationSet(Location location);
 }

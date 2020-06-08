@@ -35,7 +35,7 @@ public class GoogleLocationFinder implements LocationFinder {
 
     /**
      * Trigger the listener when the location has been found
-     * @param context of the activity caller
+     * @param context Context of the activity caller
      */
     public void findCurrentLocation(Context context){
 

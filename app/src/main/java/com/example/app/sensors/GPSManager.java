@@ -52,7 +52,7 @@ public class GPSManager implements LocationListener {
                 }
             }
             else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                int locationMode = 0;
+                int locationMode;
                 try {
                     locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
                 }

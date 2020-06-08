@@ -38,7 +38,7 @@ public class StoppablePlaceIterator implements StoppableListIterator {
     }
 
     /**
-     * @return place if the iterator has not been stopped, null otherwise
+     * @return The Place if the iterator has not been stopped, null otherwise
      */
     @Override
     public Place next() {
