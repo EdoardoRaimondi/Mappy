@@ -93,18 +93,9 @@ public class HelpActivity extends AppCompatActivity {
                 startActivity(callIntent);
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onFail() {
-                //if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.Q) { TODO: Add this if/else on production
-                    EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
-                    if (emergencyNumber == null) showPhoneNumberMessageError();
-                    else {
-                        Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
-                        startActivity(callIntent);
-                    }
-                //}
-                //else showPhoneNumberMessageError();
+               showPhoneNumberMessageError();
             }
         });
 
@@ -118,7 +109,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param grantResults results
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 // If request is cancelled, the result arrays are empty.
