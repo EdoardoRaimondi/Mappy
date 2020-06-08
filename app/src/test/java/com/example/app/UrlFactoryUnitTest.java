@@ -1,7 +1,5 @@
 package com.example.app;
 
-import android.net.Uri;
-
 import com.example.app.factories.UrlFactory;
 import com.example.app.finals.NearbyRequestType;
 

@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +24,7 @@ public class StoppablePlaceIteratorTest {
     private static Place PLACE_3 = Place.builder()
             .setId(ID_3)
             .build();
-    private final List<Place> dummyList = new ArrayList();
+    private final List<Place> dummyList = new ArrayList<>();
     private StoppablePlaceIterator iterator = new StoppablePlaceIterator(dummyList);
 
     @Before
