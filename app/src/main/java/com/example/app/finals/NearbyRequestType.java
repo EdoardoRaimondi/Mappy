@@ -3,7 +3,7 @@ package com.example.app.finals;
 /**
  * Describe the type of nearby google request. In order to distinguish them.
  * This is the list of all possible Place types
- * please see @link https://developers.google.com/places/supported_types#table1
+ * please @see https://developers.google.com/places/supported_types#table1
  */
 public enum NearbyRequestType {
     accounting,

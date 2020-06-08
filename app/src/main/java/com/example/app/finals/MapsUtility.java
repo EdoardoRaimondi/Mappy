@@ -3,7 +3,7 @@ package com.example.app.finals;
 import com.google.android.gms.location.LocationRequest;
 
 /**
- * Class containing all the methods shared by the maps activity
+ * Class containing all the methods and constants shared by the {@link com.example.app.MapsActivity}
  */
 public class MapsUtility {
 
