@@ -35,19 +35,27 @@ import java.util.Date;
 
 public class SavedFragment extends Fragment {
 
+    // Private members
     private SavedViewModel savedViewModel;
     private SavedListAdapter savedListAdapter;
     private MainActivity activity;
 
     private GoogleLocationFinder locationFinder = new GoogleLocationFinder();
 
+    /**
+     * Callback when the fragment is visible
+     * @param inflater           The layout inflater
+     * @param container          Root container
+     * @param savedInstanceState Bundle for eventual instance to restore
+     * @return The fragment view
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(getActivity() != null) {
             activity = (MainActivity) getActivity();
         }
-        savedViewModel = ViewModelProviders.of(this,
-                new ViewModelFactory(
-                        activity.getApplication())
+        savedViewModel = ViewModelProviders.of(
+                this,
+                 new ViewModelFactory(activity.getApplication())
         ).get(SavedViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_saved, container, false);
@@ -56,7 +64,7 @@ public class SavedFragment extends Fragment {
         activity.setFragment(R.id.navigation_saved);
 
         final FloatingActionButton saveLocation = root.findViewById(R.id.save_position);
-        //Set listener for save location button
+        // Set listener for save location button
         saveLocation.setOnClickListener(v -> {
             locationFinder.setLocationSetListener(location -> {
                 SavedPlace place = new SavedPlace(location.getLatitude(), location.getLongitude());
@@ -132,12 +140,12 @@ public class SavedFragment extends Fragment {
 
             /**
              * Delete the place
-             * @param viewHolder of the recycler view
-             * @param direction of the swipe
+             * @param viewHolder ViewHolder of the RecyclerView
+             * @param direction Integer param as direction of swipe
              */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // getting data of deleted object
+                // Getting data of deleted object
                 final String name = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getPlaceName();
                 final String date = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getDateSaved();
                 final double lat = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getLatitude();
@@ -161,8 +169,8 @@ public class SavedFragment extends Fragment {
 
     /**
      * Open a dialog to let user choose a name for that saved name
-     * @param place     that user saved
-     * @param viewModel to save it into the database
+     * @param place     The Place saved by user
+     * @param viewModel ViewModel of database
      */
     private void setEditablePlaceName(SavedPlace place, SavedViewModel viewModel){
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -193,7 +201,7 @@ public class SavedFragment extends Fragment {
 
     /**
      * Capitalizer for string, put every first char as capital
-     * @param str to parse
+     * @param str The String to parse
      */
     public native String capitalizeFirstChars(String str);
 
