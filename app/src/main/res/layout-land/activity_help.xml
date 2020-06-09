@@ -10,19 +10,6 @@
     android:orientation="vertical"
     android:gravity="center_vertical|center_horizontal">
 
-    <TextView
-        android:id="@+id/help_lobby"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/helper"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/rapid_actions"
-        />
-
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -31,12 +18,12 @@
     <!-- Container for possible help places -->
     <GridLayout
         android:id="@+id/rapid_actions"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/default_padding"
-        android:rowCount="3"
-        android:columnCount="3"
+        android:rowCount="1"
+        android:columnCount="4"
         app:layout_constraintBottom_toTopOf="@id/sos_call"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_row="0"
-            android:layout_column="2"
+            android:layout_column="1"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -84,8 +71,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="0"
+            android:layout_row="0"
+            android:layout_column="2"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -104,8 +91,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="2"
+            android:layout_row="0"
+            android:layout_column="3"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -134,7 +121,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:paddingVertical="@dimen/default_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
