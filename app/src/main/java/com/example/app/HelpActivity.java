@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -90,7 +91,12 @@ public class HelpActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String phoneNumber) {
                 Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
+                try{
                 startActivity(callIntent);
+                }
+                catch(ActivityNotFoundException exc){
+                    // TODO: not a phone
+                }
             }
 
             @Override

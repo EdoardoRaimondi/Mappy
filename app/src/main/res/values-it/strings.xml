@@ -12,7 +12,7 @@
     <string name="home_sweet">Casa dolce casa</string>
     <string name="no_position">Impossibile raggiungere la tua posizione</string>
     <!-- Search fragment cathegories -->
-    <string name="food">Cibi e bevande</string>
+    <string name="food">Cibi e Bevande</string>
     <string name="help_label">Soccorso</string>
     <string name="tourist">Attrazioni</string>
     <string name="services">Servizi</string>
@@ -52,8 +52,6 @@
 
     <!-- Radius selector -->
     <string name="initial">1 km</string>
-    <string name="plus">+</string>
-    <string name="minus">-</string>
     <string name="measure_unit">km</string>
 
     <!-- Snack bar -->

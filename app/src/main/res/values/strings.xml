@@ -52,8 +52,6 @@
 
     <!-- Radius selector -->
     <string name="initial">1 km</string>
-    <string name="plus">+</string>
-    <string name="minus">-</string>
     <string name="measure_unit">km</string>
 
     <!-- Snack bar -->

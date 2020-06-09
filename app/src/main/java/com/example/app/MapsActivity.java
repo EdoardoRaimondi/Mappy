@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -55,7 +56,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,8 +65,11 @@ import java.util.List;
 
 public class MapsActivity
         extends FragmentActivity
-        implements OnMapReadyCallback, RadiusDialog.RadiusDialogListener, BasicDialog.BasicDialogListener,
-        GoogleMap.OnInfoWindowLongClickListener{
+        implements OnMapReadyCallback,
+                   RadiusDialog.RadiusDialogListener,
+                   BasicDialog.BasicDialogListener,
+                   GoogleMap.OnInfoWindowLongClickListener,
+                   GoogleMap.OnInfoWindowClickListener{
 
     private static final String TAG = "MapsActivity";
 
@@ -231,7 +234,7 @@ public class MapsActivity
             //Get button pressed information
             Intent requestInfo = getIntent();
             requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
-            radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius) * 1000);
+            radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius) * MapsUtility.KM_TO_M);
 
             if(canRestore){
                 mMap.clear();
@@ -258,7 +261,13 @@ public class MapsActivity
                             if (myLastLocation != null) {
                                 //trigger the listeners
                                 loadLocation(myLastLocation);
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
+                                mMap.moveCamera(
+                                        CameraUpdateFactory.newLatLngZoom(
+                                                new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()),
+                                                MapsParameters.DEFAULT_ZOOM
+                                        )
+                                );
+                                animateProgress(50,100,500);
                             }
                             else {
                                 final LocationRequest locationRequest = MapsUtility.createLocationRequest();
@@ -271,7 +280,12 @@ public class MapsActivity
                                         }
                                         myLastLocation = locationResult.getLastLocation();
                                         loadLocation(myLastLocation);
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()), MapsParameters.DEFAULT_ZOOM));
+                                        mMap.moveCamera(
+                                                CameraUpdateFactory.newLatLngZoom(
+                                                        new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()),
+                                                        MapsParameters.DEFAULT_ZOOM)
+                                        );
+                                        animateProgress(50,100,500);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
@@ -292,14 +306,13 @@ public class MapsActivity
          setLocationSetListener(new LocationSetListener() {
              /**
               * Callback when the position is ready
-              *
-              * @param location the centre of the research
+              * @param location The centre of the research
               */
              @Override
              public void onLocationSet(Location location) {
-                 //create the request
+                 // Create the request
                  String url = UrlFactory.getNearbyRequest(myLastLocation.getLatitude(), myLastLocation.getLongitude(), type.toString(), radius);
-                 //the request will be downloaded and displayed
+                 // The request will be downloaded and displayed
                  GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                  getNearbyPlaces.setResultSetListener(new ResultSetListener() {
                      @Override
@@ -318,9 +331,9 @@ public class MapsActivity
 
     /**
      * Callback for the activity result. If check is passed, let the method execute
-     * @param requestCode activity request code
-     * @param resultCode  activity result code
-     * @param data        intent representing the data
+     * @param requestCode Activity request code
+     * @param resultCode  Activity result code
+     * @param data        Intent representing the data
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -334,12 +347,13 @@ public class MapsActivity
 
     /**
      * Callback when app has been resume from onPause. It recreate the precedent state
-     * @param markerList the list of the marker representing the precedent state
+     * @param markerList The List of marker representing the precedent state
      */
     private void displayMarkers(List<MarkerOptions> markerList){
         for(int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
             mMap.addMarker(markerList.get(currentMarker));
         }
+        animateProgress(50,100,500);
     }
 
     /**
@@ -381,13 +395,13 @@ public class MapsActivity
             }
         }
         catch(IllegalStateException exc){
-            //If app on background with dialog, nothing happened
+            // If app on background with dialog, nothing happened
         }
     }
 
     /**
      * Method that triggered the {@link LocationSetListener}
-     * @param location my last location
+     * @param location My last Location
      */
     private void loadLocation(Location location){
         if(locationSetListener != null){
@@ -396,10 +410,10 @@ public class MapsActivity
     }
 
     /**
-     * Method to animate UX progress bar
-     * @param from % starting point
-     * @param to % end point
-     * @param duration animation duration
+     * Method to animate progress bar
+     * @param from     Percentage starting point
+     * @param to       Percentage end point
+     * @param duration Animation duration
      */
     private void animateProgress(int from, int to, int duration){
         Animation anim = new ProgressAnimation(progressBar, from, to);
@@ -428,16 +442,27 @@ public class MapsActivity
      * @param positiveButton the option choosen by user
      */
     public void onDialogResult(String id, boolean positiveButton) {
-        //just go back to the main activity
+        // Just go back to the main activity
         startActivity(IntentFactory.createLobbyReturn(this));
     }
 
     /**
      * RadiusDialog listener
-     * @param radius new radius of research
+     * @param radius New radius of research
      */
     public void onRadiusDialogResult(int radius){
         startActivity(IntentFactory.createNearbyRequestIntent(this, requestType, radius));
+    }
+
+    /**
+     * Callback when the user perform a click on a Marker's InfoWindow
+     * @param marker The Marker selected by the user
+     */
+    @Override
+    public void onInfoWindowClick(final Marker marker){
+        // Launch google maps app
+        Uri gmmIntentUri = UrlFactory.createDirectionsUrl(marker.getPosition().latitude, marker.getPosition().longitude);
+        startActivity(IntentFactory.createGoogleMapsDirectionsIntent(gmmIntentUri));
     }
 
     /**
@@ -501,11 +526,9 @@ public class MapsActivity
      */
     private void animateCamera(LatLngBounds.Builder builder, GoogleMap map){
         LatLngBounds bounds = builder.build();
-        int padding = 0; // offset from edges of the map in pixels
+        int padding = 0; // Offset from edges of the map in pixels
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         map.animateCamera(cu);
-
-        animateProgress(50,100, 500);
     }
 
 }
