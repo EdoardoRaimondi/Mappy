@@ -73,38 +73,41 @@ public class MapsActivity
 
     private static final String TAG = "MapsActivity";
 
-    // activity connectors
+    // Activity connectors
     public static final String NEARBY_KEY = "nearby_k";
     public static final String RADIUS = "radius_k";
 
-    // instance state keys
+    // Instance state keys
     private static final String TITLES_KEY = "titles_k";
     private static final String LATITUDES_KEY = "lat_k";
     private static final String LONGITUDES_KEY = "lng_k";
     private static final String LAT_KEY = "lat_last_k";
     private static final String LNG_KEY = "lng_last_k";
 
-    // basic dialogs ids
+    // Basic Dialogs' ids
     private static final String OQL_ID = "oql_id";
 
+    // OBJECT PARAMS
+    // Widgets
     private GoogleMap mMap;
-    private LocationCallback locationCallback;
     private MapView mapView;
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private Location myLastLocation;
     private ProgressBar progressBar;
-
+    // Inrefcaces
+    private LocationCallback locationCallback;
+    private LocationSetListener locationSetListener;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    // Other
     private NearbyRequestType requestType;
     private int radius; //max radius can be 50000m
+    private Location myLastLocation;
 
-    //View model to database access
+    // ViewModel to database access
     private SavedViewModel mSavedViewModel;
 
-    // instance restoring control variables
+    // Instance restoring control variables
     private boolean canRestore = false;
     private List<MarkerOptions> restoreMarkers;
 
-    private LocationSetListener locationSetListener;
 
     // BEGIN OF ACTIVITY'S LIFE CYCLE CALLBACKS
 
@@ -115,20 +118,22 @@ public class MapsActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Setting Activity full screen
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         );
         setContentView(R.layout.activity_maps);
+        // Getting Widgets
         progressBar = findViewById(R.id.prog_bar);
         restoreMarkers = new ArrayList<>();
 
-        // restoring instance state if any
+        // Restoring instance state if any
         if(savedInstanceState != null){
             String[] titles = savedInstanceState.getStringArray(TITLES_KEY);
             double[] latitudes = savedInstanceState.getDoubleArray(LATITUDES_KEY);
             double[] longitudes = savedInstanceState.getDoubleArray(LONGITUDES_KEY);
-            // create a marker list, in order to be display then
+            // Create a marker list, in order to be display then
             if (titles != null && latitudes != null && longitudes != null) {
                 for (int i = 0; i < titles.length; i++) {
                     MarkerOptions newMarker = new MarkerOptions();
@@ -138,7 +143,7 @@ public class MapsActivity
                     LatLng latLng = new LatLng(lat, lng);
                     newMarker.position(latLng);
                     newMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                    // now the marker is created I add it on the marker list
+                    // Now the marker is created I add it on the marker list
                     restoreMarkers.add(newMarker);
                 }
                 canRestore = true;
@@ -148,7 +153,7 @@ public class MapsActivity
 
         mSavedViewModel =  ViewModelProviders.of(this, new ViewModelFactory(getApplication())).get(SavedViewModel.class);
 
-        // obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
@@ -165,26 +170,26 @@ public class MapsActivity
      */
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        // calling super class method
+        // Calling super class method
         super.onSaveInstanceState(savedInstanceState);
-        // getting the list of found nearby places
+        // Getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
         if (markerList.size() > 0) {
             String[] title = new String[markerList.size()];
             double[] lat = new double[markerList.size()];
             double[] lng = new double[markerList.size()];
             for (int currentMarker = 0; currentMarker < markerList.size(); currentMarker++) {
-                // filling the arrays
+                // Filling the arrays
                 MarkerOptions marker = markerList.get(currentMarker);
                 title[currentMarker] = marker.getTitle();
                 lat[currentMarker] = marker.getPosition().latitude;
                 lng[currentMarker] = marker.getPosition().longitude;
             }
-            // now arrays are filled with the information I need
+            // Now arrays are filled with the information I need
             savedInstanceState.putStringArray(TITLES_KEY, title);
             savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
             savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
-            // saving current position
+            // Saving current position
             if (myLastLocation != null) {
                 savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
                 savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
@@ -196,7 +201,7 @@ public class MapsActivity
 
     /**
      * Method to set the location listener.
-     * @param listener to set
+     * @param listener The Listener to set
      */
     private void setLocationSetListener(LocationSetListener listener){
         locationSetListener = listener;
@@ -205,7 +210,7 @@ public class MapsActivity
     /**
      * Callback when the map fragment ui is ready.
      * If triggered it means surely a button has been pressed
-     * @param googleMap the map
+     * @param googleMap The GoogleMap reference
      */
     @SuppressLint("MissingPermission")
     @Override
@@ -214,6 +219,7 @@ public class MapsActivity
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.setOnInfoWindowLongClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
 
         if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
             View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -231,11 +237,11 @@ public class MapsActivity
 
         task.addOnSuccessListener(this, locationSettingsResponse -> {
             setDeviceLocation();
-            //Get button pressed information
+            // Get button pressed information
             Intent requestInfo = getIntent();
             requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
             radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius) * MapsUtility.KM_TO_M);
-
+            // Can I restore previous state ?
             if(canRestore){
                 mMap.clear();
                 displayMarkers(restoreMarkers);
@@ -259,7 +265,7 @@ public class MapsActivity
                         if (task.isSuccessful()) {
                             myLastLocation = task.getResult();
                             if (myLastLocation != null) {
-                                //trigger the listeners
+                                // Trigger the listeners
                                 loadLocation(myLastLocation);
                                 mMap.moveCamera(
                                         CameraUpdateFactory.newLatLngZoom(
@@ -299,8 +305,8 @@ public class MapsActivity
 
     /**
      * Method to show markers on the map
-     * @param radius the radius to search
-     * @param type the type of place to display
+     * @param radius Integer as radius to search
+     * @param type   The type of place to display
      */
      private void showPlaces(final int radius, final NearbyRequestType type) {
          setLocationSetListener(new LocationSetListener() {
@@ -361,15 +367,17 @@ public class MapsActivity
      * and act accordingly (show different dialog).
      * Act normally if the status is OK
      * To see all the possible status see {@link ResponseStatus}
-     * @param status of the response
+     * @param status String as status of the response
      */
     private void showResponseInfo(String status){
         try{
             switch (status) {
+                // No result found
                 case ResponseStatus.ZERO_RESULTS:
                     RadiusDialog dialog = new RadiusDialog(radius);
                     dialog.show(getSupportFragmentManager(), TAG);
                     break;
+                // Exceeded daily quota of API key
                 case ResponseStatus.OVER_QUERY_LIMIT:
                     BasicDialog.BasicDialogBuilder overQueryBuilder = new BasicDialog.BasicDialogBuilder(OQL_ID);
                     overQueryBuilder.setTitle(getString(R.string.sorry));
@@ -383,6 +391,7 @@ public class MapsActivity
                 case ResponseStatus.CONNECTION_LOW:
                     startActivity(IntentFactory.createLobbyReturn(this));
                     break;
+                // Strange errors
                 case ResponseStatus.INVALID_REQUEST:
                 case ResponseStatus.UNKNOWN_ERROR:
                 case ResponseStatus.REQUEST_DENIED:
@@ -395,7 +404,7 @@ public class MapsActivity
             }
         }
         catch(IllegalStateException exc){
-            // If app on background with dialog, nothing happened
+            // If app on background with Dialog, nothing happened
         }
     }
 
@@ -444,6 +453,7 @@ public class MapsActivity
     public void onDialogResult(String id, boolean positiveButton) {
         // Just go back to the main activity
         startActivity(IntentFactory.createLobbyReturn(this));
+        finish();
     }
 
     /**
@@ -452,7 +462,11 @@ public class MapsActivity
      */
     public void onRadiusDialogResult(int radius){
         startActivity(IntentFactory.createNearbyRequestIntent(this, requestType, radius));
+        // We don't want user to perform multiple back stack press to go back home
+        finish();
     }
+
+    // OTHER LISTENERS
 
     /**
      * Callback when the user perform a click on a Marker's InfoWindow
@@ -476,18 +490,19 @@ public class MapsActivity
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     /**
                      * Save the place
-                     * @param dialog selected
-                     * @param id of the selection
+                     * @param dialog The selected Dialog
+                     * @param id     Dialog id
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        //create entity to add
+                        // Create entity to add
                         SavedPlace place = new SavedPlace(marker.getPosition().latitude, marker.getPosition().longitude);
                         Date today = Calendar.getInstance().getTime();
+                        @SuppressLint("SimpleDateFormat")
                         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         place.setDateSaved(formatter.format(today));
                         place.setPlaceName(marker.getTitle());
-                        //add it to the database
+                        // Add it to the database
                         mSavedViewModel.insert(place);
                         Toast.makeText(getApplicationContext(), getText(R.string.saved), Toast.LENGTH_SHORT)
                             .show();
@@ -498,23 +513,27 @@ public class MapsActivity
                 .show();
     }
 
+    // UTILITY METHODS
+
     /**
      * Display nearby places
-     * @param nearbyPlaceListIterator list of places to display
+     * @param nearbyPlaceListIterator List of places to display
      */
     private void displayPlaces(StoppablePlaceIterator nearbyPlaceListIterator){
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         if(nearbyPlaceListIterator.hasNext()) {
             while (nearbyPlaceListIterator.hasNext()) {
-                //Extract the data
+                // Extract the data
                 Place googleNearbyLocalPlace = nearbyPlaceListIterator.next();
                 String placeName = googleNearbyLocalPlace.getName();
                 LatLng latLng = googleNearbyLocalPlace.getLatLng();
-                builder.include(latLng);
+                if(latLng != null && placeName != null) {
+                    builder.include(latLng);
 
-                MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
-                GetNearbyPlaces.markerList.add(markerOptions);
-                mMap.addMarker(markerOptions);
+                    MarkerOptions markerOptions = MarkerFactory.createBasicMarker(latLng, placeName);
+                    GetNearbyPlaces.markerList.add(markerOptions);
+                    mMap.addMarker(markerOptions);
+                }
             }
             animateCamera(builder, mMap);
         }

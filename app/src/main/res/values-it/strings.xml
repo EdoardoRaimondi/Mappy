@@ -6,7 +6,7 @@
     <string name="help">Aiuto</string>
     <string name="helper">Come possiamo aiutarti?</string>
     <string name="new_place">Nuovo luogo</string>
-    <string name="new_place_label">Inserire il numer del nuovo posto</string>
+    <string name="new_place_label">Inserire il nome del nuovo posto</string>
     <string name="no_call">Impossibile trovare un numero di telefono</string>
     <string name="unauthorized_call">Permesso di chiamare negato</string>
     <string name="home_sweet">Casa dolce casa</string>
@@ -61,8 +61,6 @@
     <string name="home_delete">Coordinate casa cancellate.</string>
     <string name="undo">ANNULLA</string>
     <string name="place_delete">Posto rimosso dalla lista.</string>
-    <string name="saved">Salvato!</string>
-
     <string name="set_home_info">Punta sulla mappa per cambiare!</string>
     <string name="want_button">SETTA COME CASA</string>
 
@@ -95,8 +93,10 @@
     <string name="save_place">Vuoi salvare </string>
 
     <!-- Toasts -->
-    <string name="no_gps_permission">No GPS = nulla da mostrare</string>
+    <string name="no_gps_permission">No GPS = nulla da mostrare.</string>
     <string name="thank_you">Grazie!</string>
+    <string name="sorry_no_phone">Spiacenti ma questo non è un telefono.</string>
+    <string name="saved">Salvato!</string>
 
     <!-- Descriptions -->
     <string name="wheel_descr">ruota della fortuna</string>

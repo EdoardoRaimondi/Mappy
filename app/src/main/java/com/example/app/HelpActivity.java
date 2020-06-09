@@ -1,5 +1,6 @@
 package com.example.app;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -95,7 +96,7 @@ public class HelpActivity extends AppCompatActivity {
                 startActivity(callIntent);
                 }
                 catch(ActivityNotFoundException exc){
-                    // TODO: not a phone
+                    Toast.makeText(getApplicationContext(), getString(R.string.sorry_no_phone), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -115,7 +116,7 @@ public class HelpActivity extends AppCompatActivity {
      * @param grantResults results
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 1: {
                 // If request is cancelled, the result arrays are empty.
