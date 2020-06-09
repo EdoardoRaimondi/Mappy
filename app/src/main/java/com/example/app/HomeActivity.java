@@ -39,7 +39,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     public Location homeLocation;
 
-    //Shared preference keys
+    // Shared preference keys
     public static final String HOME_LAT = "home_lat";
     public static final String HOME_LNG = "home_long";
 
@@ -58,10 +58,13 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_place);
 
-        // setting full screen activity
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // Setting full screen activity
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
 
-        // obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
@@ -70,8 +73,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Callback when the map is ready
-     *
-     * @param googleMap the map
+     * @param googleMap The GoogleMap reference
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -99,8 +101,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
                 /**
                  * Listener all session open in order to let the user set
                  * a home manually
-                 *
-                 * @param latLng of the user click
+                 * @param latLng LatLng position the user clicked
                  */
                 @Override
                 public void onMapLongClick(LatLng latLng) {
@@ -163,7 +164,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
      * Display the user location as a marker on the map
      * It represent the home set
      *
-     * @param homeLocation the location of the user
+     * @param homeLocation The Location of the user
      */
     private void displayHome(Location homeLocation) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()), MapsParameters.SINGLE_PLACE_ZOOM));

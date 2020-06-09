@@ -51,7 +51,7 @@ public class UtilsFragment extends Fragment {
     // (so 1 section will be 2 FACTOR large)
     private static final float FACTOR = 30f;
 
-    // View components and Activity
+    // Widgets and Activity
     private SeekBar bar;
     private TextView txt;
     private ImageView wheel;
@@ -64,7 +64,7 @@ public class UtilsFragment extends Fragment {
      * @param inflater  The layout Inflater
      * @param container The root container
      * @param savedInstanceState Bundle for eventual instance to restore
-     * @return The fragment view
+     * @return The fragment View
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -102,7 +102,7 @@ public class UtilsFragment extends Fragment {
         bar.setProgress(activity.getRadius() / MapsUtility.KM_TO_M);
         // Get the text
         txt = root.findViewById(R.id.text);
-        String display = "" + (activity.getRadius() / MapsUtility.KM_TO_M) + " km";
+        String display = "" + (activity.getRadius() / MapsUtility.KM_TO_M) + " " + getResources().getString(R.string.measure_unit);
         txt.setText(display);
         random = new Random();
 
@@ -134,7 +134,6 @@ public class UtilsFragment extends Fragment {
 
                         /**
                          * Send a request depending on its final position
-                         *
                          * @param animation The Animation selected
                          */
                         @Override
@@ -319,7 +318,7 @@ public class UtilsFragment extends Fragment {
     // SHARED PREFERENCE METHODS
 
     /**
-     * @return Current home coordinates (0,0) if not valid
+     * @return Current LatLng home coordinates ,(0,0) if not valid
      */
     private LatLng getHomeLocation(){
         // Getting eventual home coordinate set in a previous app usage

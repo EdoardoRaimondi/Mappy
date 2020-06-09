@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentActivity;
 import com.example.app.factories.MarkerFactory;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -23,7 +22,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 
@@ -45,21 +43,25 @@ public class SavedPlaceActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setting full screen activity
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // Setting full screen activity
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
         setContentView(R.layout.show_place);
 
-        // obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-
-        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(SavedPlaceActivity.this);
     }
 
 
-
+    /**
+     * Callback for Map ready
+     * @param googleMap The GoogleMap reference
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -80,21 +82,18 @@ public class SavedPlaceActivity extends FragmentActivity implements
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                Intent placeInfo = getIntent();
-                Place placeToShow = placeInfo.getParcelableExtra("place");
-                assert placeToShow != null;
-                showPlace(placeToShow);
-            }
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            Intent placeInfo = getIntent();
+            Place placeToShow = placeInfo.getParcelableExtra("place");
+            assert placeToShow != null;
+            showPlace(placeToShow);
         });
     }
 
 
     /**
      * Show the place on the map
-     * @param place to show
+     * @param place Place to show
      */
     private void showPlace(Place place){
         MarkerOptions marker = MarkerFactory.createBasicMarker(Objects.requireNonNull(place.getLatLng()), Objects.requireNonNull(place.getName()));

@@ -13,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.telephony.emergency.EmergencyNumber;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -41,7 +40,7 @@ public class HelpActivity extends AppCompatActivity {
         }
         if(!Places.isInitialized())
             Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
-        // setting help activity as full screen
+        // Setting help activity as full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_help);
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
