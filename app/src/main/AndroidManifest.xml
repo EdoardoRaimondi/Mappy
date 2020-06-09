@@ -10,21 +10,18 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".HelpActivity"
-            android:label="@string/help"></activity>
-        <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".SavedPlaceActivity"></activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -38,6 +35,20 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".HelpActivity"
+            android:label="@string/help">
+
+        </activity>
+
+        <activity android:name=".HomeActivity">
+
+        </activity>
+
+        <activity android:name=".SavedPlaceActivity">
+
+        </activity>
+
+        <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="fullSensor" />
@@ -48,6 +59,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
