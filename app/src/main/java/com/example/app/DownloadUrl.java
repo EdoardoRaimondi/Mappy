@@ -11,22 +11,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Class to download URL
+ * Class to download from URL
  */
-public class DownloadUrl {
+class DownloadUrl {
 
     /**
      * It read the url (a Json file with all the places information such as position and name) and
      * return it under string format
-     * @param urlPlace to download
-     * @return String representing data to downloaded
-     * @throws IOException if input streaming goes wrong
+     * @param urlPlace String representing URL to download from
+     * @return String representing downloaded data
+     * @throws IOException If input streaming goes wrong
      */
-    public String readTheUrl(@NonNull String urlPlace) throws IOException {
+    String readTheUrl(@NonNull String urlPlace) throws IOException {
 
-        String data = "";
-        InputStream inputStream = null;
-        HttpURLConnection connection = null;
+        String data;
+        InputStream inputStream;
+        HttpURLConnection connection;
 
         URL url = new URL(urlPlace);
         connection = (HttpURLConnection) url.openConnection();
@@ -34,18 +34,18 @@ public class DownloadUrl {
 
         inputStream = connection.getInputStream();
         BufferedReader bufferedReader =  new BufferedReader(new InputStreamReader(inputStream));
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
 
-        //going to read line by line
-        String line = "";
+        // Going to read line by line
+        String line;
         while( (line = bufferedReader.readLine()) != null){
             stringBuffer.append(line);
         }
 
-        //fill the data
+        // Fill the data
         data = stringBuffer.toString();
 
-        //close all
+        // Close all
         bufferedReader.close();
         inputStream.close();
         connection.disconnect();

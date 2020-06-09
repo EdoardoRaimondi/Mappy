@@ -22,11 +22,11 @@ import java.util.List;
  */
 public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
-    private String googlePlaceData, url;
+    private String googlePlaceData;
 
     private ResultSetListener resultSetListener;
 
-    public static List<MarkerOptions> markerList = new ArrayList<>();
+    static List<MarkerOptions> markerList = new ArrayList<>();
 
     /**
      * Constructor in order to set null the listener
@@ -37,14 +37,14 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
     /**
      * Set the listener following the {@link ResultSetListener} interface
-     * @param listener to build
+     * @param listener The Listener to build
      */
     public void setResultSetListener(ResultSetListener listener){
         resultSetListener = listener;
     }
 
     /**
-     * @return a string[] containing valid data for this task
+     * @return String[] containing valid data for this task
      */
     public String[] createTransferData(String string){
         String[] transferData = new String[1];
@@ -54,12 +54,12 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
     /**
      * Download the url response on a work separated thread
-     * @param  strings url request from the {@link MainActivity}
-     * @return string representing the data
+     * @param  strings String representing URL request from the {@link MainActivity}
+     * @return String representing the data
      */
     @Override
     protected String doInBackground(String... strings) {
-        url = strings[0];
+        String url = strings[0];
 
         DownloadUrl downloadUrl = new DownloadUrl();
         try {
@@ -74,7 +74,7 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
     /**
      * Callback to show the nearby places
-     * @param s string representing the data {@see DataParser for more details}
+     * @param s String representing the data {@see DataParser for more details}
      */
     @Override
     protected void onPostExecute(String s) {
@@ -102,21 +102,19 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
 
     /**
-     * Method that trigger the listener and send
-     * it the result data
+     * Method that trigger the listener and send it to caller
      */
-    protected void loadResult(StoppablePlaceIterator nearbyPlaces){
+    private void loadResult(StoppablePlaceIterator nearbyPlaces){
         if(resultSetListener != null) {
             resultSetListener.onResultSet(nearbyPlaces);
         }
     }
 
     /**
-     * Method that trigger the listener and send
-     * it the
-     * @param error done
+     * Method that trigger the listener and send it to caller
+     * @param error String representing an error
      */
-    protected void resultNotSet(String error){
+    void resultNotSet(String error){
         if(resultSetListener != null){
             resultSetListener.onResultNotSet(error);
         }

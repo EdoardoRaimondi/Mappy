@@ -12,17 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CLass to parse the google place data
+ * CLass to parse the Google Place data
  */
 public class DataParser implements MapJSonDataParser {
 
-    public static String STATUS = "";
+    // Status of parser
+    static String STATUS = "";
 
     /**
      * Convert a single json object of the position to an Hash Map
-     * @param googlePlaceJSON the place in json format
-     * @return the hash map representing the place
-     * @throws JSONException if something in the json read goes wrong
+     * @param googlePlaceJSON JSONObject of Place(s) in json format
+     * @return The HashMap representing found Place(s)
+     * @throws JSONException if something in the json read goes wrong TODO: can remove ?
      *
      */
     private Place getSingleNearbyPlace(JSONObject googlePlaceJSON) {
@@ -37,7 +38,7 @@ public class DataParser implements MapJSonDataParser {
             id = googlePlaceJSON.getString("place_id");
             latitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat"));
             longitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng"));
-            //reference = googlePlaceJSON.getString("reference")
+            // reference = googlePlaceJSON.getString("reference") TODO: Edo ?
             place = Place.builder()
                     .setLatLng(new LatLng(latitude, longitude))
                     .setName(placeName)
@@ -46,6 +47,7 @@ public class DataParser implements MapJSonDataParser {
         }
         catch (JSONException e) {
             e.printStackTrace();
+            // TODO: STATUS = ResponseStatus.UNKNOWN_ERROR ?
         }
 
         return place;
@@ -55,14 +57,14 @@ public class DataParser implements MapJSonDataParser {
     /**
      * Create a list of place (in hash map format)
      * @param jsonArray array containing the nearby places
-     * @throws JSONException if json reading goes wrong
+     * @throws JSONException if json reading goes wrong TODO: can remove ?
      */
     private List<Place> getAllNearbyPlaces(JSONArray jsonArray) {
         int count = 0;
-        // changed code here because if there is no connection null pointer exc is thrown
         if(jsonArray != null) {
             count = jsonArray.length();
         }
+
         List<Place> nearbyPlacesList = new ArrayList<>();
 
         Place nearbyLocalPlaceMap;
@@ -74,6 +76,7 @@ public class DataParser implements MapJSonDataParser {
             }
             catch (JSONException e) {
                 e.printStackTrace();
+                // TODO: STATUS = ResponseStatus.UNKNOWN_ERROR ?
             }
         }
 
@@ -84,14 +87,14 @@ public class DataParser implements MapJSonDataParser {
 
     /**
      * Method to parse the JsonData
-     * @param JsonData to parse. Has to be compatible with JSON
+     * @param JsonData String rapresenting JSONObject data to parse. Has to be compatible with JSON
      * @return List of nearby places (in HashMap format)
-     * @throws JSONException if Json computation goes wrong
+     * @throws JSONException If Json computation goes wrong
      */
     public List<Place> parse(String JsonData) throws JSONException {
         JSONObject jsonObject = new JSONObject(JsonData);
         JSONArray jsonArray = jsonObject.getJSONArray("results");
-        //The status can assume one of the {@link ResponseStatus.class}
+        /** The status can assume one of the {@link com.example.app.finals.ResponseStatus} */
         STATUS = jsonObject.getString("status");
         return getAllNearbyPlaces(jsonArray);
     }
