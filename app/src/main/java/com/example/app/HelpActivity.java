@@ -7,12 +7,10 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -23,11 +21,16 @@ import com.example.app.handlers.HelpActivityHandler;
 import com.example.app.listeners.PhoneNumberGetListener;
 import com.google.android.libraries.places.api.Places;
 
+/*
+* Help Activity class for sos support
+*/
 public class HelpActivity extends AppCompatActivity {
 
-    private TelephonyManager  telephonyManager;
     private HelpActivityHandler helpActivityHandler = new HelpActivityHandler();
 
+    /**
+     * Callback when the activity is created
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,50 +44,53 @@ public class HelpActivity extends AppCompatActivity {
         if(!Places.isInitialized())
             Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
         // Setting help activity as full screen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
         setContentView(R.layout.activity_help);
-        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
     }
 
     /**
      * Method to show the nearby hospitals
-     * @param view button {@id hospital}
+     * @param view The button that called this
      */
     public void showNearbyHospital(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.hospital, 5000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.hospital, getResources().getInteger(R.integer.help_radius));
         startActivity(intent);
     }
 
     /**
      * Method to show the nearby police station
-     * @param view button {@id police}
+     * @param view The button that called this
      */
     public void showNearbyPolice(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.police, 5000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.police, getResources().getInteger(R.integer.help_radius));
         startActivity(intent);
     }
 
     /**
      * Method to show the nearby taxi stations
-     * @param view button {@id taxi}
+     * @param view The button that called this
      */
     public void showNearbyTaxi(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, 5000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, getResources().getInteger(R.integer.help_radius));
         startActivity(intent);
     }
 
     /**
      * Method to show the nearby taxi stations
-     * @param view button {@id taxi}
+     * @param view The button that called this
      */
     public void showNearbyPharmacy(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.pharmacy, 5000);
+        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.pharmacy, getResources().getInteger(R.integer.help_radius));
         startActivity(intent);
     }
 
     /**
      * Call the police of the nearest police station
-     * @param view button {@id call}
+     * @param view The button that called this
      */
     public void callPolice(View view) {
         helpActivityHandler.setPhoneNumberGetListener(new PhoneNumberGetListener() {
@@ -110,9 +116,9 @@ public class HelpActivity extends AppCompatActivity {
 
     /**
      * Basic request permission result override
-     * @param requestCode 1
-     * @param permissions permissions
-     * @param grantResults results
+     * @param requestCode Integer representing request code
+     * @param permissions String[] representing permissions
+     * @param grantResults Integer[] representing results
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

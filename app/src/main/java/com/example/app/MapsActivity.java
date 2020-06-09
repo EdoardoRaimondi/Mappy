@@ -87,7 +87,7 @@ public class MapsActivity
     // Basic Dialogs' ids
     private static final String OQL_ID = "oql_id";
 
-    // OBJECT PARAMS
+    // PRIVATE MEMBERS
     // Widgets
     private GoogleMap mMap;
     private MapView mapView;

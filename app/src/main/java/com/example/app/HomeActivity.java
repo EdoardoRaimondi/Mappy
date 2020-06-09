@@ -129,7 +129,7 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Set and show the new home position.
-     * If called twice, the home will be override
+     * If called twice, the home will be overwritten
      */
     private void setHome() {
         googleLocationFinder.setLocationSetListener(location -> {

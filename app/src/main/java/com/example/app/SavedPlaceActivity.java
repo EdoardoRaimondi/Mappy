@@ -38,7 +38,7 @@ public class SavedPlaceActivity extends FragmentActivity implements
 
 
     /**
-     * Callback when the activity is created
+     * Callback when the fragment activity is created
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
