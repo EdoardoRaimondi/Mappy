@@ -10,40 +10,45 @@ import com.example.app.saved_place_database.SavedPlaceRepository;
 
 import java.util.List;
 
+/**
+ * ModelView class of {@link SavedFragment }
+ */
 public class SavedViewModel extends ViewModel {
 
+    // Private members
     private SavedPlaceRepository mRepository;
     private LiveData<List<SavedPlace>> mAllSavedPlaces;
 
     /**
      * Saved View Model constructor. It access to repository
-     * @param application where is running
+     * @param application Application where it is running
      */
     public SavedViewModel(Application application) {
         mRepository = new SavedPlaceRepository(application);
         mAllSavedPlaces = mRepository.getAllPLaces();
+
     }
 
     /**
      * Get all the saved places
-     * @return all the place as LiveData object
+     * @return a List of all Place as LiveData object
      */
-    public LiveData<List<SavedPlace>> getAllPlaces() {
+    LiveData<List<SavedPlace>> getAllPlaces() {
         return mAllSavedPlaces;
     }
 
     /**
      * Insert a new place to the database
-     * @param place to insert
+     * @param place Place to insert into database
      */
     public void insert(SavedPlace place){
         mRepository.insert(place);
     }
 
     /**
-     * @param place to remove from the database
+     * @param place Place to remove from the database
      */
-    public void remove(SavedPlace place){
+    void remove(SavedPlace place){
         mRepository.remove(place);
     }
 }

@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * App search fragment
- * It contains: a list of places to search group by category.
+ * It contains: a list of Place to search group by category.
  */
 public class SearchFragment extends Fragment implements View.OnClickListener{
 

@@ -37,7 +37,7 @@ import java.util.Random;
 /**
  * App utility fragment
  * It contains: wheel, radius selection bar and floating buttons.
- * Floating buttons: setHome, viewHome, sos, saveLocation
+ * Floating buttons: setHome, viewHome, help
  */
 public class UtilsFragment extends Fragment {
 

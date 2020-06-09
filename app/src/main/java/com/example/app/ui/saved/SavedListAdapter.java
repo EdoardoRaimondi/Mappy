@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.R;
@@ -23,15 +24,16 @@ import java.util.List;
 public class SavedListAdapter extends
         RecyclerView.Adapter<SavedListAdapter.SavedViewHolder> {
 
+    // Private members
     private List<SavedPlace> savedPlacesList;
     private final LayoutInflater mInflater;
     private Context context;
 
     /**
      * Adapter constructor
-     * @param context the context of the caller
+     * @param context The Context of the caller
      */
-    public SavedListAdapter(Context context) {
+    SavedListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -43,18 +45,19 @@ public class SavedListAdapter extends
      */
     class SavedViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
+        // Private members
         private final TextView savedItemView;
         private final TextView dateView;
         final SavedListAdapter mAdapter;
+
         /**
          * Creates a new custom view holder to hold the view to display in
          * the RecyclerView.
-         *
          * @param itemView The view in which to display the data.
-         * @param adapter The adapter that manages the the data and views
+         * @param adapter  The adapter that manages the the data and views
          *                for the RecyclerView.
          */
-        public SavedViewHolder(View itemView, SavedListAdapter adapter) {
+        SavedViewHolder(View itemView, SavedListAdapter adapter) {
             super(itemView);
             savedItemView = itemView.findViewById(R.id.place);
             dateView = itemView.findViewById(R.id.date);
@@ -66,7 +69,7 @@ public class SavedListAdapter extends
          * Callback when user click an item
          * Start {@link com.example.app.SavedPlaceActivity} and
          * show selected place on them
-         * @param view the view
+         * @param view The View clicked
          */
         @Override
         public void onClick(View view) {
@@ -81,7 +84,8 @@ public class SavedListAdapter extends
         }
 
         /**
-         * @return the list element clicked/long clicked by the user
+         * Callback of the clicked saved Place
+         * @return The List reference clicked/long clicked by the user
          */
         private SavedPlace getCLickedElement(){
             // Get the position of the item that was clicked.
@@ -106,14 +110,14 @@ public class SavedListAdapter extends
      * display different items in the data set, it is a good idea to cache
      * references to sub views of the View to avoid unnecessary findViewById()
      * calls.
-     *
      * @param parent   The ViewGroup into which the new View will be added after
      *                 it is bound to an adapter position.
      * @param viewType The view type of the new View. @return A new ViewHolder
      *                 that holds a View of the given view type.
      */
+    @NonNull
     @Override
-    public SavedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SavedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate an item view.
         View mItemView = mInflater.inflate(R.layout.savedlist_item, parent, false);
         return new SavedViewHolder(mItemView, this);
@@ -122,7 +126,7 @@ public class SavedListAdapter extends
     /**
      * Method called when the data are modified
      * (user add/delete some places)
-     * @param placeList update list of place
+     * @param placeList The List of Place
      */
     public void setPlace(List<SavedPlace> placeList){
         savedPlacesList = placeList;
@@ -133,14 +137,13 @@ public class SavedListAdapter extends
      * Called by RecyclerView to display the data at the specified position.
      * This method should update the contents of the ViewHolder.itemView to
      * reflect the item at the given position.
-     *
      * @param holder   The ViewHolder which should be updated to represent
      *                 the contents of the item at the given position in the
      *                 data set.
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(SavedViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SavedViewHolder holder, int position) {
         if(savedPlacesList != null) {
             // Retrieve the data for that position.
             SavedPlace mCurrent = savedPlacesList.get(position);
@@ -149,27 +152,29 @@ public class SavedListAdapter extends
             holder.dateView.setText(mCurrent.getDateSaved());
         }
         else {
-            holder.savedItemView.setText("LONG PRESS A PLACE TO SAVE IT!");
+            holder.savedItemView.setText(context.getResources().getString(R.string.text_for_save));
         }
     }
 
     /**
      * Returns the total number of items in the data set held by the adapter.
-     *
      * @return The total number of items in this adapter.
      */
     @Override
     public int getItemCount() {
-        if (savedPlacesList != null)
+        if (savedPlacesList != null) {
             return savedPlacesList.size();
-        else return 0;
         }
+        else {
+            return 0;
+        }
+    }
 
-        /**
-         * @return the saved place at a determinate
-         * @param  position in the view
-         */
-    public SavedPlace getSavedPlaceAt(int position){
+    /**
+     * @param position Integer position in the View
+     * @return the saved place at a determinate position
+     */
+    SavedPlace getSavedPlaceAt(int position){
         return savedPlacesList.get(position);
     }
 }

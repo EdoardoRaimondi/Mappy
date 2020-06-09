@@ -139,7 +139,7 @@ public class BasicDialog extends AppCompatDialogFragment {
             basicDialog.id    = this.id;
             basicDialog.title = this.title;
             basicDialog.text  = this.text;
-            basicDialog.textForOkButton = this.textForOkButton;
+            basicDialog.textForOkButton     = this.textForOkButton;
             basicDialog.textForCancelButton = this.textForCancelButton;
             return basicDialog;
         }

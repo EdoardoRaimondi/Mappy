@@ -101,6 +101,7 @@
     <!-- Descriptions -->
     <string name="wheel_descr">ruota della fortuna</string>
     <string name="indicator_description">indicatore della ruota della fortuna</string>
+    <string name="text_for_save">PREMI A LUNGO SU UN LUOGO PER SALVARLO!</string>
 
     <!-- Hints -->
     <string name="hint">nome del luogo</string>

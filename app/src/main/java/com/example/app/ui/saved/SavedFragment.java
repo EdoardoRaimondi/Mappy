@@ -33,6 +33,10 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * App search fragment
+ * It contains: a list of saved Location
+ */
 public class SavedFragment extends Fragment {
 
     // Private members
@@ -145,7 +149,7 @@ public class SavedFragment extends Fragment {
              */
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // Getting data of deleted object
+                // Getting data of deleted saved Place
                 final String name = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getPlaceName();
                 final String date = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getDateSaved();
                 final double lat = savedListAdapter.getSavedPlaceAt(viewHolder.getAdapterPosition()).getLatitude();

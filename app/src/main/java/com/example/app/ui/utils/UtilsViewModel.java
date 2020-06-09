@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+/**
+ * ModelView class of {@link UtilsFragment }
+ */
 public class UtilsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
