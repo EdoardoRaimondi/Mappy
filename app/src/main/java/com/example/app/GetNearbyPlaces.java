@@ -23,9 +23,7 @@ import java.util.List;
 public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
     private String googlePlaceData;
-
     private ResultSetListener resultSetListener;
-
     static List<MarkerOptions> markerList;
 
     /**
