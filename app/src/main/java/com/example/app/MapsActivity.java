@@ -146,8 +146,8 @@ public class MapsActivity
                 }
                 canRestore = true;
             }
-            animateProgress(0,20, 1000);
         }
+        animateProgress(0,50, 1000);
 
         mSavedViewModel =  ViewModelProviders.of(this, new ViewModelFactory(getApplication())).get(SavedViewModel.class);
 
@@ -157,9 +157,7 @@ public class MapsActivity
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
-        animateProgress(20,30, 500);
     }
 
     /**
@@ -221,7 +219,7 @@ public class MapsActivity
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, 40, 180);
         }
-        animateProgress(30,50, 500);
+        //animateProgress(30,50, 500);
         final LocationRequest locationRequest = MapsUtility.createLocationRequest();
 
         final LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
@@ -321,7 +319,6 @@ public class MapsActivity
                      @Override
                      public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
                          displayPlaces(nearbyPlaceListIterator);
-                         animateProgress(50,100,500);
                      }
                      @Override
                      public void onResultNotSet(String error) {
@@ -534,6 +531,8 @@ public class MapsActivity
                 }
             }
             animateCamera(builder, mMap);
+
+            animateProgress(50,100,500);
         }
         showResponseInfo(DataParser.STATUS);
     }
