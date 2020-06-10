@@ -51,10 +51,9 @@ public class DataParser implements MapJSonDataParser {
         return place;
     }
 
-
     /**
      * Create a list of place (in hash map format)
-     * @param jsonArray array containing the nearby places
+     * @param jsonArray The JSONArray containing the nearby places
      */
     private List<Place> getAllNearbyPlaces(JSONArray jsonArray) {
         int count = 0;
@@ -78,8 +77,6 @@ public class DataParser implements MapJSonDataParser {
 
         return nearbyPlacesList;
     }
-
-
 
     /**
      * Method to parse the JsonData.
