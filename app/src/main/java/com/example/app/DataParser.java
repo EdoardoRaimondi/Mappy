@@ -1,5 +1,6 @@
 package com.example.app;
 
+import com.example.app.finals.ResponseStatus;
 import com.example.app.interfaces.MapJSonDataParser;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.Place;
@@ -23,7 +24,6 @@ public class DataParser implements MapJSonDataParser {
      * Convert a single json object of the position to an Hash Map
      * @param googlePlaceJSON JSONObject of Place(s) in json format
      * @return The HashMap representing found Place(s)
-     * @throws JSONException if something in the json read goes wrong TODO: can remove ?
      *
      */
     private Place getSingleNearbyPlace(JSONObject googlePlaceJSON) {
@@ -38,7 +38,6 @@ public class DataParser implements MapJSonDataParser {
             id = googlePlaceJSON.getString("place_id");
             latitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lat"));
             longitude = Double.parseDouble(googlePlaceJSON.getJSONObject("geometry").getJSONObject("location").getString("lng"));
-            // reference = googlePlaceJSON.getString("reference") TODO: Edo ?
             place = Place.builder()
                     .setLatLng(new LatLng(latitude, longitude))
                     .setName(placeName)
@@ -46,8 +45,7 @@ public class DataParser implements MapJSonDataParser {
                     .build();
         }
         catch (JSONException e) {
-            e.printStackTrace();
-            // TODO: STATUS = ResponseStatus.UNKNOWN_ERROR ?
+            STATUS = ResponseStatus.UNKNOWN_ERROR;
         }
 
         return place;
@@ -57,7 +55,6 @@ public class DataParser implements MapJSonDataParser {
     /**
      * Create a list of place (in hash map format)
      * @param jsonArray array containing the nearby places
-     * @throws JSONException if json reading goes wrong TODO: can remove ?
      */
     private List<Place> getAllNearbyPlaces(JSONArray jsonArray) {
         int count = 0;
@@ -75,8 +72,7 @@ public class DataParser implements MapJSonDataParser {
                 nearbyPlacesList.add(nearbyLocalPlaceMap);
             }
             catch (JSONException e) {
-                e.printStackTrace();
-                // TODO: STATUS = ResponseStatus.UNKNOWN_ERROR ?
+                STATUS = ResponseStatus.UNKNOWN_ERROR;
             }
         }
 
@@ -86,15 +82,15 @@ public class DataParser implements MapJSonDataParser {
 
 
     /**
-     * Method to parse the JsonData
-     * @param JsonData String rapresenting JSONObject data to parse. Has to be compatible with JSON
+     * Method to parse the JsonData.
+     * STATUS can assume one of the {@link ResponseStatus} fields.
+     * @param JsonData String representing JSONObject data to parse. Has to be compatible with JSON
      * @return List of nearby places (in HashMap format)
      * @throws JSONException If Json computation goes wrong
      */
     public List<Place> parse(String JsonData) throws JSONException {
         JSONObject jsonObject = new JSONObject(JsonData);
         JSONArray jsonArray = jsonObject.getJSONArray("results");
-        /** The status can assume one of the {@link com.example.app.finals.ResponseStatus} */
         STATUS = jsonObject.getString("status");
         return getAllNearbyPlaces(jsonArray);
     }
