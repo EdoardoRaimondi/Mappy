@@ -81,8 +81,6 @@ public class MapsActivity
     private static final String TITLES_KEY = "titles_k";
     private static final String LATITUDES_KEY = "lat_k";
     private static final String LONGITUDES_KEY = "lng_k";
-    private static final String LAT_KEY = "lat_last_k";
-    private static final String LNG_KEY = "lng_last_k";
 
     // Basic Dialogs' ids
     private static final String OQL_ID = "oql_id";
@@ -189,11 +187,6 @@ public class MapsActivity
             savedInstanceState.putStringArray(TITLES_KEY, title);
             savedInstanceState.putDoubleArray(LATITUDES_KEY, lat);
             savedInstanceState.putDoubleArray(LONGITUDES_KEY, lng);
-            // Saving current position
-            if (myLastLocation != null) {
-                savedInstanceState.putDouble(LAT_KEY, myLastLocation.getLatitude());
-                savedInstanceState.putDouble(LNG_KEY, myLastLocation.getLongitude());
-            }
         }
     }
 
