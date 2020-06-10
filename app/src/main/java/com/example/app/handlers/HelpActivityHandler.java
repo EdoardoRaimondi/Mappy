@@ -35,12 +35,15 @@ public class HelpActivityHandler {
     /**
      * Trigger the {@link PhoneNumberGetListener} when the
      * nearest phone number is found
-     * @param type Type of phone number you need (need to be a {@link NearbyRequestType})
+     * @param type    Type of phone number you need (need to be a {@link NearbyRequestType})
+     * @param context The caller's Context
+     * @param apiKey  The Google API key
      */
-     public void getPhoneNumber(NearbyRequestType type, Context context){
+     public void getPhoneNumber(NearbyRequestType type, Context context, String apiKey){
         GoogleLocationFinder googleLocationFinder = new GoogleLocationFinder();
         googleLocationFinder.setLocationSetListener(location -> {
             String url = UrlFactory.getNearbyRequest(
+                    apiKey,
                     location.getLatitude(),
                     location.getLongitude(),
                     type.toString(), 

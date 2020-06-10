@@ -111,13 +111,13 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
 
-        helpActivityHandler.getPhoneNumber(NearbyRequestType.police, this);
+        helpActivityHandler.getPhoneNumber(NearbyRequestType.police, this, getResources().getString(R.string.google_maps_key));
     }
 
     /**
      * Basic request permission result override
-     * @param requestCode Integer representing request code
-     * @param permissions String[] representing permissions
+     * @param requestCode  Integer representing request code
+     * @param permissions  String[] representing permissions
      * @param grantResults Integer[] representing results
      */
     @Override

@@ -266,7 +266,6 @@ public class MapsActivity
                                                 MapsParameters.DEFAULT_ZOOM
                                         )
                                 );
-                                animateProgress(50,100,500);
                             }
                             else {
                                 final LocationRequest locationRequest = MapsUtility.createLocationRequest();
@@ -284,7 +283,6 @@ public class MapsActivity
                                                         new LatLng(myLastLocation.getLatitude(), myLastLocation.getLongitude()),
                                                         MapsParameters.DEFAULT_ZOOM)
                                         );
-                                        animateProgress(50,100,500);
                                         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                                     }
                                 };
@@ -323,6 +321,7 @@ public class MapsActivity
                      @Override
                      public void onResultSet(StoppablePlaceIterator nearbyPlaceListIterator) {
                          displayPlaces(nearbyPlaceListIterator);
+                         animateProgress(50,100,500);
                      }
                      @Override
                      public void onResultNotSet(String error) {
