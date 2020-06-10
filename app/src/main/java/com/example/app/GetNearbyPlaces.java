@@ -26,13 +26,14 @@ public class GetNearbyPlaces extends AsyncTask<String, String, String>{
 
     private ResultSetListener resultSetListener;
 
-    static List<MarkerOptions> markerList = new ArrayList<>();
+    static List<MarkerOptions> markerList;
 
     /**
      * Constructor in order to set null the listener
      */
     public GetNearbyPlaces(){
         resultSetListener = null;
+        markerList  = new ArrayList<>();
     }
 
     /**
