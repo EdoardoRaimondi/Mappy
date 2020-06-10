@@ -11,16 +11,17 @@ public abstract class UrlFactory {
 
     /**
      * Create nearby URL request
+     * @param apiKey      The Google API key to access backend
      * @param latitude    The current latitude
      * @param longitude   The current longitude
      * @param radius      The research radius selected
      * @param nearbyPlace The type of place to search
      * @return The string representing the URL request
      */
-   public static String getNearbyRequest(double latitude, double longitude, String nearbyPlace, int radius) {
+   public static String getNearbyRequest(String apiKey, double latitude, double longitude, String nearbyPlace, int radius) {
        String[] label = {"location", "radius", "type", "sensor", "key"};
        String location = "" + latitude + "," + longitude;
-       String[] value = {location, Integer.toString(radius), nearbyPlace, "true", "AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s"};
+       String[] value = {location, Integer.toString(radius), nearbyPlace, "true", apiKey};
         StringBuilder url = new StringBuilder(MapsUtility.NEARBY_URL_DOMAIN);
         url.append('?');
         for(int i = 0; i < label.length; i++){

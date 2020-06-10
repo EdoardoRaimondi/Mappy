@@ -310,7 +310,13 @@ public class MapsActivity
              @Override
              public void onLocationSet(Location location) {
                  // Create the request
-                 String url = UrlFactory.getNearbyRequest(myLastLocation.getLatitude(), myLastLocation.getLongitude(), type.toString(), radius);
+                 String url = UrlFactory.getNearbyRequest(
+                         getResources().getString(R.string.google_maps_key),
+                         myLastLocation.getLatitude(),
+                         myLastLocation.getLongitude(),
+                         type.toString(),
+                         radius
+                 );
                  // The request will be downloaded and displayed
                  GetNearbyPlaces getNearbyPlaces = new GetNearbyPlaces();
                  getNearbyPlaces.setResultSetListener(new ResultSetListener() {
