@@ -7,10 +7,13 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.telephony.emergency.EmergencyNumber;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -28,6 +31,7 @@ import com.google.android.libraries.places.api.Places;
 public class HelpActivity extends AppCompatActivity {
 
     private HelpActivityHandler helpActivityHandler = new HelpActivityHandler();
+    private TelephonyManager telephonyManager;
 
     /**
      * Callback when the activity is created
@@ -50,6 +54,8 @@ public class HelpActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         );
         setContentView(R.layout.activity_help);
+
+        telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
     }
 
@@ -130,9 +136,19 @@ public class HelpActivity extends AppCompatActivity {
                 }
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onFail() {
-               showPhoneNumberMessageError();
+                /*Here because no police phone number nearby user has been found*/
+                if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.Q) { //Always false but we anticipate the future (Use the emulator to see how it works)
+                    EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
+                    if (emergencyNumber == null) showPhoneNumberMessageError();
+                    else {
+                        Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
+                        startActivity(callIntent);
+                    }
+                }
+                showPhoneNumberMessageError();
             }
         });
 
