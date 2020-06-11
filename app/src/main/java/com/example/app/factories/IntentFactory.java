@@ -9,6 +9,7 @@ import com.example.app.HomeActivity;
 import com.example.app.MainActivity;
 import com.example.app.MapsActivity;
 import com.example.app.SavedPlaceActivity;
+import com.example.app.finals.CallerReturn;
 import com.example.app.finals.NearbyRequestType;
 import com.google.android.libraries.places.api.model.Place;
 
@@ -32,6 +33,21 @@ public abstract class IntentFactory {
     }
 
     /**
+     * Method to create a nearby request Intent
+     * @param context     The activity Context
+     * @param requestType The place I'm looking for (disco, restaurant...)
+     * @param radius      The research radius
+     * @return The Intent created
+     */
+    public static Intent createNearbyRequestIntentIAm(Context context, NearbyRequestType requestType, int radius, CallerReturn caller){
+        Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra(MapsActivity.NEARBY_KEY, requestType);
+        intent.putExtra(MapsActivity.RADIUS, radius);
+        intent.putExtra(MapsActivity.CALLER_KEY, caller);
+        return intent;
+    }
+
+    /**
      * Method to create an help request Intent
      * @param context The Context of the activity
      * @return The Intent created
@@ -46,9 +62,19 @@ public abstract class IntentFactory {
      * @param context The Context of the current activity
      * @return The Intent created
      */
-     public static Intent createLobbyReturn(Context context){
-         return new Intent(context, MainActivity.class);
-     }
+    public static Intent createLobbyReturn(Context context){
+        return new Intent(context, MainActivity.class);
+    }
+
+    /**
+     * Method to create a intent in order to return
+     * to the help lobby
+     * @param context The Context of the current activity
+     * @return The Intent created
+     */
+    public static Intent createLobbyReturnHelp(Context context){
+        return new Intent(context, HelpActivity.class);
+    }
 
     /**
      * Method to create a intent in order to return

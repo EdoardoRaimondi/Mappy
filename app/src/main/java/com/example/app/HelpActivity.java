@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.app.factories.IntentFactory;
+import com.example.app.finals.CallerReturn;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.handlers.HelpActivityHandler;
 import com.example.app.listeners.PhoneNumberGetListener;
@@ -57,7 +58,12 @@ public class HelpActivity extends AppCompatActivity {
      * @param view The button that called this
      */
     public void showNearbyHospital(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.hospital, getResources().getInteger(R.integer.help_radius));
+        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
+                this,
+                NearbyRequestType.hospital,
+                getResources().getInteger(R.integer.help_radius),
+                CallerReturn.help_activity
+        );
         startActivity(intent);
     }
 
@@ -66,7 +72,12 @@ public class HelpActivity extends AppCompatActivity {
      * @param view The button that called this
      */
     public void showNearbyPolice(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.police, getResources().getInteger(R.integer.help_radius));
+        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
+                this,
+                NearbyRequestType.police,
+                getResources().getInteger(R.integer.help_radius),
+                CallerReturn.help_activity
+        );
         startActivity(intent);
     }
 
@@ -75,7 +86,12 @@ public class HelpActivity extends AppCompatActivity {
      * @param view The button that called this
      */
     public void showNearbyTaxi(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.taxi_stand, getResources().getInteger(R.integer.help_radius));
+        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
+                this,
+                NearbyRequestType.taxi_stand,
+                getResources().getInteger(R.integer.help_radius),
+                CallerReturn.help_activity
+        );
         startActivity(intent);
     }
 
@@ -84,7 +100,12 @@ public class HelpActivity extends AppCompatActivity {
      * @param view The button that called this
      */
     public void showNearbyPharmacy(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntent(this, NearbyRequestType.pharmacy, getResources().getInteger(R.integer.help_radius));
+        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
+                this,
+                NearbyRequestType.pharmacy,
+                getResources().getInteger(R.integer.help_radius),
+                CallerReturn.help_activity
+        );
         startActivity(intent);
     }
 

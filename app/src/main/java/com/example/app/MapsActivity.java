@@ -22,6 +22,7 @@ import com.example.app.dialogs.RadiusDialog;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.MarkerFactory;
 import com.example.app.factories.UrlFactory;
+import com.example.app.finals.CallerReturn;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
@@ -76,6 +77,7 @@ public class MapsActivity
     // Activity connectors
     public static final String NEARBY_KEY = "nearby_k";
     public static final String RADIUS = "radius_k";
+    public static final String CALLER_KEY = "caller_k";
 
     // Instance state keys
     private static final String TITLES_KEY = "titles_k";
@@ -98,6 +100,7 @@ public class MapsActivity
     private NearbyRequestType requestType;
     private int radius; //max radius can be 50000m
     private Location myLastLocation;
+    private CallerReturn caller;
 
     // ViewModel to database access
     private SavedViewModel mSavedViewModel;
@@ -232,6 +235,7 @@ public class MapsActivity
             Intent requestInfo = getIntent();
             requestType = (NearbyRequestType) requestInfo.getSerializableExtra(NEARBY_KEY);
             radius = requestInfo.getIntExtra(RADIUS, getResources().getInteger(R.integer.default_radius) * MapsUtility.KM_TO_M);
+            caller = (CallerReturn) requestInfo.getSerializableExtra(CALLER_KEY);
             // Can I restore previous state ?
             if(canRestore){
                 mMap.clear();
@@ -443,11 +447,23 @@ public class MapsActivity
     /**
      * BasicDialog common listener
      * @param id the identifier of dialog that was dismissed
-     * @param positiveButton the option choosen by user
+     * @param positiveButton the option chosen by user
      */
     public void onDialogResult(String id, boolean positiveButton) {
         // Just go back to the main activity
-        startActivity(IntentFactory.createLobbyReturn(this));
+        Intent returnTo = IntentFactory.createLobbyReturn(this);
+        switch (caller){
+            case help_activity:
+                returnTo = IntentFactory.createLobbyReturnHelp(this);
+                break;
+            case search_fragment:
+                returnTo = IntentFactory.createLobbyReturn(this, R.id.navigation_search);
+                break;
+            case utils_fragment:
+                returnTo = IntentFactory.createLobbyReturn(this, R.id.navigation_utils);
+                break;
+        }
+        startActivity(returnTo);
         finish();
     }
 
@@ -456,7 +472,7 @@ public class MapsActivity
      * @param radius New radius of research
      */
     public void onRadiusDialogResult(int radius){
-        startActivity(IntentFactory.createNearbyRequestIntent(this, requestType, radius));
+        startActivity(IntentFactory.createNearbyRequestIntentIAm(this, requestType, radius, caller));
         // We don't want user to perform multiple back stack press to go back home
         finish();
     }
