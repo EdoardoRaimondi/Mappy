@@ -34,7 +34,7 @@ public class RadiusDialog extends AppCompatDialogFragment {
      * @param actualRadius The old research int radius
      */
     public RadiusDialog(int actualRadius){
-        this.actualRadius = actualRadius/ MapsUtility.KM_TO_M + MapsUtility.DEFAULT_INCREMENT;
+        this.actualRadius = actualRadius / MapsUtility.KM_TO_M + MapsUtility.DEFAULT_INCREMENT;
     }
 
     /**
@@ -52,6 +52,12 @@ public class RadiusDialog extends AppCompatDialogFragment {
         // Finding widgets
         final SeekBar seekBar = view.findViewById(R.id.seek);
         textView = view.findViewById(R.id.text_view);
+
+        // You are in the desert
+        if(actualRadius >= getResources().getInteger(R.integer.max_radius_bar)){
+            actualRadius = getResources().getInteger(R.integer.max_radius_bar) - MapsUtility.DEFAULT_INCREMENT;
+        }
+
         // Init them
         String display = "" + actualRadius  + " " + getResources().getString(R.string.measure_unit);
         textView.setText(display);
