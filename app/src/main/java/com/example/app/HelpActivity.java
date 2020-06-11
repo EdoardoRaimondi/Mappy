@@ -16,20 +16,28 @@ import android.telephony.TelephonyManager;
 import android.telephony.emergency.EmergencyNumber;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.app.factories.IntentFactory;
 import com.example.app.finals.CallerReturn;
+import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.handlers.HelpActivityHandler;
 import com.example.app.listeners.PhoneNumberGetListener;
 import com.google.android.libraries.places.api.Places;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /*
 * Help Activity class for sos support
 */
-public class HelpActivity extends AppCompatActivity {
+public class HelpActivity extends AppCompatActivity  implements View.OnClickListener{
 
+    // Dictionary for onClick listener
+    private Map<String, NearbyRequestType> dictionary;
     private HelpActivityHandler helpActivityHandler = new HelpActivityHandler();
     private TelephonyManager telephonyManager;
 
@@ -55,68 +63,20 @@ public class HelpActivity extends AppCompatActivity {
         );
         setContentView(R.layout.activity_help);
 
+        // Defining dictionary for get nearby request type
+        dictionary = new HashMap<>();
+        for(int i = 0; i < NearbyRequestType.values().length; i++){
+            dictionary.put(NearbyRequestType.values()[i].toString(), NearbyRequestType.values()[i]);
+        }
+        // Getting all image button ids
+        ArrayList<View> allButtons;
+        allButtons = findViewById(R.id.full_page).getTouchables();
+        for(int i = 0; i < allButtons.size(); i++){
+            ImageButton button = (ImageButton) allButtons.get(i);
+            button.setOnClickListener(this);
+        }
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-    }
-
-    /**
-     * Method to show the nearby hospitals
-     * @param view The button that called this
-     */
-    public void showNearbyHospital(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
-                this,
-                NearbyRequestType.hospital,
-                getResources().getInteger(R.integer.help_radius),
-                CallerReturn.help_activity
-        );
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Method to show the nearby police station
-     * @param view The button that called this
-     */
-    public void showNearbyPolice(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
-                this,
-                NearbyRequestType.police,
-                getResources().getInteger(R.integer.help_radius),
-                CallerReturn.help_activity
-        );
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Method to show the nearby taxi stations
-     * @param view The button that called this
-     */
-    public void showNearbyTaxi(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
-                this,
-                NearbyRequestType.taxi_stand,
-                getResources().getInteger(R.integer.help_radius),
-                CallerReturn.help_activity
-        );
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Method to show the nearby taxi stations
-     * @param view The button that called this
-     */
-    public void showNearbyPharmacy(View view) {
-        Intent intent = IntentFactory.createNearbyRequestIntentIAm(
-                this,
-                NearbyRequestType.pharmacy,
-                getResources().getInteger(R.integer.help_radius),
-                CallerReturn.help_activity
-        );
-        startActivity(intent);
-        finish();
     }
 
     /**
@@ -183,6 +143,41 @@ public class HelpActivity extends AppCompatActivity {
      */
     private void showPhoneNumberMessageError(){
         Toast.makeText(getApplicationContext(), getString(R.string.no_call), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Common OnClick listener
+     * @param v The View that called the listener
+     */
+    @Override
+    public void onClick(View v) {
+        // If it is a valid id
+        if (v.getId() != View.NO_ID){
+            // Getting string variable id
+            String stringId = v.getResources().getResourceName(v.getId());
+            // Getting string variable id filtered
+            stringId = stringId.replace("com.example.app:id/","");
+            // Searching NearbyRequestType from dictionary
+            NearbyRequestType type;
+            try {
+                type = dictionary.get(stringId);
+            }
+            catch (NullPointerException exc){
+                type = NearbyRequestType.hospital;
+            }
+            if(type == null){
+                type = NearbyRequestType.hospital;
+            }
+            // Going to MapsActivity
+            Intent intent = IntentFactory.createNearbyRequestIntentIAm(
+                    this,
+                    type,
+                    getResources().getInteger(R.integer.help_radius),
+                    CallerReturn.help_activity
+            );
+            startActivity(intent);
+            finish();
+        }
     }
 
 }

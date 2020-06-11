@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/full_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/default_padding"
@@ -52,8 +53,8 @@
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="showNearbyPharmacy"
                 android:src="@drawable/pharmacy"
+                android:id="@+id/pharmacy"
                 app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
@@ -71,8 +72,8 @@
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="showNearbyHospital"
                 android:src="@drawable/hospital"
+                android:id="@+id/hospital"
                 app:backgroundTint="@color/colorPrimaryLight" />
 
             <TextView
@@ -91,8 +92,8 @@
             <androidx.appcompat.widget.AppCompatImageButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="showNearbyPolice"
                 android:src="@drawable/police"
+                android:id="@+id/police"
                 app:backgroundTint="@color/colorPrimaryLight"/>
 
             <TextView
@@ -109,8 +110,8 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:onClick="showNearbyTaxi"
                 android:src="@drawable/taxi"
+                android:id="@+id/taxi_stand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:backgroundTint="@color/colorPrimaryLight"/>
