@@ -92,7 +92,7 @@ public class MapsActivity
     private GoogleMap mMap;
     private MapView mapView;
     private ProgressBar progressBar;
-    // Inrefcaces
+    // Interfaces
     private LocationCallback locationCallback;
     private LocationSetListener locationSetListener;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -222,7 +222,7 @@ public class MapsActivity
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, 40, 180);
         }
-        //animateProgress(30,50, 500);
+
         final LocationRequest locationRequest = MapsUtility.createLocationRequest();
 
         final LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
@@ -244,6 +244,7 @@ public class MapsActivity
             }
             else {
                 showPlaces(radius, requestType);
+                animateProgress(50,100,500);
             }
         });
     }
@@ -553,7 +554,6 @@ public class MapsActivity
                     mMap.addMarker(markerOptions);
                 }
             }
-            animateProgress(50,100,500);
             animateCamera(builder, mMap);
         }
         showResponseInfo(DataParser.STATUS);
