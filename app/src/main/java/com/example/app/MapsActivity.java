@@ -375,6 +375,7 @@ public class MapsActivity
                 case ResponseStatus.ZERO_RESULTS:
                     RadiusDialog dialog = new RadiusDialog(radius);
                     dialog.show(getSupportFragmentManager(), TAG);
+                    animateProgress(50,100,500);
                     break;
                 // Exceeded daily quota of API key
                 case ResponseStatus.OVER_QUERY_LIMIT:
@@ -383,12 +384,15 @@ public class MapsActivity
                     overQueryBuilder.setText(getString(R.string.sorry_message));
                     overQueryBuilder.setTextForOkButton(getString(R.string.ok_button));
                     overQueryBuilder.build().show(getSupportFragmentManager(), TAG);
+                    animateProgress(50,100,500);
                     break;
                 // GPS is disabled or no Internet provider
                 case ResponseStatus.NOT_FOUND:
                 case ResponseStatus.NO_CONNECTION:
                 case ResponseStatus.CONNECTION_LOW:
                     startActivity(IntentFactory.createLobbyReturn(this));
+                    animateProgress(50,100,500);
+                    finish();
                     break;
                 // Strange errors
                 case ResponseStatus.INVALID_REQUEST:
@@ -399,6 +403,7 @@ public class MapsActivity
                     requestDeniedBuilder.setText(getString(R.string.unknown_err));
                     requestDeniedBuilder.setTextForOkButton(getString(R.string.ok_button));
                     requestDeniedBuilder.build().show(getSupportFragmentManager(), TAG);
+                    animateProgress(50,100,500);
                     break;
             }
         }
@@ -548,9 +553,8 @@ public class MapsActivity
                     mMap.addMarker(markerOptions);
                 }
             }
-            animateCamera(builder, mMap);
-
             animateProgress(50,100,500);
+            animateCamera(builder, mMap);
         }
         showResponseInfo(DataParser.STATUS);
     }
