@@ -47,7 +47,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
         }
         // Saving current displayed fragment
         activity.setFragment(R.id.navigation_search);
-        // Defining dictionary for get nearby request type
+        // Defining dictionary to get nearby request type
         dictionary = new HashMap<>();
         for(int i = 0; i < NearbyRequestType.values().length; i++){
             dictionary.put(NearbyRequestType.values()[i].toString(), NearbyRequestType.values()[i]);
