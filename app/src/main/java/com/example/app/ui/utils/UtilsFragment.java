@@ -34,6 +34,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * App utility fragment
@@ -191,17 +192,17 @@ public class UtilsFragment extends Fragment {
              */
             @Override
             public boolean onLongClick(View v) {
-                final boolean[] hasUndo = {false};
-                setHomeButton(home);
-                if(getActivity() != null) {
+                AtomicBoolean hasUndo = new AtomicBoolean(false);
+                if(getActivity() != null && isViewMode) {
+                    setHomeButton(home);
+                    if(!hasUndo.get()) deleteHomeLocation();
                     Snackbar.make(root.findViewById(R.id.box_for_undo), getString(R.string.home_delete), Snackbar.LENGTH_LONG)
                             .setAction(getString(R.string.undo), v1 -> {
                                 setDirectionsButton(home);
-                                hasUndo[0] = true;
+                                hasUndo.set(true);
                             })
                             .show();
                 }
-                if(!hasUndo[0]) deleteHomeLocation();
                 return true;
             }
         });
