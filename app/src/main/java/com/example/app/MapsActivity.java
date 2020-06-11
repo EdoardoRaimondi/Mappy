@@ -446,22 +446,24 @@ public class MapsActivity
 
     /**
      * BasicDialog common listener
-     * @param id the identifier of dialog that was dismissed
-     * @param positiveButton the option chosen by user
+     * @param id             The identifier of dialog that was dismissed
+     * @param positiveButton The option chosen by user
      */
     public void onDialogResult(String id, boolean positiveButton) {
         // Just go back to the main activity
         Intent returnTo = IntentFactory.createLobbyReturn(this);
-        switch (caller){
-            case help_activity:
-                returnTo = IntentFactory.createLobbyReturnHelp(this);
-                break;
-            case search_fragment:
-                returnTo = IntentFactory.createLobbyReturn(this, R.id.navigation_search);
-                break;
-            case utils_fragment:
-                returnTo = IntentFactory.createLobbyReturn(this, R.id.navigation_utils);
-                break;
+        if(caller != null){
+            switch (caller){
+                case help_activity:
+                    returnTo = IntentFactory.createLobbyReturnHelp(this);
+                    break;
+                case search_fragment:
+                    returnTo = IntentFactory.createLobbyReturn(this, R.id.navigation_search);
+                    break;
+                case utils_fragment:
+                    returnTo = IntentFactory.createLobbyReturn(this, R.id.navigation_utils);
+                    break;
+            }
         }
         startActivity(returnTo);
         finish();

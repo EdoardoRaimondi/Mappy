@@ -71,6 +71,7 @@ public class HelpActivity extends AppCompatActivity {
                 CallerReturn.help_activity
         );
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -85,6 +86,7 @@ public class HelpActivity extends AppCompatActivity {
                 CallerReturn.help_activity
         );
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -99,6 +101,7 @@ public class HelpActivity extends AppCompatActivity {
                 CallerReturn.help_activity
         );
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -113,6 +116,7 @@ public class HelpActivity extends AppCompatActivity {
                 CallerReturn.help_activity
         );
         startActivity(intent);
+        finish();
     }
 
     /**

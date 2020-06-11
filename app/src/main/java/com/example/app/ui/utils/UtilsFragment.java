@@ -25,6 +25,7 @@ import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.factories.IntentFactory;
 import com.example.app.factories.UrlFactory;
+import com.example.app.finals.CallerReturn;
 import com.example.app.finals.MapsParameters;
 import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
@@ -265,27 +266,27 @@ public class UtilsFragment extends Fragment {
     private void sendRequest(int position) {
         int radius = activity.getRadius();
         if ((position >= FACTOR * 1) && (position < FACTOR * 3)) {
-            Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.art_gallery, radius);
+            Intent intent = IntentFactory.createNearbyRequestIntentIAm(getActivity(), NearbyRequestType.art_gallery, radius, CallerReturn.utils_fragment);
             startActivity(intent);
         }
         if ((position >= FACTOR * 3) && (position < FACTOR * 5)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.museum, radius);
+            Intent intent = IntentFactory.createNearbyRequestIntentIAm(getActivity(), NearbyRequestType.museum, radius, CallerReturn.utils_fragment);
             startActivity(intent);
         }
         if((position >= FACTOR * 5) && (position < FACTOR * 7)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.zoo, radius);
+            Intent intent = IntentFactory.createNearbyRequestIntentIAm(getActivity(), NearbyRequestType.zoo, radius, CallerReturn.utils_fragment);
             startActivity(intent);
         }
         if((position >= FACTOR * 7) && (position < FACTOR * 9)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.movie_theater, radius);
+            Intent intent = IntentFactory.createNearbyRequestIntentIAm(getActivity(), NearbyRequestType.movie_theater, radius, CallerReturn.utils_fragment);
             startActivity(intent);
         }
         if((position >= FACTOR * 9) && (position < FACTOR * 11)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.tourist_attraction, radius);
+            Intent intent = IntentFactory.createNearbyRequestIntentIAm(getActivity(), NearbyRequestType.tourist_attraction, radius, CallerReturn.utils_fragment);
             startActivity(intent);
         }
         if((position >= FACTOR * 11) && (position < FACTOR * 13)){
-            Intent intent = IntentFactory.createNearbyRequestIntent(getActivity(), NearbyRequestType.park, radius);
+            Intent intent = IntentFactory.createNearbyRequestIntentIAm(getActivity(), NearbyRequestType.park, radius, CallerReturn.utils_fragment);
             startActivity(intent);
         }
         else{
