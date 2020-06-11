@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -79,10 +80,11 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         Intent intent = getIntent();
         displayFragment = intent.getIntExtra(FRAGMENT_KEY_INTENT, displayFragment);
         // Managing navigation graph
-        NavGraph navGraph = navController.getGraph();
+        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
         // Setting starting fragment
         navGraph.setStartDestination(displayFragment);
         navController.setGraph(navGraph);
+
         // Initializing navigation bar (footer)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);

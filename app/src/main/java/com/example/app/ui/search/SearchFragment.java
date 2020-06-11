@@ -29,6 +29,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
     // Dictionary for onClick listener
     private Map<String, NearbyRequestType> dictionary;
+    private MainActivity activity;
 
     /**
      * Callback when the fragment is visible
@@ -41,6 +42,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
             ViewGroup container, Bundle savedInstanceState) {
         ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        if(getActivity() != null){
+            activity = (MainActivity) getActivity();
+        }
+        // Saving current displayed fragment
+        activity.setFragment(R.id.navigation_search);
         // Defining dictionary for get nearby request type
         dictionary = new HashMap<>();
         for(int i = 0; i < NearbyRequestType.values().length; i++){
