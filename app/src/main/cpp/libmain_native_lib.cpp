@@ -27,7 +27,7 @@ extern "C" {
             string[0] = (string[0] - 'a') + 'A';
         }
         for(i = 1; string[i]; i++){
-            if(string[i] == SPACE && i < length - 1 != SPACE && (string[i+1] >= 'a' && string[i+1] <= 'z')){
+            if(string[i] == SPACE && i < length - 1 && (string[i+1] >= 'a' && string[i+1] <= 'z')){
                 string[i+1] = (string[i+1] - 'a') + 'A';
             }
         }
