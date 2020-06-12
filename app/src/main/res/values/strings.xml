@@ -102,6 +102,7 @@
     <string name="wheel_descr">fortune spinning wheel on pressed</string>
     <string name="indicator_description">spinning wheel indicator</string>
     <string name="text_for_save">LONG PRESS A PLACE TO SAVE IT!</string>
+    <string name="default_string">Saved Place Without a Name</string>
 
     <!-- Hints -->
     <string name="hint">place name</string>

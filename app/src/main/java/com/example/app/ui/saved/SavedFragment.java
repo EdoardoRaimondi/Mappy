@@ -187,6 +187,9 @@ public class SavedFragment extends Fragment {
                 .setMessage(getString(R.string.new_place_label))
                 .setView(view)
                 .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
+                    if(inputEditText.getText().toString().equals("")){
+                        inputEditText.setText(getResources().getString(R.string.default_string));
+                    }
                     place.setPlaceName(capitalizeFirstChars(inputEditText.getText().toString()));
                     Date today = Calendar.getInstance().getTime();
                     @SuppressLint("SimpleDateFormat")
