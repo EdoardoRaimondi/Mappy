@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     private static final String TAG = "MainActivity";
     // Type of location request
     private static final int REQUEST_USER_LOCATION_CODE = 99;
-    // Type of Google Update or Sign In
+    // Type of Google Update or Sign In request
     private static final int GOOGLE_CHECK = 100;
     // Selected radius
     private int radius;
