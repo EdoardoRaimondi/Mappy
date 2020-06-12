@@ -31,11 +31,10 @@ import java.util.Objects;
  * Map where a single saved place it is showed when clicked
  */
 public class SavedPlaceActivity extends FragmentActivity implements
-        OnMapReadyCallback {
+        OnMapReadyCallback{
 
     private GoogleMap mMap;
     private MapView mapView;
-
 
     /**
      * Callback when the fragment activity is created

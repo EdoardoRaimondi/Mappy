@@ -187,10 +187,14 @@ public class SavedFragment extends Fragment {
                 .setMessage(getString(R.string.new_place_label))
                 .setView(view)
                 .setPositiveButton(getString(R.string.ok_button), (dialogInterface, i) -> {
+                    String text;
                     if(inputEditText.getText().toString().equals("")){
-                        inputEditText.setText(getResources().getString(R.string.default_string));
+                       text = getResources().getString(R.string.default_string);
                     }
-                    place.setPlaceName(capitalizeFirstChars(inputEditText.getText().toString()));
+                    else{
+                        text = inputEditText.getText().toString();
+                    }
+                    place.setPlaceName(capitalizeFirstChars(text));
                     Date today = Calendar.getInstance().getTime();
                     @SuppressLint("SimpleDateFormat")
                     DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
