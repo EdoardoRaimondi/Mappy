@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -39,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     private static final String TAG = "MainActivity";
     // Type of location request
     private static final int REQUEST_USER_LOCATION_CODE = 99;
+    // Type of Google Update or Sign In
+    private static final int GOOGLE_CHECK = 100;
     // Selected radius
     private int radius;
     // Fragment displayed
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         int result = google.isGooglePlayServicesAvailable(this);
         // If Google Play Services SDK is disabled or not present
         if(result != ConnectionResult.SUCCESS){
-            google.getErrorDialog(this, result, GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE)
+            google.getErrorDialog(this, result, GOOGLE_CHECK)
                 .show();
         }
         else{
