@@ -27,31 +27,34 @@ Mappy APP was tested on:
 
 ### Support
 
-Since our APP uses Google backends, limitations comes in especially on the number of Place search queries. If you often incur in the message that notifies a lot of requests, please modify the following line containing the Google API key in ```app/src/release/res/values/google_maps_api.xml``` file
+Since our APP uses Google back-ends, limitations comes in especially on the number of Place search queries. If you often incur in the message that notifies a lot of requests, please modify the following line containing the Google API key in ```app/src/release/res/values/google_maps_api.xml``` file
 ```xml
-<string 
-        name="google_maps_key" 
+<string
+        name="google_maps_key"
         templateMergeStrategy="preserve"
         translatable="false"
         >
-        AIzaSyDO5W0b3EqbJgPm0yg3AOpflgxhc8hsTPM
+        YOUR_KEY_HERE
 </string>
 ```
-and in ```app/src/debug/res/values/google_maps_api.xml``` file
+replacing YOUR_KEY_HERE with production key and in ```app/src/debug/res/values/google_maps_api.xml``` file
 ```xml
 <string 
         name="google_maps_key" 
         templateMergeStrategy="preserve"
         translatable="false"
         >
-        AIzaSyDO5W0b3EqbJgPm0yg3AOpflgxhc8hsTPM
+        AIzaSyB8qGxacayHhwpxNnrrbTofIi0vs0aT9OI
 </string>
 ```
 with one of the following key
 ```xml
-        AIzaSyDlmOO2hQUKeM6jghktDSVvsOsXvoFLv3k
+        AIzaSyB9kEwf_CoRPK7tNzn9LN09ysPdUCYZj8w
 ```
 ```xml
         AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s
 ```
-NOTE: keys in the two file should be the same
+NOTE: keys in the two file should be the same on production
+
+WARN: This keys were working since 11/06/20. Now Google requests billing account even with free trial limitations on Nearby Places requests.
+     Other App functionality are not compromised.
