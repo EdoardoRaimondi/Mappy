@@ -87,7 +87,7 @@
     <string name="sorry">Perdonaci</string>
     <string name="sorry_message">I nostri fornitori sono saturi di richieste, prova più tardi.</string>
     <string name="oh_no">Oh no</string>
-    <string name="unknown_err">Errore imprevisto, riprova</string>
+    <string name="unknown_err">Richiesto account billing.</string>
     <string name="no_conn">Cosa ti aspettavi, abbiamo bisogno di Internet per trovare luoghi vicino a te. Connettere ora?</string>
     <string name="retry">RIPROVA</string>
     <string name="save_place">Vuoi salvare </string>
