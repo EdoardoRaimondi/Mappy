@@ -27,34 +27,6 @@ Mappy APP was tested on:
 
 ### Support
 
-Since our APP uses Google back-ends, limitations comes in especially on the number of Place search queries. If you often incur in the message that notifies a lot of requests, please modify the following line containing the Google API key in ```app/src/release/res/values/google_maps_api.xml``` file
-```xml
-<string
-        name="google_maps_key"
-        templateMergeStrategy="preserve"
-        translatable="false"
-        >
-        YOUR_KEY_HERE
-</string>
-```
-replacing YOUR_KEY_HERE with production key and in ```app/src/debug/res/values/google_maps_api.xml``` file
-```xml
-<string 
-        name="google_maps_key" 
-        templateMergeStrategy="preserve"
-        translatable="false"
-        >
-        AIzaSyB8qGxacayHhwpxNnrrbTofIi0vs0aT9OI
-</string>
-```
-with one of the following key
-```xml
-        AIzaSyB9kEwf_CoRPK7tNzn9LN09ysPdUCYZj8w
-```
-```xml
-        AIzaSyCIN8HCmGWXf5lzta5Rv2nu8VdIUV4Jp7s
-```
-NOTE: keys in the two file should be the same on production
-
-WARN: This keys were working since 11/06/20. Now Google requests billing account even with free trial limitations on Nearby Places requests.
-     Other App functionality are not compromised.
+Since our APP uses Google back-ends, limitations comes in especially on the number of Place search queries.
+Please make sure to not abuse with requests. If you want to use your own Google Maps SDK key, put it in the files
+```app/src/debug/res/values/google_maps_api.xml``` and ```app/src/release/res/values/google_maps_api.xml```
