@@ -23,6 +23,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+
 /**
  * Main UI activity. Here the user can choose the main actions.
  */
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         // Initializing navigation bar (footer)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
     }
 
     /**
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
             }
             else {
                 // Checking if location provider is enabled
-                if (!gpsManager.isGPSOn() || !gpsManager.isProviderEnabled()) {
+                if (!gpsManager.isGPSOn()) {
                     Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
                     .show();
