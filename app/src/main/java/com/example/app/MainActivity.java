@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.example.app.dialogs.BasicDialog;
@@ -22,8 +23,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 
 /**
  * Main UI activity. Here the user can choose the main actions.
@@ -138,8 +137,11 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                     final ConnectionManager connectionManager = new ConnectionManager(getApplicationContext());
                     if(!connectionManager.isNetworkAvailable()){
                         Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
-                                .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)))
+                                .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_SETTINGS)))
                                 .show();
+                    }
+                    else{
+                        Log.d(TAG, connectionManager.getConnectionType().toString());
                     }
                 }
             }

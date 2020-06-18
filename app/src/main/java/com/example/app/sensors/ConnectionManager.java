@@ -2,7 +2,9 @@ package com.example.app.sensors;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.example.app.finals.ConnectionType;
 
@@ -37,8 +39,14 @@ public class ConnectionManager {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager != null){
-            NetworkInfo[] netInfo = connectivityManager.getAllNetworkInfo();
+            NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+            if(netInfo != null && netInfo.isConnected()){
+                Log.i(">>", netInfo.getTypeName());
+                return ConnectionType.WIFI;
+            }
+            /*
             for (NetworkInfo netinfo : netInfo) {
+                Log.i(">>", netinfo.getTypeName());
                 if (netinfo.getTypeName().equalsIgnoreCase("WIFI")) {
                     if (netinfo.isConnected()) {
                         type = ConnectionType.WIFI;
@@ -49,7 +57,7 @@ public class ConnectionManager {
                         type = ConnectionType.MOBILE;
                     }
                 }
-            }
+            }*/
         }
         return type;
     }
