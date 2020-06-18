@@ -2,9 +2,7 @@ package com.example.app.sensors;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import com.example.app.finals.ConnectionType;
 
@@ -35,31 +33,23 @@ public class ConnectionManager {
     * Method to get Internet connection type based on active providers
     */
     public ConnectionType getConnectionType(){
-        ConnectionType type = ConnectionType.NONE;
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager != null){
             NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
             if(netInfo != null && netInfo.isConnected()){
-                Log.i(">>", netInfo.getTypeName());
-                return ConnectionType.WIFI;
+                if(netInfo.getTypeName().equalsIgnoreCase("WIFI")){
+                    return ConnectionType.WIFI;
+                }
+                else if(netInfo.getTypeName().equalsIgnoreCase("MOBILE")){
+                    return ConnectionType.MOBILE;
+                }
+                else{
+                    return ConnectionType.NONE;
+                }
             }
-            /*
-            for (NetworkInfo netinfo : netInfo) {
-                Log.i(">>", netinfo.getTypeName());
-                if (netinfo.getTypeName().equalsIgnoreCase("WIFI")) {
-                    if (netinfo.isConnected()) {
-                        type = ConnectionType.WIFI;
-                    }
-                }
-                else if (netinfo.getTypeName().equalsIgnoreCase("MOBILE")){
-                    if (netinfo.isConnected()) {
-                        type = ConnectionType.MOBILE;
-                    }
-                }
-            }*/
         }
-        return type;
+        return ConnectionType.NONE;
     }
 
 }
