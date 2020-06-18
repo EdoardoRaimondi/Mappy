@@ -173,7 +173,7 @@ public class MapsActivity
         super.onSaveInstanceState(savedInstanceState);
         // Getting the list of found nearby places
         List<MarkerOptions> markerList = GetNearbyPlaces.markerList;
-        if (markerList.size() > 0) {
+        if (markerList != null && markerList.size() > 0) {
             String[] title = new String[markerList.size()];
             double[] lat = new double[markerList.size()];
             double[] lng = new double[markerList.size()];
