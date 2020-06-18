@@ -69,8 +69,6 @@ public class GPSManager implements LocationListener {
             try {
                 LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
                 if (manager != null) {
-                    /*List<String> enabledProviders = manager.getProviders(true);
-                    return !enabledProviders.isEmpty();*/
                     return LocationManagerCompat.isLocationEnabled(manager);
                 }
             }
