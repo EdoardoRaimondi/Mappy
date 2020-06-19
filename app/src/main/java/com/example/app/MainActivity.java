@@ -10,8 +10,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.example.app.dialogs.BasicDialog;
@@ -26,7 +29,7 @@ import com.google.android.material.snackbar.Snackbar;
 /**
  * Main UI activity. Here the user can choose the main actions.
  */
-public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener{
+public class MainActivity extends AppCompatActivity implements BasicDialog.BasicDialogListener, LocationListener {
 
     // Dialogs' ids
     private static final String RATIONALE_ID = "rationale_id";
@@ -108,39 +111,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 .show();
         }
         else{
-            // Checking GPS fine location permissions
-            final GPSManager gpsManager = new GPSManager(getApplicationContext());
-            if(!gpsManager.hasPermissions()){
-                // Request for permissions
-                if(gpsManager.canRequestNow(this)) {
-                    gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
-                }
-                else{
-                    // Showing Rationale
-                    BasicDialog.BasicDialogBuilder basicDialogBuilder = new BasicDialog.BasicDialogBuilder(RATIONALE_ID);
-                    basicDialogBuilder.setTitle(getString(R.string.to_clarify));
-                    basicDialogBuilder.setText(getString(R.string.rationale));
-                    basicDialogBuilder.setTextForOkButton(getString(R.string.ok_button));
-                    basicDialogBuilder.build().show(getSupportFragmentManager(), TAG);
-                }
-            }
-            else {
-                // Checking if location provider is enabled
-                if (!gpsManager.isGPSOn()) {
-                    Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
-                        .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
-                    .show();
-                }
-                else{
-                    // Checking Internet providers
-                    final ConnectionManager connectionManager = new ConnectionManager(getApplicationContext());
-                    if(!connectionManager.isNetworkAvailable()){
-                        Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
-                                .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_SETTINGS)))
-                                .show();
-                    }
-                }
-            }
+            checkConditions();
         }
     }
 
@@ -218,4 +189,92 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         }
     }
 
+    /**
+     * Called when the location has changed.
+     * There are no restrictions on the use of the supplied Location object.
+     * @param location The new location, as a Location object.
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    /**
+     * This callback will never be invoked
+     * @param provider The String representing provider
+     * @param status   The actual status of provider
+     * @param extras   Bundle as extras
+     * @deprecated This callback will never be invoked.
+     */
+    @Override
+    @Deprecated
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    /**
+     * Called when the provider is enabled by the user.
+     * @param provider The name of the location provider associated with this
+     *                 update.
+     */
+    @Override
+    public void onProviderEnabled(String provider) {
+        if(checkConditions()){
+            findViewById(R.id.coordinator).setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Called when the provider is disabled by the user. If requestLocationUpdates
+     * is called on an already disabled provider, this method is called
+     * immediately.
+     * @param provider The name of the location provider associated with this
+     *                 update.
+     */
+    @Override
+    public void onProviderDisabled(String provider) {
+        checkConditions();
+    }
+
+    private boolean checkConditions(){
+        // Checking GPS fine location permissions
+        final GPSManager gpsManager = new GPSManager(getApplicationContext());
+        if(!gpsManager.hasPermissions()){
+            // Request for permissions
+            if(gpsManager.canRequestNow(this)) {
+                gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
+            }
+            else{
+                // Showing Rationale
+                BasicDialog.BasicDialogBuilder basicDialogBuilder = new BasicDialog.BasicDialogBuilder(RATIONALE_ID);
+                basicDialogBuilder.setTitle(getString(R.string.to_clarify));
+                basicDialogBuilder.setText(getString(R.string.rationale));
+                basicDialogBuilder.setTextForOkButton(getString(R.string.ok_button));
+                basicDialogBuilder.build().show(getSupportFragmentManager(), TAG);
+            }
+        }
+        else {
+            // Checking if location provider is enabled
+            if (!gpsManager.isGPSOn()) {
+                findViewById(R.id.coordinator).setVisibility(View.VISIBLE);
+                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                        .show();
+            }
+            else{
+                // Checking Internet providers
+                final ConnectionManager connectionManager = new ConnectionManager(getApplicationContext());
+                if(!connectionManager.isNetworkAvailable()){
+                    findViewById(R.id.coordinator).setVisibility(View.VISIBLE);
+                    Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
+                            .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_SETTINGS)))
+                            .show();
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
