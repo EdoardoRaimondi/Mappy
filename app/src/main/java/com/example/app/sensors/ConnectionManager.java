@@ -13,6 +13,7 @@ public class ConnectionManager {
 
     // Object params
     private Context context;
+    private ConnectivityManager connectivityManager;
 
     /**
      * Constructor
@@ -20,6 +21,7 @@ public class ConnectionManager {
      */
     public ConnectionManager(Context context){
         this.context = context;
+        this.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     /*
@@ -33,8 +35,6 @@ public class ConnectionManager {
     * Method to get Internet connection type based on active providers
     */
     public ConnectionType getConnectionType(){
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager != null){
             NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
             if(netInfo != null && netInfo.isConnected()){
@@ -51,5 +51,6 @@ public class ConnectionManager {
         }
         return ConnectionType.NONE;
     }
+
 
 }

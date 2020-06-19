@@ -75,7 +75,12 @@ public class GPSManager {
         return false;
     }
 
-    public void requireUpdates(LocationListener locationListener) {
+    /**
+     * Method to register callback for GPS Providers updates
+     * @param locationListener The LocationListener to call
+     * @return true if correctly settled false otherwise
+     */
+    public boolean requireUpdates(LocationListener locationListener) {
         if (
                 ActivityCompat.checkSelfPermission(
                     context,
@@ -89,13 +94,14 @@ public class GPSManager {
                         Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
         ) {
-            return;
+            return false;
         }
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 500,
                 10, locationListener
         );
+        return true;
     }
 
 }

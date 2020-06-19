@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 }
 
                 @Override
+                @Deprecated
                 public void onStatusChanged(String provider, int status, Bundle extras) {
 
                 }
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     public void onDialogResult(String id, boolean option){
         if(id.equals(RATIONALE_ID)) {
             if (option) {
-                (new GPSManager(this)).requirePermissions(this, REQUEST_USER_LOCATION_CODE);
+                gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
             }
         }
     }
