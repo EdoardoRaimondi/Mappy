@@ -12,6 +12,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.location.LocationManagerCompat;
 
+import java.util.List;
+
 
 /*
  * Class for managing GPS providers
@@ -97,12 +99,35 @@ public class GPSManager {
         ) {
             return false;
         }
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                interval,
-                10, locationListener
-        );
+        boolean found = false;
+        List<String> providers = getActiveProviders();
+        for(int i=0; i<providers.size(); i++){
+            if(providers.get(i).equalsIgnoreCase(LocationManager.GPS_PROVIDER)){
+                found = true;
+            }
+        }
+        if(found) {
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    interval,
+                    10, locationListener
+            );
+        }
+        else{
+            locationManager.requestLocationUpdates(
+                    LocationManager.PASSIVE_PROVIDER,
+                    interval,
+                    10, locationListener
+            );
+        }
         return true;
+    }
+
+    /**
+     * Getter method to find all enabled Location providers
+     */
+    private List<String> getActiveProviders(){
+        return locationManager.getProviders(true);
     }
 
 }
