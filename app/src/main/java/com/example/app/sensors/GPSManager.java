@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 
@@ -15,24 +16,26 @@ import androidx.core.location.LocationManagerCompat;
 /*
  * Class for managing GPS providers
  */
-public class GPSManager{
+public class GPSManager {
 
     // Object params
     private Context context;
+    private LocationManager locationManager;
 
     /**
-    * Constructor
-    * @param context The Context GPSManager instance has to be attached
-    */
+     * Constructor
+     * @param context The Context GPSManager instance has to be attached
+     */
     public GPSManager(Context context) {
         super();
         this.context = context;
+        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
     /*
-    * Method to know if app has GPS permissions granted
-    */
-    public boolean hasPermissions(){
+     * Method to know if app has GPS permissions granted
+     */
+    public boolean hasPermissions() {
         return ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -40,40 +43,59 @@ public class GPSManager{
     }
 
     /**
-    * Method to know if app can request GPS permissions
-    * @param activity The Activity to attach
-    */
-    public boolean canRequestNow(Activity activity){
+     * Method to know if app can request GPS permissions
+     * @param activity The Activity to attach
+     */
+    public boolean canRequestNow(Activity activity) {
         return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     /**
-    * Method to require GPS permissions
-    * @param activity The Activity required permissions
-    * @param reqCode  The request code (int)
-    */
-    public void requirePermissions(Activity activity, int reqCode){
-        if(canRequestNow(activity) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+     * Method to require GPS permissions
+     * @param activity The Activity required permissions
+     * @param reqCode  The request code (int)
+     */
+    public void requirePermissions(Activity activity, int reqCode) {
+        if (canRequestNow(activity) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, reqCode);
         }
     }
 
     /*
-    * Method to know if GPS Sensor is enabled
-    */
-    public boolean isGPSOn(){
-        if(hasPermissions()) {
+     * Method to know if GPS Sensor is enabled
+     */
+    public boolean isGPSOn() {
+        if (hasPermissions()) {
             try {
-                LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-                if (manager != null) {
-                    return LocationManagerCompat.isLocationEnabled(manager);
-                }
-            }
-            catch (Exception exc) {
+                return LocationManagerCompat.isLocationEnabled(locationManager);
+            } catch (Exception exc) {
                 return false;
             }
         }
         return false;
+    }
+
+    public void requireUpdates(LocationListener locationListener) {
+        if (
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+
+                        &&
+
+                ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return;
+        }
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                500,
+                10, locationListener
+        );
     }
 
 }
