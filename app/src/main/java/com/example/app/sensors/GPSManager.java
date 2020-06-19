@@ -78,9 +78,10 @@ public class GPSManager {
     /**
      * Method to register callback for GPS Providers updates
      * @param locationListener The LocationListener to call
+     * @param interval         The interval check time
      * @return true if correctly settled false otherwise
      */
-    public boolean requireUpdates(LocationListener locationListener) {
+    public boolean requireUpdates(LocationListener locationListener, int interval) {
         if (
                 ActivityCompat.checkSelfPermission(
                     context,
@@ -98,7 +99,7 @@ public class GPSManager {
         }
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                500,
+                interval,
                 10, locationListener
         );
         return true;

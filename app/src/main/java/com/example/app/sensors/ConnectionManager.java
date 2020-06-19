@@ -51,6 +51,4 @@ public class ConnectionManager {
         }
         return ConnectionType.NONE;
     }
-
-
 }

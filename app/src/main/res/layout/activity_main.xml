@@ -24,7 +24,13 @@
         app:navGraph="@navigation/mobile_navigation" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        app:layout_constraintEnd_toStartOf="@id/nav_view"
+        app:layout_constraintBottom_toTopOf="@id/coordinator"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/coordinator2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

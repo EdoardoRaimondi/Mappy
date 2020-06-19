@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,6 +26,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
 
 /**
  * Main UI activity. Here the user can choose the main actions.
@@ -43,12 +45,23 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     // Type of Google Update or Sign In request
     private static final int GOOGLE_CHECK = 100;
+    // Check delay of GPS and Connection statuses
+    private static final int DELAY_CHECK = 1000;
+
     // Selected radius
     private int radius;
     // Fragment displayed
     private int displayFragment;
     // GPS Manager
     private GPSManager gpsManager;
+    // ConnectivityManager
+    private ConnectionManager connectionManager;
+
+    private Handler handler;
+    private Runnable runnable;
+
+    private boolean isShowingNoConnection;
+    private boolean isShowingNoGPS;
 
     // BEGIN OF MAIN ACTIVITY'S LIFE CYCLE CALLBACKS
 
@@ -114,6 +127,12 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         }
         else{
             gpsManager = new GPSManager(getApplicationContext());
+            connectionManager = new ConnectionManager(getApplicationContext());
+            isShowingNoConnection = false;
+            isShowingNoGPS = false;
+            if(!gpsManager.isGPSOn()){
+                showNoGPS();
+            }
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
@@ -128,18 +147,45 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
 
                 @Override
                 public void onProviderEnabled(String provider) {
-                    if(checkConditions()){
-                        findViewById(R.id.coordinator).setVisibility(View.GONE);
+                    if(gpsManager.isGPSOn()){
+                        if(isShowingNoGPS){
+                            findViewById(R.id.coordinator).setVisibility(View.GONE);
+                            isShowingNoGPS = false;
+                        }
                     }
                 }
 
                 @Override
                 public void onProviderDisabled(String provider) {
-                    checkConditions();
+                    if(!gpsManager.isGPSOn()){
+                        if(!isShowingNoGPS){
+                            showNoGPS();
+                        }
+                    }
                 }
             };
-            gpsManager.requireUpdates(locationListener);
-            checkConditions();
+            gpsManager.requireUpdates(locationListener, DELAY_CHECK);
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    // The check
+                    if(connectionManager.isNetworkAvailable()){
+                        if(isShowingNoConnection) {
+                            findViewById(R.id.coordinator2).setVisibility(View.GONE);
+                            isShowingNoConnection = false;
+                        }
+                    }
+                    else{
+                        if(!isShowingNoConnection) {
+                            showNoConnection();
+                        }
+                    }
+                    // Setting delay time before one check and another
+                    handler.postDelayed(runnable, DELAY_CHECK);
+                }
+            };
+            handler.post(runnable);
         }
     }
 
@@ -151,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putInt(RADIUS_KEY, radius);
         savedInstanceState.putInt(FRAGMENT_KEY, displayFragment);
+        handler.removeCallbacks(runnable);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -217,44 +264,19 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         }
     }
 
-    private boolean checkConditions(){
-        // Checking GPS fine location permissions
-        if(!gpsManager.hasPermissions()){
-            // Request for permissions
-            if(gpsManager.canRequestNow(this)) {
-                gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
-            }
-            else{
-                // Showing Rationale
-                BasicDialog.BasicDialogBuilder basicDialogBuilder = new BasicDialog.BasicDialogBuilder(RATIONALE_ID);
-                basicDialogBuilder.setTitle(getString(R.string.to_clarify));
-                basicDialogBuilder.setText(getString(R.string.rationale));
-                basicDialogBuilder.setTextForOkButton(getString(R.string.ok_button));
-                basicDialogBuilder.build().show(getSupportFragmentManager(), TAG);
-            }
-        }
-        else {
-            // Checking if location provider is enabled
-            if (!gpsManager.isGPSOn()) {
-                findViewById(R.id.coordinator).setVisibility(View.VISIBLE);
-                Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
-                        .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
-                        .show();
-            }
-            else{
-                // Checking Internet providers
-                final ConnectionManager connectionManager = new ConnectionManager(getApplicationContext());
-                if(!connectionManager.isNetworkAvailable()){
-                    findViewById(R.id.coordinator).setVisibility(View.VISIBLE);
-                    Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
-                            .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_SETTINGS)))
-                            .show();
-                }
-                else{
-                    return true;
-                }
-            }
-        }
-        return false;
+    private void showNoConnection(){
+        isShowingNoConnection = true;
+        findViewById(R.id.coordinator2).setVisibility(View.VISIBLE);
+        Snackbar.make(findViewById(R.id.coordinator2), getString(R.string.no_internet), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_SETTINGS)))
+                .show();
+    }
+
+    private void showNoGPS(){
+        isShowingNoGPS = true;
+        findViewById(R.id.coordinator).setVisibility(View.VISIBLE);
+        Snackbar.make(findViewById(R.id.coordinator), getString(R.string.no_gps), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.yes), v -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                .show();
     }
 }
