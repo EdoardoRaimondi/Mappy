@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.telephony.emergency.EmergencyNumber;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -21,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.app.factories.IntentFactory;
 import com.example.app.finals.CallerReturn;
-import com.example.app.finals.MapsUtility;
 import com.example.app.finals.NearbyRequestType;
 import com.example.app.handlers.HelpActivityHandler;
 import com.example.app.listeners.PhoneNumberGetListener;
@@ -44,7 +44,6 @@ public class HelpActivity extends AppCompatActivity  implements View.OnClickList
     /**
      * Callback when the activity is created
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,42 +76,40 @@ public class HelpActivity extends AppCompatActivity  implements View.OnClickList
         }
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-    }
-
-    /**
-     * Call the police of the nearest police station
-     * @param view The button that called this
-     */
-    public void callPolice(View view) {
-        helpActivityHandler.setPhoneNumberGetListener(new PhoneNumberGetListener() {
-            @Override
-            public void onSuccess(String phoneNumber) {
-                Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
-                try{
-                startActivity(callIntent);
-                }
-                catch(ActivityNotFoundException exc){
-                    Toast.makeText(getApplicationContext(), getString(R.string.sorry_no_phone), Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.Q)
-            @Override
-            public void onFail() {
-                /*Here because no police phone number nearby user has been found*/
-                if(BuildConfig.VERSION_CODE >= Build.VERSION_CODES.Q) { //Always false but we anticipate the future (Use the emulator to see how it works)
-                    EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
-                    if (emergencyNumber == null) showPhoneNumberMessageError();
-                    else {
-                        Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
+        findViewById(R.id.sos_button).setOnClickListener(v -> {
+            helpActivityHandler.setPhoneNumberGetListener(new PhoneNumberGetListener() {
+                @Override
+                public void onSuccess(String phoneNumber) {
+                    Log.d("HERE!", phoneNumber);
+                    Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
+                    try{
                         startActivity(callIntent);
                     }
+                    catch(ActivityNotFoundException exc){
+                        Toast.makeText(getApplicationContext(), getString(R.string.sorry_no_phone), Toast.LENGTH_LONG).show();
+                    }
                 }
-                showPhoneNumberMessageError();
-            }
+
+                @RequiresApi(api = Build.VERSION_CODES.Q)
+                @Override
+                public void onFail() {
+                    // Here because no police phone number nearby user has been found
+                    if (BuildConfig.VERSION_CODE >= Build.VERSION_CODES.Q) { // Always false but we anticipate the future (Use the emulator to see how it works)
+                        EmergencyNumber emergencyNumber = telephonyManager.getEmergencyNumberList().get(EmergencyNumber.EMERGENCY_SERVICE_CATEGORY_POLICE).get(0);
+                        if (emergencyNumber == null) showPhoneNumberMessageError();
+                        else {
+                            Intent callIntent = IntentFactory.createCallIntent(emergencyNumber.getNumber());
+                            startActivity(callIntent);
+                        }
+                    }
+                    showPhoneNumberMessageError();
+                }
+
+            });
+
+            helpActivityHandler.getPhoneNumber(NearbyRequestType.police, getApplicationContext(), getResources().getString(R.string.google_maps_key));
         });
 
-        helpActivityHandler.getPhoneNumber(NearbyRequestType.police, this, getResources().getString(R.string.google_maps_key));
     }
 
     /**
@@ -151,6 +148,7 @@ public class HelpActivity extends AppCompatActivity  implements View.OnClickList
      */
     @Override
     public void onClick(View v) {
+        Log.d("CRAP","");
         // If it is a valid id
         if (v.getId() != View.NO_ID){
             // Getting string variable id

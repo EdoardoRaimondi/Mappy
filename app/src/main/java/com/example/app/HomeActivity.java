@@ -120,7 +120,20 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             public void onHomeSet() {
                 displayHome(homeLocation);
                 Snackbar.make(findViewById(android.R.id.content), getString(R.string.set_home_info), Snackbar.LENGTH_INDEFINITE)
-                        .setAction(getString(R.string.want_button), v -> startActivity(IntentFactory.createLobbyReturn(getApplicationContext(), R.id.navigation_utils)))
+                        .setAction(getString(R.string.want_button), v -> {
+                            if (homeLocation != null) {
+                                SharedPreferences preferences = getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                String homeLat = String.valueOf(homeLocation.getLatitude());
+                                String homeLng = String.valueOf(homeLocation.getLongitude());
+
+                                editor.putString(HOME_LAT, homeLat);
+                                editor.putString(HOME_LNG, homeLng);
+
+                                editor.apply();
+                                startActivity(IntentFactory.createLobbyReturn(getApplicationContext(), R.id.navigation_utils));
+                            }
+                        })
                         .show();
             }
         });
@@ -137,27 +150,6 @@ public class HomeActivity extends FragmentActivity implements OnMapReadyCallback
             homeSet();
         });
         googleLocationFinder.findCurrentLocation(this);
-    }
-
-    /**
-     * Callback when the method is onPause.
-     * Save the current home coordinates for future access
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (homeLocation != null) {
-            SharedPreferences preferences = getSharedPreferences(MapsParameters.SHARED_HOME_PREFERENCE, MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            String homeLat = String.valueOf(homeLocation.getLatitude());
-            String homeLng = String.valueOf(homeLocation.getLongitude());
-
-            editor.putString(HOME_LAT, homeLat);
-            editor.putString(HOME_LNG, homeLng);
-
-            editor.apply();
-        }
     }
 
     /**
