@@ -86,7 +86,7 @@ public class HelpActivity extends AppCompatActivity  implements View.OnClickList
                         startActivity(callIntent);
                     }
                     catch(ActivityNotFoundException exc){
-                        Toast.makeText(getApplicationContext(), getString(R.string.sorry_no_phone), Toast.LENGTH_LONG).show();
+                        showPhoneNumberMessageError();
                     }
                 }
 
