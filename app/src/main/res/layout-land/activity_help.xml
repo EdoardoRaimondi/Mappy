@@ -130,9 +130,19 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:src="@drawable/ic_call"
             style="@style/FloatStyle"
-            android:onClick="callPolice"
             app:backgroundTint="@color/colorGreenCall"
             android:layout_gravity="end"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="CALL THE POLICE STATION NEAR YOU!"
+            android:layout_marginEnd="@android:dimen/app_icon_size"
+            android:layout_gravity="center"
+            android:layout_marginStart="@android:dimen/app_icon_size"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            ></TextView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>
