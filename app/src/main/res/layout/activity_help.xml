@@ -149,14 +149,14 @@
             android:layout_gravity="end"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="CALL THE POLICE STATION NEAR YOU!"
+            android:text="@string/help_hint"
             android:layout_marginEnd="@android:dimen/app_icon_size"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            ></TextView>
+            android:layout_gravity="center|center_vertical|start"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/quantum_grey"
+            />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

@@ -11,6 +11,7 @@
     <string name="unauthorized_call">Permesso di chiamare negato</string>
     <string name="home_sweet">Casa dolce casa</string>
     <string name="no_position">Impossibile raggiungere la tua posizione</string>
+    <string name="help_hint">Chiama la caserma di polizia!</string>
     <!-- Search fragment cathegories -->
     <string name="food">Cibi e Bevande</string>
     <string name="help_label">Soccorso</string>

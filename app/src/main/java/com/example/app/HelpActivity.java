@@ -80,7 +80,6 @@ public class HelpActivity extends AppCompatActivity  implements View.OnClickList
             helpActivityHandler.setPhoneNumberGetListener(new PhoneNumberGetListener() {
                 @Override
                 public void onSuccess(String phoneNumber) {
-                    Log.d("HERE!", phoneNumber);
                     Intent callIntent = IntentFactory.createCallIntent(phoneNumber);
                     try{
                         startActivity(callIntent);
