@@ -14,8 +14,9 @@ Mappy uses:
 
 * [Android](https://en.wikipedia.org/wiki/Android_(operating_system)) - as OS on your device
 * [Java](https://www.java.com/en/) - the programming language we used in Android Studio
-* [Google Places API](https://cloud.google.com/maps-platform/places?hl=it) backend
-* [Google Maps API](https://cloud.google.com/maps-platform) backend
+* [Google Places Search](https://developers.google.com/places/web-service/search#PlaceSearchRequests)
+* [Google Location Data](https://developers.google.com/maps/documentation/android-sdk/location)
+* [Google Places SDK](https://developers.google.com/places/android-sdk/reference/com/google/android/libraries/places/api/Places)
 
 
 ### Test
@@ -28,5 +29,5 @@ Mappy APP was tested on:
 ### Support
 
 Since our APP uses Google back-ends, limitations comes in especially on the number of Place search queries.
-Please make sure to not abuse with requests. If you want to use your own Google Maps SDK key, put it in the files
+Please make sure to not abuse with requests. If you want to use your own Google Maps Platform key, put it in the files
 ```app/src/debug/res/values/google_maps_api.xml``` and ```app/src/release/res/values/google_maps_api.xml```
