@@ -11,8 +11,6 @@ import com.example.app.finals.ConnectionType;
 */
 public class ConnectionManager {
 
-    // Object params
-    private Context context;
     private ConnectivityManager connectivityManager;
 
     /**
@@ -20,7 +18,7 @@ public class ConnectionManager {
      * @param context The Context ConnectionManager instance has to be attached
      */
     public ConnectionManager(Context context){
-        this.context = context;
+        // Object params
         this.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
@@ -34,7 +32,7 @@ public class ConnectionManager {
     /*
     * Method to get Internet connection type based on active providers
     */
-    public ConnectionType getConnectionType(){
+    private ConnectionType getConnectionType(){
         if(connectivityManager != null){
             NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
             if(netInfo != null && netInfo.isConnected()){

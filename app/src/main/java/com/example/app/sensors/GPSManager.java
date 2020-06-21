@@ -37,7 +37,7 @@ public class GPSManager {
     /*
      * Method to know if app has GPS permissions granted
      */
-    public boolean hasPermissions() {
+    private boolean hasPermissions() {
         return ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -48,7 +48,7 @@ public class GPSManager {
      * Method to know if app can request GPS permissions
      * @param activity The Activity to attach
      */
-    public boolean canRequestNow(Activity activity) {
+    private boolean canRequestNow(Activity activity) {
         return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
@@ -81,9 +81,8 @@ public class GPSManager {
      * Method to register callback for GPS Providers updates
      * @param locationListener The LocationListener to call
      * @param interval         The interval check time
-     * @return true if correctly settled false otherwise
      */
-    public boolean requireUpdates(LocationListener locationListener, int interval) {
+    public void requireUpdates(LocationListener locationListener, int interval) {
         if (
                 ActivityCompat.checkSelfPermission(
                     context,
@@ -97,7 +96,7 @@ public class GPSManager {
                         Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
         ) {
-            return false;
+            return;
         }
         boolean found = false;
         List<String> providers = getActiveProviders();
@@ -120,7 +119,6 @@ public class GPSManager {
                     10, locationListener
             );
         }
-        return true;
     }
 
     /**

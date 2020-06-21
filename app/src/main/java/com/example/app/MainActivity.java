@@ -15,7 +15,6 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -28,9 +27,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
-
-
 /**
  * Main UI activity. Here the user can choose the main actions.
  */
@@ -42,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     private static final String RADIUS_KEY = "radius_k";
     private static final String FRAGMENT_KEY = "fragment_k";
     public static final String FRAGMENT_KEY_INTENT = "fragment_k";
-    // Tag for dialogs and logs
-    private static final String TAG = "MainActivity";
     // Type of location request
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     // Type of Google Update or Sign In request
@@ -60,9 +54,11 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     // ConnectivityManager
     private ConnectionManager connectionManager;
 
+    // Child Thread
     private Handler handler;
     private Runnable runnable;
 
+    // Snackbar statuses
     private boolean isShowingNoConnection;
     private boolean isShowingNoGPS;
 
@@ -129,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 .show();
         }
         else{
+            // Initializing managers and statuses
             gpsManager = new GPSManager(getApplicationContext());
             connectionManager = new ConnectionManager(getApplicationContext());
             isShowingNoConnection = false;
@@ -136,18 +133,17 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
             if(!gpsManager.isGPSOn()){
                 showNoGPS();
             }
+            // The LocationListener
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
 
                 }
-
                 @Override
                 @Deprecated
                 public void onStatusChanged(String provider, int status, Bundle extras) {
 
                 }
-
                 @Override
                 public void onProviderEnabled(String provider) {
                     if(gpsManager.isGPSOn()){
@@ -157,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                         }
                     }
                 }
-
                 @Override
                 public void onProviderDisabled(String provider) {
                     if(!gpsManager.isGPSOn()){
@@ -169,24 +164,21 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
             };
             gpsManager.requireUpdates(locationListener, DELAY_CHECK);
             handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    // The check
-                    if(connectionManager.isNetworkAvailable()){
-                        if(isShowingNoConnection) {
-                            findViewById(R.id.coordinator2).setVisibility(View.GONE);
-                            isShowingNoConnection = false;
-                        }
+            runnable = () -> {
+                // The check
+                if(connectionManager.isNetworkAvailable()){
+                    if(isShowingNoConnection) {
+                        findViewById(R.id.coordinator2).setVisibility(View.GONE);
+                        isShowingNoConnection = false;
                     }
-                    else{
-                        if(!isShowingNoConnection) {
-                            showNoConnection();
-                        }
-                    }
-                    // Setting delay time before one check and another
-                    handler.postDelayed(runnable, DELAY_CHECK);
                 }
+                else{
+                    if(!isShowingNoConnection) {
+                        showNoConnection();
+                    }
+                }
+                // Setting delay time before one check and another
+                handler.postDelayed(runnable, DELAY_CHECK);
             };
             handler.post(runnable);
         }
