@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     // ConnectivityManager
     private ConnectionManager connectionManager;
 
+    private LocationListener locationListener;
+
     // Child Thread
     private Handler handler;
     private Runnable runnable;
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
                 showNoGPS();
             }
             // The LocationListener
-            LocationListener locationListener = new LocationListener() {
+            locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
 
@@ -193,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
         savedInstanceState.putInt(RADIUS_KEY, radius);
         savedInstanceState.putInt(FRAGMENT_KEY, displayFragment);
         handler.removeCallbacks(runnable);
+        gpsManager.removeCallback(locationListener);
         super.onSaveInstanceState(savedInstanceState);
     }
 

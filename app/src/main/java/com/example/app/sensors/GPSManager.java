@@ -121,6 +121,10 @@ public class GPSManager {
         }
     }
 
+    public void removeCallback(LocationListener locationListener){
+        locationManager.removeUpdates(locationListener);
+    }
+
     /**
      * Getter method to find all enabled Location providers
      */
