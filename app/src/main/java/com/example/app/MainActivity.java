@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     // Check delay of GPS and Connection statuses
     private static final int DELAY_CHECK = 1000;
 
+    private static final String TAG = "MainActivity";
+
     // Selected radius
     private int radius;
     // Fragment displayed
@@ -132,7 +134,21 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
             connectionManager = new ConnectionManager(getApplicationContext());
             isShowingNoConnection = false;
             isShowingNoGPS = false;
-            if(!gpsManager.isGPSOn()){
+            if(!gpsManager.hasPermissions()){
+                // Request for permissions
+                if(gpsManager.canRequestNow(this)) {
+                    gpsManager.requirePermissions(this, REQUEST_USER_LOCATION_CODE);
+                }
+                else{
+                    // Showing Rationale
+                    BasicDialog.BasicDialogBuilder basicDialogBuilder = new BasicDialog.BasicDialogBuilder(RATIONALE_ID);
+                    basicDialogBuilder.setTitle(getString(R.string.to_clarify));
+                    basicDialogBuilder.setText(getString(R.string.rationale));
+                    basicDialogBuilder.setTextForOkButton(getString(R.string.ok_button));
+                    basicDialogBuilder.build().show(getSupportFragmentManager(), TAG);
+                }
+            }
+            else if(!gpsManager.isGPSOn()){
                 showNoGPS();
             }
             // The LocationListener
@@ -187,6 +203,16 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     }
 
     /**
+     * Callback when activity looses foreground space
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
+        gpsManager.removeCallback(locationListener);
+    }
+
+    /**
      * Callback to save the state when necessary
      * @param savedInstanceState Bundle where to save radius value
      */
@@ -194,8 +220,6 @@ public class MainActivity extends AppCompatActivity implements BasicDialog.Basic
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putInt(RADIUS_KEY, radius);
         savedInstanceState.putInt(FRAGMENT_KEY, displayFragment);
-        handler.removeCallbacks(runnable);
-        gpsManager.removeCallback(locationListener);
         super.onSaveInstanceState(savedInstanceState);
     }
 

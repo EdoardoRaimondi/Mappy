@@ -37,7 +37,7 @@ public class GPSManager {
     /*
      * Method to know if app has GPS permissions granted
      */
-    private boolean hasPermissions() {
+    public boolean hasPermissions() {
         return ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -48,7 +48,7 @@ public class GPSManager {
      * Method to know if app can request GPS permissions
      * @param activity The Activity to attach
      */
-    private boolean canRequestNow(Activity activity) {
+    public boolean canRequestNow(Activity activity) {
         return !ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
