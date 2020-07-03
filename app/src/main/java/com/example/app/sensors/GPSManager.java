@@ -58,7 +58,7 @@ public class GPSManager {
      * @param reqCode  The request code (int)
      */
     public void requirePermissions(Activity activity, int reqCode) {
-        if (canRequestNow(activity) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, reqCode);
         }
     }
