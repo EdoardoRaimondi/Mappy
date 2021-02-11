@@ -1,12 +1,12 @@
 # Mappy
 
 
-Mappy is an Android application based on the so famous Google Maps and Google Places APIs. Designed to search interesting places nearby your device using Google Maps backend (GPS is required for high accuracy). Research radius is adjustable according to your taste. The most awsome place is a click beside you.
+Mappy is an Android application based on Google Maps and Google Places APIs. Designed to search interesting places nearby your device, using Google Maps backend (GPS is required for high accuracy). Research radius is adjustable according to your taste. The most awesome place is a click beside you.
 
   - Find in the list the place you want to search
-  - Save your home in case you forgot it
+  - Save your home/hotel/residence in case you forgot it
   - Save your favourite places
-  - Get local help phone numbers in an emergency
+  - Get local help phone numbers in case of emergency
 
 ### Tech
 
@@ -29,5 +29,9 @@ Mappy APP was tested on:
 ### Support
 
 Since our APP uses Google back-ends, limitations comes in especially on the number of Place search queries.
-Please make sure to not abuse with requests. If you want to use your own Google Maps Platform key, put it in the files
-```app/src/debug/res/values/google_maps_api.xml``` and ```app/src/release/res/values/google_maps_api.xml```
+THE KEY INSTALLED RIGHT NOW IS DISABLED, SO THE APP DOESN'T WORK PROPERLY.If you are interested to invest in our app 
+or see how it works, please contact us.
+If you want to use your own Google Maps Platform key, put it in the files:
+```app/src/debug/res/values/google_maps_api.xml``` 
+and 
+```app/src/release/res/values/google_maps_api.xml```
