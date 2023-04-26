@@ -26,12 +26,5 @@ Mappy APP was tested on:
 - Emulators: Pixel 2 (Android R), Nexus 5 (Android R)
 
 
-### Support
 
-Since our APP uses Google back-ends, limitations comes in especially on the number of Place search queries.
-THE KEY INSTALLED RIGHT NOW IS DISABLED, SO THE APP DOESN'T WORK PROPERLY.If you are interested to invest in our app 
-or see how it works, please contact us.
-If you want to use your own Google Maps Platform key, put it in the files:
-```app/src/debug/res/values/google_maps_api.xml``` 
-and 
-```app/src/release/res/values/google_maps_api.xml```
+
